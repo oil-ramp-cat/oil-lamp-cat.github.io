@@ -73,12 +73,15 @@ theme_mode: # [light|dark]
 #
 # e.g. 'https://cdn.com'
 #img_cdn: "https://chirpy-img.netlify.app"
+pin: true #홈 뜨게하는거
+
 
 # the avatar on sidebar, support local or CORS resources
 avatar: "/assets/img/avatar.jpg"
 
 # boolean type, the global switch for TOC in posts.
 toc: true
+
 
 comments:
   active: # The global switch for posts comments, e.g., 'disqus'.  Keep it empty means disable
