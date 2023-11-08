@@ -73,7 +73,6 @@ theme_mode: # [light|dark]
 #
 # e.g. 'https://cdn.com'
 #img_cdn: "https://chirpy-img.netlify.app"
-#pin: true #홈 뜨게하는거 안됨
 
 
 # the avatar on sidebar, support local or CORS resources
