@@ -73,3 +73,4 @@ Finish 클릭
 # kali linux ios 다운로드
 
 [kali linux]()다운로드 사이트에 들어가서 live 버전을 다운로드 해주기로 하자
+
