@@ -1,7 +1,7 @@
 ---
 title: kali linux virtualbox 가상환경 다운로드
 date: 2023-11-28 14:52:15 +09:00
-categories: [kali linux, virtualbox]
+categories: [kalilinux, virtualbox]
 tags: [download, 설치]
 pin: true
 ---
@@ -74,3 +74,4 @@ Finish 클릭
 
 [kali linux]()다운로드 사이트에 들어가서 live 버전을 다운로드 해주기로 하자
 
+![스크린샷 2023-11-28 154045](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/f899a108-6e57-44fa-aae1-154f05135169)
