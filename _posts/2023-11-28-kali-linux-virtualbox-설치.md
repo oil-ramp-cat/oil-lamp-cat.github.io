@@ -53,3 +53,25 @@ Finish 클릭
 내가 사용한 버전은 7.0 버전이다.
 ![스크린샷 2023-11-28 151018](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/333a7a4b-780d-45ff-80a6-c3342c7d389c)
 
+가장 처음 virtualbox를 키게 되면 아래와 같은 화면을 보게 될 것이다.
+![스크린샷 2023-11-26 233605](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/b62beb88-9a0e-47c8-97b9-6604eabb1b53)
+
+여기서 우리는 파일 - 도구 - 네트워크 관리자 를 들어가 네트워크 설정을 보자.
+![스크린샷 2023-11-26 233718](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/a52182fa-719d-4bca-af0a-d7f6bac9c979)
+
+책에서는 이것을 직접 설정해 주어야 했지만 다행히! 우리는 이미 설정이 끝나있다. 그래도 한번 살펴보자.
+![스크린샷 2023-11-26 233739](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/602cc0b3-6f8b-4be8-b544-93991ef1e4b6)
+호스트 전용 네트워크란 내가 만든 가상환경들 끼리만 통신이 가능하게 될 인터넷을 의미한다. 처음에는 왜 사용하는지 몰랐으나, 예를들어 우리가 취약한 서버를 설치해서 해킹 실습을 하게 된다면(실제로 하게 될 것이다.) 그 서버가 연결된 외부인터넷에서도 접속 할 수 있으면 내 컴퓨터가 위험하기에 가상환경으로 접속할 인터넷을 한정시켜 주는 것이다. 그리고 ipv4가 192.168.56.1/24이다.
+
+속성을 누르면 다음과 같은 화면을 볼 수 있다. 이것 또한 우리는 자동으로 맞춰저 있기에 건드릴 것이 없다.
+![스크린샷 2023-11-26 235507](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/750f7f63-c6fe-4228-8407-983b2cde4e87)
+
+하지만 **DHCP 서버**를 눌러보면 아래 화면과 다르게 서버 활성화가 꺼져있을 것이다. 우리는 이것을 활성화 해주면 된다.
+![스크린샷 2023-11-26 235517](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/1b5b313d-3e13-48e1-8117-c954937a9175)
+
+# kali linux ios 다운로드
+
+[kalilinux](https://www.kali.org/get-kali/#kali-live)다운로드 사이트에 들어가서 live 버전을 다운로드 해주기로 하자
+
+![스크린샷 2023-11-28 154045](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/e9df3b22-46c7-4b9d-aaa3-821a7d00ffd7)
+
