@@ -19,28 +19,6 @@ pin: true
 이제는 그저 next만 누르면 virtualbox를 설치할 수 있기에 굳이 필요 없지만 그래도 모르겠다 하는 사람을 위해 아래 사진을 첨부해 놓았다.
  <details><summary>설치 과정</summary>
  <div markdown = "1">
-
-![스크린샷](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/bc915ca7-8b42-4df6-8d29-f872acbbb8a6)
-Next
-
-![스크린샷](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/4c2ee854-905e-4a21-ab03-4573df675c3d)
-Next
-
-![스크린샷](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/cfbd9f73-0480-48ac-90a4-c3a069d8ab8c)
-Yes
-
-![스크린샷](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/7e678b0b-fbc2-4cb8-a312-5a5ffed67f3a)
-Yes
-
-![스크린샷](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/af62caa8-917d-4803-95b6-57bbe69dc8a0)
-Install
-
-![스크린샷](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/ddf1b4a1-f7a9-45e1-8662-96b16265f2cc)
-설치 대기
-
-![스크린샷](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/0064669d-3595-4a43-9571-ca899a0877d3)
-Finish 클릭
-
 </div>
 </details>
 
