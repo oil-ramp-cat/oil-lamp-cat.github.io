@@ -164,5 +164,19 @@ Full name(username) 유저 이름이다. 칼리 로그인 하면 뜨는 이름�
 디스크 포멧이 바뀐다는 의미인데 우리는 상관 없다 가상환경이니까.
 ![스크린샷 2023-11-26 235924](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/7447162e-2625-4bc8-99c4-cd52833d0cd8)
 
-기다리면 Use a network mirror?라는 질문이 뜨는데 NO누르지 말고 무조건 Yes다 페키지 다운로드 해야하니까.
+기다리면 Use a network mirror?라는 질문이 뜨는데 NO누르지 말고 무조건 Yes다 패키지 다운로드 해야하기에.
 ![스크린샷 2023-11-27 000855](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/c705e741-2cc0-4d6e-b370-25aec4d5aa23)
+
+다음으로는 proxy를 설정할 것이냐 묻는데 우리는 필요하지 않다.
+![스크린샷 2023-11-27 000918](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/21180322-fabc-497f-99d1-1b500eed4583)
+
+설치를 쭉 진행하다 보면 GRUB boot loader를 사용할 것이냐 묻는데 우리는 가상환경에 설치하였으니 Yes
+
+그리고 그 설치 위치는 가상환경의 설치 경로인(화면에 떠있는) /dev/sda
+
+이제 화면에 뜬 것 처럼 'Please choose Continue to reboot'을 따라 reboot해주면 된다.
+
+다시 들어가면 다음과 같은 화면이 뜰 것이고, 위에서 설정한 아이디, 비밀번호를 치면 들어갈 수 있게 된다.
+
+# 끝 마치며
+아무래도 시간이 지남에 따라 편리성이 증가하기도 하고 조금씩 달라지는 것들이 있다보니 책을 선택할 때에도 가능하면 최신 책을 선택하는 것이 좋겠다. 물론 이론을 공부할 것이라면 괜찮겠지만 실습을 할 때에는 이것저것 찾아봐야 하는 경우가 있기에. 나중에 또 달라지는 점이 생긴다면 다시 와서 고치기로 하자.</br>(2023-11-29)
