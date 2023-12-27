@@ -14,7 +14,7 @@ css
 * [FlexboxFroggy](https://flexboxfroggy.com/#ko)
 
 javascript
-* 
+* lalala
 
 react
 * [2022 코딩애플 리액트 강의](https://www.youtube.com/playlist?list=PLfLgtT94nNq0qTRunX9OEmUzQv4lI4pnP)
