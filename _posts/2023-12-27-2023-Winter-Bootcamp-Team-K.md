@@ -19,17 +19,30 @@ github.io페이지 넘길 때에는 main브랜치에 바로 push pull했고 issu
 
 ## 3일차 2023-12-29 (Chat Gpt를 사용하여 개발하기)
 
-chat Gpt를 이용한 서비스를 만들게 될 것이다보니 아무래도 좀 많이 집중해서 들어야겠다. 우리는 GPT를 이용해서 캐릭터를 만들고 그 캐릭터와 대화하면서 영어실력을 향상시킬 수 있는 서비스를 만들 것이다.
+chat Gpt를 이용한 서비스를 만들게 될 것이다보니 아무래도 좀 많이 집중해서 들어야겠다. 우리는 GPT를 이용해서 캐릭터를 만들고 그 캐릭터와 대화하면서 영어실력을 향상시킬 수 있는 서비스를 만들 것이다. 
+> 다른 아이디어를 생각해 보라는....
 
 사용할 것들 : chat GPT, RVS-TTS, STT, react, typescript 등등
+
+## 4일차 2023-12-30 (프로젝트 관리와 커뮤니케이션)
+
+> 아직도 아이디어 개발중... 으엑
+
+react를 공부할 때에는 [생활코딩의 react강의](https://www.youtube.com/watch?v=t9e3hMJ_s-c&list=PLuHgQVnccGMCOGstdDZvH41x0Vtvwyxu7&index=5&t=233s)를 보면서 공부하고 있다.
+
+추가로 아래 영상들을 보며 공부하고 있다.
+![생활코딩](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/13daafcc-cf7e-4365-b29f-80fda6246d6d)
+
+
 
 # 공부할 때에 도움이 된 것들
 
 css
 * [FlexboxFroggy](https://flexboxfroggy.com/#ko)
+* [WEB2-CSS](https://youtube.com/playlist?list=PLuHgQVnccGMAnWgUYiAW2cTzSBywFO75B&si=LZxR-ue8zYp82oOh)
 
 javascript
-* lalala
+* [WEB2-JavaScript](https://youtube.com/playlist?list=PLuHgQVnccGMBB348PWRN0fREzYcYgFybf&si=5-6IckN6-OTd5cwx)
 
 react
 * [2022 코딩애플 리액트 강의](https://www.youtube.com/playlist?list=PLfLgtT94nNq0qTRunX9OEmUzQv4lI4pnP)
