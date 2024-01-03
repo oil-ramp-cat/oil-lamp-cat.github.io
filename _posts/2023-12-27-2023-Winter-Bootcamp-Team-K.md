@@ -63,6 +63,15 @@ react를 공부할 때에는 [생활코딩의 react강의](https://www.youtube.c
 ## 6, 7일차 2024-01-03 (UI/UX 설계 및 적용, 도커 & 도커 컴포즈)
 [CSS 공부 시작](https://www.youtube.com/)
 
+api 설계(api 명세서 작성)
+
+API 설계란? 
+
+애플리케이션(스마트폰, 카카오톡 서버 등 서로 다른 프로그램)이 인터페이싱하는(요청과 응답을 주고받는) 체계
+[추가적인 내용](https://enjoyinjoanne.tistory.com/56)
+
+[설계할 때 참고한 블로그](https://hackmd.io/@boostgroup3/S152Qkn_P)
+
 # 공부할 때에 도움이 된 것들
 
 css
