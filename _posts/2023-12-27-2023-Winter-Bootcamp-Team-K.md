@@ -63,6 +63,10 @@ react를 공부할 때에는 [생활코딩의 react강의](https://www.youtube.c
 ## 6, 7일차 2024-01-03 (UI/UX 설계 및 적용, 도커 & 도커 컴포즈)
 [CSS 공부 시작](https://www.youtube.com/)
 
+[HTML 공부 이어서](https://oil-lamp-cat.github.io/posts/html/)
+
+[ERD cloud](https://shuu.tistory.com/64)
+
 api 설계(api 명세서 작성)
 
 API 설계란? 
