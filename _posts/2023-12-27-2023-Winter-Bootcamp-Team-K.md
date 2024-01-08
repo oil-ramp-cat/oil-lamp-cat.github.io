@@ -101,6 +101,50 @@ API 설계란?
 - `yarn add react-router-dom`
 - `yarn dev`로 실행
 
+## 2024-01-09
+
+이제는 Typescript를 이용해서 웹사이트 퍼블리싱을 하기로 함. 타입스크립트관련 내용은 추후에 추가로 쓰겠다.
+![2024-01-09](https://github.com/2023-Summer-Bootcamp-Team-G/frontend/assets/103806022/482ea619-7cc2-4aad-8e87-11c5937a140b)
+
+타입스크립트에서 props사용하는 법을 잘 알지 못해 아무래도 여기 저기 찾아다녔고 결국 찾았다!
+![스크린샷(187)](https://github.com/2023-Summer-Bootcamp-Team-G/frontend/assets/103806022/fdd2c37f-ba5c-4521-afff-8f90f6206a8c)
+
+```escripttyp
+type [이름] = {
+  변수명?: [변수 타입];
+}
+```
+
+변수명 뒤에 ?를 붙여 기본 설정하고 변수 타입을 설정할 수 있게 만들어준다.
+
+![스크린샷(188)](https://github.com/2023-Summer-Bootcamp-Team-G/frontend/assets/103806022/bc19230e-52fc-43bb-afec-435ee7d6193b)
+
+```typescript
+export default function [함수명]({
+  변수명 = '기본 설정 값',
+  변수명,
+} : [이름]){
+  return(
+    <div
+    변수명1 = {변수명1}
+    변수명2 = {변수명2}
+    >{변수명3}</div>
+  );
+}
+```
+
+변수설정 할 때에 기본 설정을 해 놓으면 컴포넌트 사용할 때에 필수가 아닌 선택을 할 수 있게 된다.
+
+![스크린샷(189)](https://github.com/2023-Summer-Bootcamp-Team-G/frontend/assets/103806022/638d898b-71cd-4f19-9dcd-1c233c8e2b40)
+
+이 부분에서 중요한 곳은
+
+```typescript
+[css 변수]: ${(props) => (props.[css 변수] === '원하는 기본 명령어' ? '기본 명령어일 때 값' : props.[css 변수])}
+```
+
+이거를 이해하기 위해 거진 6시간동안 찾았고 역시 나는 이런거에 희열을 느끼는 사람인가보다. 다음 문제는 뭘까?
+
 # 공부할 때에 도움이 된 것들
 
 css
