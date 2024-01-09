@@ -145,6 +145,41 @@ export default function [함수명]({
 
 이거를 이해하기 위해 거진 6시간동안 찾았고 역시 나는 이런거에 희열을 느끼는 사람인가보다. 다음 문제는 뭘까?
 
+## 2024-01-09
+
+> 오늘은 (로그인 안했을 시) 메인 페이지, 로그인 페이지, 회원가입 페이지를 만들었다.
+
+![main page](https://github.com/2023-Winter-Bootcamp-Team-K/Front/assets/103806022/35049a1a-007f-4c65-9dd7-859864501727)
+-> 메인 페이지
+
+![login page](https://github.com/2023-Winter-Bootcamp-Team-K/Front/assets/103806022/94cbd5a0-9b6a-4b18-9c02-2e2aea80c0b2)
+-> 로그인 페이지
+
+![register page](https://github.com/2023-Winter-Bootcamp-Team-K/Front/assets/103806022/2be7ec1f-0ed9-4e42-aef2-e6e099dd6c0a)
+-> 회원가입(아이디 비밀번호) 페이지
+
+![register page2](https://github.com/2023-Winter-Bootcamp-Team-K/Front/assets/103806022/5cedd0e4-4fe6-4497-9b89-c3c211edb3fd)
+-> 회원가입(개인정보) 페이지
+
+styled component를 사용하게 되면 딱 css나 html문법만 사용하게 될 줄 알았는데 생각보다 하면서 뭔가 애니메이션도 넣고 싶은 생각이 들어 typescript를 좀 더 파봐야겠다. 일단 오늘 만든 것은 위 3페이지로 추가적으로 나중에 시간이 난다면 구름이나 꽃 등의 요소가 떠다니는 애니메이션을 넣고 싶다. 코드를 짜면서 오류가 나던 것들은 계속 캡쳐를 하고 있으니 나중에 모아서 오류들에 관한 이야기를 작성해 봐야겠다.
+
+컴포넌트들(btn, id/pwinput)을 우리 입맛대로 조율할 수 있게 하려고 props를 추가하여 넣어주었다.
+
+[github](https://github.com/2023-Winter-Bootcamp-Team-K/Front/pull/27)
+
+> git 자주 쓰는 명령어
+
+```git
+git fetch
+git switch 브랜치 이름(design/#1)
+
+git add .
+git commit -m '폴더'
+git push origin main
+
+git pull
+```
+
 # 공부할 때에 도움이 된 것들
 
 css
