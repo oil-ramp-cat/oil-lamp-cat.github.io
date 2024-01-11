@@ -244,6 +244,10 @@ git pull
     }
 ```
 
+### 지금까지의 결과물
+
+![2024-01-11-18-07-26-Trim](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/720e2dcb-99ef-40a9-8468-db6ffff6de3f)
+
 [[design] 회원가입 페이지 반응형 설정 #44](https://github.com/2023-Winter-Bootcamp-Team-K/Front/issues/44)
 
 [[design] 로그인 페이지 반응형 설정 #38](https://github.com/2023-Winter-Bootcamp-Team-K/Front/issues/38)
