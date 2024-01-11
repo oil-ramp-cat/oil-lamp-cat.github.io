@@ -192,7 +192,7 @@ git pull
 
 ## 2024-01-11
 
-> 어제 하던 로그인 페이지, 회원가입 페이지를 완성했다.
+> 어제 하던 로그인 페이지, 회원가입 페이지를 완성했다. 추가로 카메라(react-webcam) 반응형을 구현하였다.
 
 ### 오늘의 문제
 
@@ -251,6 +251,7 @@ git pull
 [[design] 회원가입 페이지 반응형 설정 #44](https://github.com/2023-Winter-Bootcamp-Team-K/Front/issues/44)
 
 [[design] 로그인 페이지 반응형 설정 #38](https://github.com/2023-Winter-Bootcamp-Team-K/Front/issues/38)
+[[design] 카메라 반응형 구현 #50](https://github.com/2023-Winter-Bootcamp-Team-K/Front/issues/50)
 
 # 공부할 때에 도움이 된 것들
 
