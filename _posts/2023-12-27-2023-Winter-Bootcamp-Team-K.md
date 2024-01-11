@@ -180,10 +180,79 @@ git push origin main
 git pull
 ```
 
+### 오후
+
+> 스크롤 바꾸미는 방법을 찾아 채팅창을 구현하는 중이다.
+
+![scrollB](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/07bd4b23-390a-4f8b-99a2-6fc3907921f0)
+
+-> 꾸미기 전
+
+음... 브라우저마다 규칙이 달라서 이건 나중에 혼자 해보는 걸로....
+
+## 2024-01-11
+
+> 어제 하던 로그인 페이지, 회원가입 페이지를 완성했다.
+
+### 오늘의 문제
+
+분명 같은 컴포넌트인데 자꾸 input창이 밖으로 나온다.
+
+![비밀번호_box_layout](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/e1c291b4-785f-49a3-b0f3-c5d9b1176683)
+![비밀번호_input_layout](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/37017faa-3375-41b4-88d3-4178554fc3f8)
+![비밀번호_layout](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/4f3833f6-e38a-49b2-805a-8f37cb7ced07)
+
+-> 비밀번호 layout
+
+![아이디_box_layout](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/adfc106f-675c-452b-9c75-988393927fc1)
+![아이디_input_layout](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/949588e2-fccc-4f0c-9542-4266c0428ee2)
+![아이디_layout](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/5e7f6e29-78bf-4c9f-8ef0-07ff3abc2c46)
+
+-> 아이디 layout
+
+### 해결
+
+일단 결론만 말하자면 width 설정을 해줄 때에 오류가 생긴 코드에서는 outbox layer와 input layer의 값이 동일하기에 margin을 주었을 때에 옆으로 삐져나가는 오류가 생긴 것이다. 해결하기위해 width 를 props로 주지 않고 100%로 설정하여 해결하였다.
+
+```typescript
+    @media all and (min-width: 791px) {
+      width: ${(props) => (props.width === 'normal' ? '29.55rem' : props.width)};;
+      height: 1.84725rem;
+      font-size: 1.25rem;
+      margin-left: 0.94rem;
+    }
+    @media all and (min-width: 390px) and (max-width: 790px) {
+      width: ${(props) => (props.width === 'normal' ? '29.55rem' : props.width)};;
+      height: 1.1425rem;
+      font-size: 1rem;
+      margin-left: 0.51rem;
+    }
+```
+
+```typescript
+    @media all and (min-width: 791px) {
+      width: 100%;
+      height: 1.84725rem;
+      font-size: 1.25rem;
+      margin-left: 0.94rem;
+    }
+    @media all and (min-width: 390px) and (max-width: 790px) {
+      width: 100%;
+      height: 1.1425rem;
+      font-size: 1rem;
+      margin-left: 0.51rem;
+    }
+```
+
+[[design] 회원가입 페이지 반응형 설정 #44](https://github.com/2023-Winter-Bootcamp-Team-K/Front/issues/44)
+
+[[design] 로그인 페이지 반응형 설정 #38](https://github.com/2023-Winter-Bootcamp-Team-K/Front/issues/38)
+
 # 공부할 때에 도움이 된 것들
 
 css
 
+- [스크롤 꾸미기!](https://inpa.tistory.com/entry/CSS-%F0%9F%8C%9F-%EC%8A%A4%ED%81%AC%EB%A1%A4-%EB%B0%94Scrollbar-%EA%BE%B8%EB%AF%B8%EA%B8%B0-%EC%86%8D%EC%84%B1-%EC%B4%9D%EC%A0%95%EB%A6%AC)
 - [FlexboxFroggy](https://flexboxfroggy.com/#ko)
 - [WEB2-CSS](https://youtube.com/playlist?list=PLuHgQVnccGMAnWgUYiAW2cTzSBywFO75B&si=LZxR-ue8zYp82oOh)
 
