@@ -275,6 +275,14 @@ git pull
 
 이제 백엔드에서 만든 api를 연동해야 하는데.. 백엔드에서 작업을 끝낼 때 까지 어떻게 연동해야하는지 그리고 Zustand, useEffect 함수에 관해 공부하고 있어야겠다.
 
+### 2024-01-13 02/37
+
+추가적으로 변경사항이 생겼다.
+
+[[design/#69] chatInfo 컴포넌트 생성 및 chatpage 레이아웃 조정 ](https://github.com/2023-Winter-Bootcamp-Team-K/Front/pull/70)
+
+![스크린샷(210)](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/da3e4c21-f42b-4920-b0a5-2e1f369106a1)
+
 # 공부할 때에 도움이 된 것들
 
 > 이기는 한데 코드를 짤 때에 이미 너무 많은 것들을 찾아봐서 저장하기 어려울지도?
