@@ -253,6 +253,14 @@ git pull
 [[design] 로그인 페이지 반응형 설정 #38](https://github.com/2023-Winter-Bootcamp-Team-K/Front/issues/38)
 [[design] 카메라 반응형 구현 #50](https://github.com/2023-Winter-Bootcamp-Team-K/Front/issues/50)
 
+## 2023-01-12
+
+오늘은 어제에 이어서 일기장 페이지 반응형을 설정하였고, webcam 모달을 퍼블리싱 하였다.
+
+### 결과물
+
+
+
 # 공부할 때에 도움이 된 것들
 
 css
