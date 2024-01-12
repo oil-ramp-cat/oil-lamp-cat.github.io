@@ -215,7 +215,7 @@ git pull
 일단 결론만 말하자면 width 설정을 해줄 때에 오류가 생긴 코드에서는 outbox layer와 input layer의 값이 동일하기에 margin을 주었을 때에 옆으로 삐져나가는 오류가 생긴 것이다. 해결하기위해 width 를 props로 주지 않고 100%로 설정하여 해결하였다.
 
 ```typescript
-    @media all and (min-width: 791px) {
+    @media all and (min-width: 391px) {
       width: ${(props) => (props.width === 'normal' ? '29.55rem' : props.width)};;
       height: 1.84725rem;
       font-size: 1.25rem;
@@ -230,7 +230,7 @@ git pull
 ```
 
 ```typescript
-    @media all and (min-width: 791px) {
+    @media all and (min-width: 391px) {
       width: 100%;
       height: 1.84725rem;
       font-size: 1.25rem;
@@ -257,11 +257,27 @@ git pull
 
 오늘은 어제에 이어서 일기장 페이지 반응형을 설정하였고, webcam 모달을 퍼블리싱 하였다.
 
+### 오늘의 실수
+
+부모 요소를 자식요소한테 전해주려면 (width, height) display: flex;를 이용해야 한다. 이걸 해깔려서 분명 반응형 설정을 했는데 불구하고 카메라 캡쳐가 혼자 본래의 크기를 유지하고 있는 일이 생겼다. 그리고 \<webcam>에 width를 줄 때에 부모 크기에 맞출 수 있게 rem이나 px값이 아닌 100%로 줘야한다는 요령이 생겼다. 이러한 관계가 익숙해지면 훨씬 더 간단하고 효율적으로 코드를 짤 수 있지 않을까 생각해본다.
+
 ### 결과물
 
+![df](../assets/img/post/winter_bootcamp/2024-01-12/2024-01-12%2022-09-48.gif)
 
+생각보다 자잘한 문제들이 많아서 아무래도 조금 시간이 걸렸다. 확실히 만들기 전에 어떻게 코들를 짤지 박스로 그림을 그려놓고 만드는 것이 좋은 것 같다.
+
+그리고 확실히 나는 적어도 6시간은 자야겠다. 아무래도 효율이 좋지 않다.
+
+- [[design] CameraModal.tsx 퍼블리싱 ](https://github.com/2023-Winter-Bootcamp-Team-K/Front/issues/61)
+- [[design] result 페이지, chattingResult 컴포넌트(반응형x) 생성 ](https://github.com/2023-Winter-Bootcamp-Team-K/Front/issues/59)
+- [[design] 일기장 페이지 반응형 설정](https://github.com/2023-Winter-Bootcamp-Team-K/Front/issues/55)
+
+이제 백엔드에서 만든 api를 연동해야 하는데.. 백엔드에서 작업을 끝낼 때 까지 어떻게 연동해야하는지 그리고 Zustand, useEffect 함수에 관해 공부하고 있어야겠다.
 
 # 공부할 때에 도움이 된 것들
+
+> 이기는 한데 코드를 짤 때에 이미 너무 많은 것들을 찾아봐서 저장하기 어려울지도?
 
 css
 
@@ -276,6 +292,7 @@ javascript
 react
 
 - [2022 코딩애플 리액트 강의](https://www.youtube.com/playlist?list=PLfLgtT94nNq0qTRunX9OEmUzQv4lI4pnP)
+- [react-webcam + TypeScript](https://dev.to/sababg/react-webcam-typescript-gh2)
 
 git
 
