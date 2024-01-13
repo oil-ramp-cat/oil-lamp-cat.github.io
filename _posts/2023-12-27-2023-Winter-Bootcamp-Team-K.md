@@ -283,6 +283,22 @@ git pull
 
 ![스크린샷(210)](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/da3e4c21-f42b-4920-b0a5-2e1f369106a1)
 
+## 2024-01-13
+
+시작부터 오류를 발견했다..
+
+> chunk-GZ55BCQ2.js?v=bed9aa86:521 Warning: React does not recognize the `marginBottomPTT` prop on a DOM element. If you intentionally want it to appear in the DOM as a custom attribute, spell it as lowercase `marginbottomptt` instead. If you accidentally passed it from a parent component, remove it from the DOM element.
+
+콘솔창이 말하길 pops 명에 대문자가 포함되어 있어 문제가 생기고 있다 한다.
+
+아.. 미리 체크 해볼걸.. 또 새로운 것을 알아간다..
+
+![스크린샷(216)](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/088ad40d-0792-4fa7-84b8-9b284a9f2ce9)
+
+세상에 이걸 다 바꿔야한다니... 연결되어있는 page가 좀 많이 많은데..
+
+![스크린샷(215)](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/6d8c25f0-961b-4798-913a-56362c1141e7)
+
 # 공부할 때에 도움이 된 것들
 
 > 이기는 한데 코드를 짤 때에 이미 너무 많은 것들을 찾아봐서 저장하기 어려울지도?
