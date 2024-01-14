@@ -299,6 +299,12 @@ git pull
 
 ![스크린샷(215)](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/6d8c25f0-961b-4798-913a-56362c1141e7)
 
+### 저녁
+
+![스크린샷(219)](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/9fa8a7fa-d98b-4282-b938-9b68e897af7a)
+
+해결을 이해 marginbottomptt에 값을 넣어주었다.
+
 # 공부할 때에 도움이 된 것들
 
 > 이기는 한데 코드를 짤 때에 이미 너무 많은 것들을 찾아봐서 저장하기 어려울지도?
