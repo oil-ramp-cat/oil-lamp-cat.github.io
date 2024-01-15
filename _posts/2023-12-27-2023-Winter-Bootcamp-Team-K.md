@@ -251,6 +251,7 @@ git pull
 [[design] 회원가입 페이지 반응형 설정 #44](https://github.com/2023-Winter-Bootcamp-Team-K/Front/issues/44)
 
 [[design] 로그인 페이지 반응형 설정 #38](https://github.com/2023-Winter-Bootcamp-Team-K/Front/issues/38)
+
 [[design] 카메라 반응형 구현 #50](https://github.com/2023-Winter-Bootcamp-Team-K/Front/issues/50)
 
 ## 2023-01-12
@@ -263,7 +264,11 @@ git pull
 
 ### 결과물
 
+음.. 이미지가 너무 커서 github 호스팅이 안된다.
+
+```
 ![df](../assets/img/post/winter_bootcamp/2024-01-12/2024-01-12%2022-09-48.gif)
+```
 
 생각보다 자잘한 문제들이 많아서 아무래도 조금 시간이 걸렸다. 확실히 만들기 전에 어떻게 코들를 짤지 박스로 그림을 그려놓고 만드는 것이 좋은 것 같다.
 
@@ -328,6 +333,16 @@ git pull
 ```
 
 ![2024-01-14 14-46-13 - Trim](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/9d4abfc9-fe31-4d33-9488-c1df7616be58)
+
+## 2024-01-16
+
+일기장 생성 api연동, diarypage에서 메인으로 가는 버튼 추가, result 페이지 퍼블리싱을 하였다. 사실 이번에는 백엔드와 axios로 api연동하는 작업을 많이 했다.
+
+![2024-01-16 00-10-05 - Trim](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/62928d2f-5f74-4712-8946-287c1f7fe0e9)
+
+[[feat/#77] 일기장 생성 및 diarypage 메인으로 가기 버튼 추가](https://github.com/2023-Winter-Bootcamp-Team-K/Front/pull/82)
+
+[[design/#83] result 페이지 퍼블리(채팅기록 페이지 퍼블리싱)](https://github.com/2023-Winter-Bootcamp-Team-K/Front/pull/84)
 
 # 공부할 때에 도움이 된 것들
 
