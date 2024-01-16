@@ -344,6 +344,22 @@ git pull
 
 [[design/#83] result 페이지 퍼블리(채팅기록 페이지 퍼블리싱)](https://github.com/2023-Winter-Bootcamp-Team-K/Front/pull/84)
 
+## 2024-01-17
+
+### 새벽
+
+일단 어제, 오늘은 swagger연동과 웹소켓 연결을 하였고 추가적으로 웹소켓 시작 세팅(첫 대화 시작 연동을 하였다)
+
+웹소켓 연결을 할 때에 다른 라이브러리를 사용하지 않고 그냥 WebSocket을 사용하였다.
+
+[[design] 채팅기록 페이지 퍼블리싱](https://github.com/2023-Winter-Bootcamp-Team-K/Front/issues/83)
+
+[[feat] 채팅 페이지 웹소켓 연결](https://github.com/2023-Winter-Bootcamp-Team-K/Front/issues/85)
+
+[[feat] 일기장 생성 ](https://github.com/2023-Winter-Bootcamp-Team-K/Front/issues/77)
+
+[[feat] 웹소켓 기분설정, 첫 대화 시작](https://github.com/2023-Winter-Bootcamp-Team-K/Front/issues/90)
+
 # 공부할 때에 도움이 된 것들
 
 > 이기는 한데 코드를 짤 때에 이미 너무 많은 것들을 찾아봐서 저장하기 어려울지도?
@@ -366,3 +382,7 @@ react
 git
 
 - [Learning git branch](https://learngitbranching.js.org/?locale=ko)
+
+색상 추천
+
+- [color space](https://mycolor.space/?hex=%23FEC479&sub=1)
