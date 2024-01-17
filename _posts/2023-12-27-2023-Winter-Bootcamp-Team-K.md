@@ -360,6 +360,20 @@ git pull
 
 [[feat] 웹소켓 기분설정, 첫 대화 시작](https://github.com/2023-Winter-Bootcamp-Team-K/Front/issues/90)
 
+### 저녁
+
+웹소켓 연결, 연결 해제, 웹소켓 연결하면 연결 되었다고 백엔드에 요청 보낸 후 요청을 받아서 character별로 분류하여 리스트에 넣고 tts는 blob형태를 다시 base64 디코딩하여 소리로 출력할 수 있게 만들었다.
+
+```javascript
+const audioBlob = messageReceived.data.audioBlob;
+let snd = new Audio(`data:audio/x-wav;base64, ${audioBlob}`);
+snd.play();
+```
+
+- javascript에서 blob형태를 base64 디코딩하여 소리로 변환하는 코드
+
+[[Feat/#90] 웹소켓 연결 및 연결 해제](https://github.com/2023-Winter-Bootcamp-Team-K/Front/pull/97)
+
 # 공부할 때에 도움이 된 것들
 
 > 이기는 한데 코드를 짤 때에 이미 너무 많은 것들을 찾아봐서 저장하기 어려울지도?
