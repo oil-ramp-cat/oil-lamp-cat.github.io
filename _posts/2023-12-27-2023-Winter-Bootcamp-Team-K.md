@@ -374,6 +374,22 @@ snd.play();
 
 [[Feat/#90] 웹소켓 연결 및 연결 해제](https://github.com/2023-Winter-Bootcamp-Team-K/Front/pull/97)
 
+## 2024-01-18
+
+아래와 같은 오류가 발생하는 이유는 컴포넌트에서 페이지 컴포넌트로 옮겨 오는 과정에서 styled-components 콘솔 오류가 발생하는 듯 하다.
+
+```
+styled-components: it looks like an unknown prop "prop이름" is being sent through to the DOM, which will likely trigger a React console error. If you would like automatic filtering of unknown props, you can opt-into that behavior via <StyleSheetManager shouldForwardProp={...}> (connect an API like @emotion/is-prop-valid) or consider using transient props ($ prefix for automatic filtering.)
+```
+
+이 오류를 해결하기 위해 자식 컴포넌트에 $를 붙여 해결하였다.
+
+![props 오류](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/d8872ae6-e9a0-4a64-9fa7-af402f744648)
+
+![props 오류 2](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/f9ab4c55-57ab-4c35-b74c-e84fb7e10d5e)
+
+![props 오류 3](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/e3aee7e7-bbe1-45cd-ad2c-952e79d6a131)
+
 # 공부할 때에 도움이 된 것들
 
 > 이기는 한데 코드를 짤 때에 이미 너무 많은 것들을 찾아봐서 저장하기 어려울지도?
