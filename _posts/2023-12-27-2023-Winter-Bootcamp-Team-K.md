@@ -392,6 +392,17 @@ styled-components: it looks like an unknown prop "prop이름" is being sent thro
 
 ![props 오류 3](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/e3aee7e7-bbe1-45cd-ad2c-952e79d6a131)
 
+## 2024-01-19
+
+### 새벽
+
+- 페이지 이동하였을 때에 다이어리 아이디 받지 못하던것 다이어리 생성할 때에 다이어리 아이디 localstorage에 저장해놓았다가 꺼내서 사용
+- 다이어리 백그라운드 이미지 않뜨던 것 이미지 위치를 src로 받아줘야했음.
+
+나머지는 있다가 나가서 하는걸로.
+
+[[feat] 채팅 기록 보기 페이지 api 연동](https://github.com/2023-Winter-Bootcamp-Team-K/Front/issues/102)
+
 # 공부할 때에 도움이 된 것들
 
 > 이기는 한데 코드를 짤 때에 이미 너무 많은 것들을 찾아봐서 저장하기 어려울지도?
