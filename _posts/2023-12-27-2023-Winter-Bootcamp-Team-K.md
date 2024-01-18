@@ -376,7 +376,9 @@ snd.play();
 
 ## 2024-01-18
 
-아래와 같은 오류가 발생하는 이유는 컴포넌트에서 페이지 컴포넌트로 옮겨 오는 과정에서 styled-components 콘솔 오류가 발생하는 듯 하다.
+아래와 같은 오류가 발생하는 이유는 부모 컴포넌트에서 자식 컴포넌트로 props를 옮겨 오는 과정에서 styled-components 콘솔 오류가 발생하는 듯 하다.
+
+![캡처](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/95c28288-bc00-4c2e-9f6f-71c7b5093c7b)
 
 ```
 styled-components: it looks like an unknown prop "prop이름" is being sent through to the DOM, which will likely trigger a React console error. If you would like automatic filtering of unknown props, you can opt-into that behavior via <StyleSheetManager shouldForwardProp={...}> (connect an API like @emotion/is-prop-valid) or consider using transient props ($ prefix for automatic filtering.)
