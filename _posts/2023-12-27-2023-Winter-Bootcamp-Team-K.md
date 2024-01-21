@@ -433,6 +433,14 @@ javascript로 화면을 녹화할 때에는 그냥 react-webcam을 사용하여 
 
 ![스크린샷(252)](https://github.com/2023-Winter-Bootcamp-Team-K/Front/assets/103806022/a4e6dc60-5bc1-4a67-9e0d-d1f8bb92ef34)
 
+추가적으로 분명 ToggleRecording이 false값인데 녹음을 시작하게 되는 이 상황을 해결해야한다... 도대체 뭐지 진짜
+
+![스크린샷(256)](https://github.com/2023-Winter-Bootcamp-Team-K/Front/assets/103806022/529a4444-33bc-44c3-9c15-36725ad738f0)
+
+어쨰서 false값이 들어온 후에 바로 true 값이 되는지 찾아봐야겠다. 이제는 true값이 되어야하는게 false값이 들어와있다... 허허
+
+![스크린샷(257)](https://github.com/2023-Winter-Bootcamp-Team-K/Front/assets/103806022/b2ba2b9c-647b-4f02-80d9-d73dec6734b7)
+
 [[feat] 녹음 기능 웹소켓 연결](https://github.com/2023-Winter-Bootcamp-Team-K/Front/issues/109)
 
 # 공부할 때에 도움이 된 것들
