@@ -403,6 +403,38 @@ styled-components: it looks like an unknown prop "prop이름" is being sent thro
 
 [[feat] 채팅 기록 보기 페이지 api 연동](https://github.com/2023-Winter-Bootcamp-Team-K/Front/issues/102)
 
+## 2023-01-20~22
+
+### 새벽
+
+- 웹소켓에 녹음 기능 연동하는중... 3일째
+
+javascript로 화면을 녹화할 때에는 그냥 react-webcam을 사용하여 처리하였으나 녹음기능을 처리할 때에는 MediaRecorder를 사용하여 미디어 풀을 만들고 blob형태로 받고 base64처리해서 보내야했기에 정말 많은 시간이 걸렸다. 나중에 MediaRecorder에 관한 것으로만으로도 글을 쓸 수도 있을 정도로 어렵더라...
+
+오늘은 웹소켓 녹음 기능을 websocket과 연결하여 대화하는 것에는 성공했으나 justand문제인지 비동기 문제인지 가장 중요한 대화에서 문제가 생긴다.
+
+```
+쿼카: 1질문
+나: 1대답
+쿼카: 2질문
+나: 2대답
+```
+
+이런 방식으로 대화해야 하지만 현재
+
+```
+쿼카: 1질문
+나: 0대답
+쿼카: 0대답에 대한 질문
+나: 1질문에 대한 대답
+```
+
+이런식이다.. 으악
+
+![스크린샷(252)](https://github.com/2023-Winter-Bootcamp-Team-K/Front/assets/103806022/a4e6dc60-5bc1-4a67-9e0d-d1f8bb92ef34)
+
+[[feat] 녹음 기능 웹소켓 연결](https://github.com/2023-Winter-Bootcamp-Team-K/Front/issues/109)
+
 # 공부할 때에 도움이 된 것들
 
 > 이기는 한데 코드를 짤 때에 이미 너무 많은 것들을 찾아봐서 저장하기 어려울지도?
