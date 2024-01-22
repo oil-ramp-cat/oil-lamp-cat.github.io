@@ -443,6 +443,93 @@ javascript로 화면을 녹화할 때에는 그냥 react-webcam을 사용하여 
 
 [[feat] 녹음 기능 웹소켓 연결](https://github.com/2023-Winter-Bootcamp-Team-K/Front/issues/109)
 
+### 오후
+
+ToggleRecording이 true로 바뀌지 않는 이유는 찾았다. 아래 코드에서 RecordToggle을 log찍는 순간이 setTimeout안에서 setRecordToggle로 바뀌는 함수 안에 있기에 변화가 생기지 않는다고 한다.
+
+```javascript
+        snd.addEventListener('loadedmetadata', (event) => {
+          const sndElement = event.currentTarget as HTMLAudioElement;
+          const QuokkaTime = sndElement.duration * 1000;
+          console.log('시간지연 테스트', QuokkaTime);
+          setTimeout(() => {
+            console.log('쿼카 말 끝남');
+            setRecordToggle(true); //true 인데
+            console.log('RecordToggle(true 여야함): ', RecordToggle); //false래 말이 됨?
+            console.log('레코드 시작1');
+          }, QuokkaTime);
+```
+
+이 코드를
+
+```javascript
+        snd.addEventListener('loadedmetadata', (event) => {
+          const sndElement = event.currentTarget as HTMLAudioElement;
+          const QuokkaTime = sndElement.duration * 1000;
+          console.log('시간지연 테스트', QuokkaTime);
+          setTimeout(() => {
+            console.log('쿼카 말 끝남');
+            setRecordToggle(true); //true 인데
+
+            console.log('레코드 시작1');
+          }, QuokkaTime);
+            console.log('RecordToggle(true 여야함): ', RecordToggle); //false래 말이 됨?
+```
+
+이런식으로 만들면 로그에는 이제 제대로 true값이 나오게 될 것이다.
+
+### 대화 밀림 현상 해결
+
+아래 코드에서 나는 python과 c, c++ 쪽만 공부해봐서 설마 이런 이유일 거라고는 생각을 못했었다. 분명 나는 toggleRecording이 실행되고 setSendAudio가 실행될 것이라고 생각했는데 놀랍게도 setSendAudio가 먼저 실행되었다... 와우
+
+```javascript
+// 버튼 클릭 핸들러
+const handleButtonClick = () => {
+  setRecordToggle(false); // true이면 녹음 시작 false면 중지
+  toggleRecording();
+  setSendAudio(true); // 오디오 보내기 상태관리
+};
+
+'''생략'''
+
+        const fileReader = new FileReader();
+        fileReader.onloadend = () => {
+          const base64Audio = fileReader.result as string;
+          const resultAudio = base64Audio.split(',')[1];
+
+          // console.log('오디오 설정', resultAudio);
+          window.localStorage.setItem('Audio', resultAudio);
+          setAudio(resultAudio);
+        };
+        fileReader.readAsDataURL(audioBlob);
+      });
+```
+
+이를 해결하기 위해 아래와 같이 코드를 개편하였다. 이리하여 오디오가 저장된 뒤 오디오를 websocket으로 전송하였다. 멘토님 감사합니다!! 진짜 세상에 이런 문제일줄이야.
+
+```javascript
+// 버튼 클릭 핸들러
+const handleButtonClick = () => {
+  setRecordToggle(false); // true이면 녹음 시작 false면 중지
+  toggleRecording();
+};
+
+'''생략'''
+
+        const fileReader = new FileReader();
+        fileReader.onloadend = () => {
+          const base64Audio = fileReader.result as string;
+          const resultAudio = base64Audio.split(',')[1];
+
+          // console.log('오디오 설정', resultAudio);
+          window.localStorage.setItem('Audio', resultAudio);
+          setAudio(resultAudio);
+          setSendAudio(true); // 오디오 보내기 상태관리
+        };
+        fileReader.readAsDataURL(audioBlob);
+      });
+```
+
 # 공부할 때에 도움이 된 것들
 
 > 이기는 한데 코드를 짤 때에 이미 너무 많은 것들을 찾아봐서 저장하기 어려울지도?
