@@ -551,7 +551,7 @@ const handleButtonClick = () => {
 
 ![스크린샷(279)](https://github.com/2023-Winter-Bootcamp-Team-K/Front/assets/103806022/43adb1f4-4c9c-4a7a-8b1c-b3d8b2d5fe2f)
 
-### 저녁
+### 저녁 & 새벽(2024-01-24)
 
 일단 위에 작업은 작동'은' 하기에 두고 다음 작업을 하였다. 페이지 렌더링 순서 문제인 듯 한데.. 음.. 아직 어렵다
 
@@ -594,7 +594,45 @@ useEffect(() => {
 });
 ```
 
-그리고 벡엔드에서 일을 하게 되었다..?
+- 경로 오류
+
+```javascript
+import loadingLottie from "/src/assets/lottie/Animation - 1704999772308.json";
+```
+
+```javascript
+import loadingLottie from "../../assets/lottie/Animation - 1704999772308.json";
+```
+
+---
+
+추후 해야하는 것들
+
+- 로그아웃 시 토큰 지우기
+- 채팅 렌더링 조정해서 실시간으로 뜰 수 있게 하기
+- resultPage 반응형
+- 폴링 구현
+- 아이디 중복확인 안하면 안넘어가도록
+- 쿼카 처음에 말하는거 gif 움직이도록
+- 대화 끝내기 컴포넌트 쿼카가 이야기할 때에는 안보이도록
+- 다이어리 페이지 line-height 재설정
+- 쿼카가 말할 때 잠깐 기다려줘 문구 띄우기 + 쿼카 차례에 둥실거리게 하기
+
+![스크린샷(289)](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/59789ba2-b08d-4781-80f6-909f788012de)
+
+![스크린샷(293)](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/c447986e-4a68-4bb0-8371-6b829fcbd075)
+
+생각해보니 뭔가 많이 남았다...
+
+---
+
+오늘의 작업
+
+[[Feat/#109] 웹소켓 에러 해결](https://github.com/2023-Winter-Bootcamp-Team-K/Front/pull/118)
+
+[[Fix/#127] 빌드 성공](https://github.com/2023-Winter-Bootcamp-Team-K/Front/pull/129)
+
+[[Design/#121] 대화 모달 퍼블리싱 완성(?), 로그인페이지에서 쿠키 있으면 이동](https://github.com/2023-Winter-Bootcamp-Team-K/Front/pull/126)
 
 # 공부할 때에 도움이 된 것들
 
