@@ -541,13 +541,60 @@ const handleButtonClick = () => {
 - 리액트 쿼리를 통한 폴링 구현
 - resultpage 구현
 
-### 2024-01-23
+## 2024-01-23
+
+### 오후
 
 이제 대화하는 것까지 해결했으니 대화한 내용이 채팅창에 뜰 수 있게끔 작업을 해줘야 한다.
 
 문제 : 아이 메세지나 쿼카 메세지가 들어오면 들어온 내용을 바로 chatting 컴포넌트로 보내서 띄워주려 하였으나 아래 사진과 같이 tts가 끝난 후에야 컴포넌트가 변경된다.
 
 ![스크린샷(279)](https://github.com/2023-Winter-Bootcamp-Team-K/Front/assets/103806022/43adb1f4-4c9c-4a7a-8b1c-b3d8b2d5fe2f)
+
+### 저녁
+
+일단 위에 작업은 작동'은' 하기에 두고 다음 작업을 하였다. 페이지 렌더링 순서 문제인 듯 한데.. 음.. 아직 어렵다
+
+- 대화 쌓이면 스크롤 아래로 내리기
+
+```javascript
+---생략---
+
+const messageLayOutRef = useRef<HTMLDivElement | null>(null);
+
+---생략---
+
+//스크롤부분
+useEffect(() => {
+  const messageLayOutElement = messageLayOutRef.current;
+  if (messageLayOutElement) {
+    messageLayOutElement.scrollTop = messageLayOutElement.scrollHeight;
+  }
+});
+
+---생략---
+
+//적용부분
+return (
+<ChatBoxLayout ref={messageLayOutRef}>
+)
+
+---생략---
+
+```
+
+- 로그인 되어있을 때에 /login 페이지로 가면 로그인 되어있는 토큰 읽어서 바로 main페이지로 이동
+
+```javascript
+useEffect(() => {
+  const cookie = getCookie("token");
+  if (cookie) {
+    navigate("/main");
+  }
+});
+```
+
+그리고 벡엔드에서 일을 하게 되었다..?
 
 # 공부할 때에 도움이 된 것들
 
