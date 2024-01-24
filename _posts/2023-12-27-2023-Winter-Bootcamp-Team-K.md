@@ -634,6 +634,41 @@ import loadingLottie from "../../assets/lottie/Animation - 1704999772308.json";
 
 [[Design/#121] 대화 모달 퍼블리싱 완성(?), 로그인페이지에서 쿠키 있으면 이동](https://github.com/2023-Winter-Bootcamp-Team-K/Front/pull/126)
 
+## 2024-01-24
+
+### 오후
+
+로그아웃 했을 때 토큰 삭제
+
+-> 토큰 제거
+
+```javascript
+  const logout = async () => {
+    const refresh = getCookie('refresh_token');
+    removeCookie('token');
+    removeCookie('refresh_token');
+```
+
+-> 토큰 관련 함수
+
+```javascript
+import { Cookies } from "react-cookie";
+
+const cookies = new Cookies();
+
+export const setCookie = (name: string, value: string, options: any) => {
+  return cookies.set(name, value, { ...options });
+};
+
+export const getCookie = (name: string) => {
+  return cookies.get(name);
+};
+
+export const removeCookie = (name: string) => {
+  return cookies.remove(name, { path: "/" });
+};
+```
+
 # 공부할 때에 도움이 된 것들
 
 > 이기는 한데 코드를 짤 때에 이미 너무 많은 것들을 찾아봐서 저장하기 어려울지도?
