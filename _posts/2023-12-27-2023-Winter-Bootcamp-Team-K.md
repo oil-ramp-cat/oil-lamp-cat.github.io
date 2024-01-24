@@ -669,6 +669,30 @@ export const removeCookie = (name: string) => {
 };
 ```
 
+### 새벽 (2024-01-25)
+
+쿼카가 말을 할 때에는 대화를 끝내지 못하게 만들었다.
+
+```javascript
+<QuitChatBtn onClick={handleQuitChat} disabled={exitToggle}>
+  대화 끝내기
+  {exitToggle === true && <ButtonImage src="src/assets/img/QuitIcon2.png" />}
+  {exitToggle === false && <ButtonImage src="src/assets/img/QuitIcon.png" />}
+</QuitChatBtn>
+```
+
+위 코드에서 QuitChatBtn은 styledcomponent.button으로 구성되어있다보니 disabled를 나는 분명 그냥 props 이름으로 사용하려고 했는데 disabled true면 버튼이 눌리지 않는 해프닝이 있었다.
+
+```javascript
+<QuitChatBtn onClick={handleQuitChat} disabled={exitToggle}></QuitChatBtn>
+```
+
+살다살다 Docker Desktop 오류가 이런건 또 처음본다. CPU가 161%라뇨 선생님 이게 무슨 말씀이세요... 윈도우에서 도커 사용하는 것은 어려운가보다.
+
+![스크린샷(306)](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/8fdcbd5f-1ba0-4d34-b8f5-3208ebe0c364)
+
+[[feat] 대화 끝내기 컴포넌트 쿼카가 이야기할 때에는 안보이도록 설정 #137](https://github.com/2023-Winter-Bootcamp-Team-K/Front/issues/137)
+
 # 공부할 때에 도움이 된 것들
 
 > 이기는 한데 코드를 짤 때에 이미 너무 많은 것들을 찾아봐서 저장하기 어려울지도?
