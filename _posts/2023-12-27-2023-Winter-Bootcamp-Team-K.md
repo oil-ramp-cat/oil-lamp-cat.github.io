@@ -693,6 +693,8 @@ export const removeCookie = (name: string) => {
 
 [[feat] 대화 끝내기 컴포넌트 쿼카가 이야기할 때에는 안보이도록 설정 #137](https://github.com/2023-Winter-Bootcamp-Team-K/Front/issues/137)
 
+[[design#139] 404페이지 퍼블리싱 및 다시시도하시옹](https://github.com/2023-Winter-Bootcamp-Team-K/Front/pull/140)
+
 # 공부할 때에 도움이 된 것들
 
 > 이기는 한데 코드를 짤 때에 이미 너무 많은 것들을 찾아봐서 저장하기 어려울지도?
