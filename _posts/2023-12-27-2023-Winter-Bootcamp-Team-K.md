@@ -695,6 +695,47 @@ export const removeCookie = (name: string) => {
 
 [[design#139] 404페이지 퍼블리싱 및 다시시도하시옹](https://github.com/2023-Winter-Bootcamp-Team-K/Front/pull/140)
 
+## 2024-01-25
+
+### 오후
+
+쿼카가 말할 때에 애니메이션 넣기
+
+```javascript
+const bounce = keyframes`
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+`;
+
+const SpeakingQuakkaAnimate = styled.img`
+  animation: ${bounce} 2s ease-in-out infinite;
+`;
+```
+
+- 대화가 들어오기 전에 기다려줘 문구
+- 쿼카가 말하는 도중에 끝내기 버튼과 마이크 버튼 못 누르게 설정
+- 쿼카가 말할 때 애니메이션 추가
+
+### 새벽 (2024-01-26)
+
+chatpage 로그인 후 접속하면 오류 발생
+
+```javascript
+const Mood = window.localStorage.getItem("mood");
+```
+
+위 코드의 실행 위치를 함수 내로 설정해주어 변수를 함수 실행 시 가져올 수 있게 하였다.
+
+[대화 감정 불러오기 해결](https://github.com/2023-Winter-Bootcamp-Team-K/Front/commit/4e5290c55960aaceae369ab79779095902cef9b8)
+
+![2024-01-25 16-49-56](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/808fac68-3151-4e64-8d5f-eb970e07c7e0)
+
+[[feat/#141] 기다려줘 문구, 쿼가가 말하는 도중에 끝내기(마이크) 못 누르게, 쿼카 어화둥둥~](https://github.com/2023-Winter-Bootcamp-Team-K/Front/pull/143)
+
 # 공부할 때에 도움이 된 것들
 
 > 이기는 한데 코드를 짤 때에 이미 너무 많은 것들을 찾아봐서 저장하기 어려울지도?
@@ -721,3 +762,7 @@ git
 색상 추천
 
 - [color space](https://mycolor.space/?hex=%23FEC479&sub=1)
+
+DB
+
+- [VS-code에서-MySQL-연동하기](https://velog.io/@milkim0818/VS-code%EC%97%90%EC%84%9C-MySQL-%EC%97%B0%EB%8F%99%ED%95%98%EA%B8%B0)
