@@ -736,6 +736,8 @@ const Mood = window.localStorage.getItem("mood");
 
 [[feat/#141] 기다려줘 문구, 쿼가가 말하는 도중에 끝내기(마이크) 못 누르게, 쿼카 어화둥둥~](https://github.com/2023-Winter-Bootcamp-Team-K/Front/pull/143)
 
+그리고 .. 오늘이 내 발표일 으악
+
 # 공부할 때에 도움이 된 것들
 
 > 이기는 한데 코드를 짤 때에 이미 너무 많은 것들을 찾아봐서 저장하기 어려울지도?
