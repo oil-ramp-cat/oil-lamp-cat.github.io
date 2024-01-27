@@ -940,6 +940,10 @@ export default function ChatBox({ sendChatArray, sendChatting }: ChatBoxProps) {
 
 .slice라는 함수를 지우게 되면 우리가 생각했던 한단어씩 나오는 상황이 된다. 다만 마지막에 이상한 것이 끼어있다.
 
+test1과 test2는 usestate를 실행하게 되면 그 때마다 리셋시키기에 여기서 문제가 생긴것 같다 아마도?
+[[commit] 2024-01-28-03-13 문장 하나씩 추출 성공](https://github.com/2023-Winter-Bootcamp-Team-K/Front/commit/251a3a48dd74516b395cd7a5609c35af43e5af37)
+[[commit] 리엑트가 싫다](https://github.com/2023-Winter-Bootcamp-Team-K/Front/commit/c9d1094c818b72f3c651e87c1b6f08190a1ea01c)
+
 # 공부할 때에 도움이 된 것들
 
 > 이기는 한데 코드를 짤 때에 이미 너무 많은 것들을 찾아봐서 저장하기 어려울지도?
