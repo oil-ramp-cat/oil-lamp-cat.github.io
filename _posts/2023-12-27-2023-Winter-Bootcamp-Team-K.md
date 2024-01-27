@@ -738,6 +738,208 @@ const Mood = window.localStorage.getItem("mood");
 
 그리고 .. 오늘이 내 발표일 으악
 
+## 2024-01-27
+
+채팅 시작을 하자마자 녹화가 되는 문제 해결... zustand 상태관리값이 페이지를 이동해도 여전히 남아있었다... 그래서 우리는 페이지가 이동되면 F5가 눌리게 하거나 zustand를 리셋시킬 예정이다. 라고 했으나 이것은 다른 문제였다는 이야기... 아래 방법으로 해결하였다.
+
+```javascript
+import { create, StateCreator } from 'zustand';
+import { persist, PersistOptions } from 'zustand/middleware';
+
+type ChatStore = {
+  RecordToggle: boolean;
+  isShowChar: boolean;
+  audio: string;
+  sendAudio: boolean;
+  plzWait: boolean;
+  exitChat: boolean;
+
+  setIsShowChar: (isShowChar: any) => void;
+  setRecordToggle: (RecordToggle: any) => void;
+  setAudio: (audio: any) => void;
+  setSendAudio: (sendAudio: any) => void;
+  setPlzWait: (plzWait: any) => void;
+  setExitChat: (exitChat: any) => void;
+};
+type UserPersist = (
+  config: StateCreator<ChatStore>,
+  options: PersistOptions<ChatStore>
+) => StateCreator<ChatStore>;
+
+export const useChatStore = create<ChatStore>(
+  (persist as UserPersist)(
+  (set) => ({
+    RecordToggle: false,
+    isShowChar: false,
+    audio: 'none',
+    sendAudio: false,
+    plzWait: false,
+    exitChat: true,
+
+    setRecordToggle: (RecordToggle) => set({ RecordToggle: RecordToggle }),
+    setIsShowChar: (isShowChar) => set({ isShowChar: isShowChar }),
+    setAudio: (audio) => set({ audio: audio }),
+    setSendAudio: (sendAudio) => set({ sendAudio: sendAudio }),
+    setPlzWait: (plzWait) => set({ plzWait: plzWait }),
+    setExitChat: (exitChat) => set({ exitChat: exitChat }),
+  })
+   {
+     name: 'chat-StoreName',
+   }
+ )
+);
+```
+
+위 코드를
+
+```javascript
+import { create, StateCreator } from "zustand";
+import { persist, PersistOptions } from "zustand/middleware";
+
+type ChatStore = {
+  RecordToggle: boolean,
+  isShowChar: boolean,
+  audio: string,
+  sendAudio: boolean,
+  plzWait: boolean,
+  exitChat: boolean,
+
+  setIsShowChar: (isShowChar: any) => void,
+  setRecordToggle: (RecordToggle: any) => void,
+  setAudio: (audio: any) => void,
+  setSendAudio: (sendAudio: any) => void,
+  setPlzWait: (plzWait: any) => void,
+  setExitChat: (exitChat: any) => void
+};
+// type UserPersist = (
+//   config: StateCreator<ChatStore>,
+//   options: PersistOptions<ChatStore>
+// ) => StateCreator<ChatStore>;
+
+export const useChatStore =
+  create <
+  ChatStore >
+  // (persist as UserPersist)(
+  ((set) => ({
+    RecordToggle: false,
+    isShowChar: false,
+    audio: "none",
+    sendAudio: false,
+    plzWait: false,
+    exitChat: true,
+
+    setRecordToggle: (RecordToggle) => set({ RecordToggle: RecordToggle }),
+    setIsShowChar: (isShowChar) => set({ isShowChar: isShowChar }),
+    setAudio: (audio) => set({ audio: audio }),
+    setSendAudio: (sendAudio) => set({ sendAudio: sendAudio }),
+    setPlzWait: (plzWait) => set({ plzWait: plzWait }),
+    setExitChat: (exitChat) => set({ exitChat: exitChat })
+  }));
+//   {
+//     name: 'chat-StoreName',
+//   }
+// )
+```
+
+대화 끝내기를 누른 후에도 음성녹음이 지속되는 문제를 해결하기 위해 대화가 끝나면 녹음을 종료하지만 음성녹음이 된 파일을 전송하지 않아 대화가 지속되지 않지만 동시에 마이크 녹음은 종료 할 수 있도록 하였다.
+
+[[feat/#149] 쿼카 대화 음성녹음 오류 해결 main에서...](https://github.com/2023-Winter-Bootcamp-Team-K/Front/commit/b6f7fd7fe6591b65a7c13801219baa56f4552b9a)
+
+### 새벽 (2024-01-28)
+
+아래 코든는 대화 관련 코드인데 지금 한 글자씩 나오는 코드를 작성하던 중 가장 처음 생각했던 바로바로 한 문장씩 나오는 코드를 만들어버렸다. 근데 이유를 이해하지 못해서 이곳에 저장
+
+<details><summary>Chatting.tsx</summary>
+<div markdown = "1">
+
+```javascript
+import styled from 'styled-components';
+import MyMessage from './MyMessage';
+import OpponentMessage from './OpponentMessage';
+import { useEffect, useState } from 'react';
+import AudioRecorder from './AudioRecorder';
+import { useRef } from 'react';
+
+type ChatBoxProps = {
+  sendChatArray: any[];
+  sendChatting: any[];
+};
+
+export default function ChatBox({ sendChatArray, sendChatting }: ChatBoxProps) {
+  const [messages, setMessages] = useState<
+    { character?: string; message?: string }[]
+  >([]);
+  const [chat, setChat] = useState<{ character?: string; message?: string }[]>(
+    []
+  );
+  const messageLayOutRef = useRef<HTMLDivElement | null>(null);
+
+  const [End, setEnd] = useState<{ character?: string; message?: string }[]>(
+    []
+  );
+
+  let Middle = [];
+
+  //스크롤부분
+  useEffect(() => {
+    const messageLayOutElement = messageLayOutRef.current;
+    if (messageLayOutElement) {
+      messageLayOutElement.scrollTop = messageLayOutElement.scrollHeight;
+    }
+  });
+
+  useEffect(() => {
+    let test1 = [];
+    let test2 = [];
+
+    if (sendChatArray !== messages) {
+      setMessages(sendChatArray);
+      test1 = sendChatArray;
+      console.log('messages', messages);
+    }
+
+    if (sendChatting !== messages) {
+      setChat(sendChatting.flat());
+      test2 = sendChatting;
+      console.log('chat', chat);
+    }
+
+    Middle = test2.flat();
+    Middle = Middle.concat(test1);
+
+    setEnd(Middle);
+    console.log(End);
+  }, [sendChatArray, sendChatting]);
+
+  return (
+    <ChatLayout>
+      <ChatBoxLayout ref={messageLayOutRef}>
+        {End.slice(0, End.length - 1).map((message, index) => {
+          if (message.character === 'quokka') {
+            return (
+              <OpponentMessage key={index} chatMessage={message.message} />
+            );
+          }
+          if (message.character === 'child') {
+            return <MyMessage key={index} chatMessage={message.message} />;
+          }
+          return null;
+        })}
+      </ChatBoxLayout>
+      <TextBox>말을 다하면 나를 눌러줘</TextBox>
+      <AudioRecorder />
+    </ChatLayout>
+  );
+}
+//생략//
+
+```
+
+</div>
+</details>
+
+.slice라는 함수를 지우게 되면 우리가 생각했던 한단어씩 나오는 상황이 된다. 다만 마지막에 이상한 것이 끼어있다.
+
 # 공부할 때에 도움이 된 것들
 
 > 이기는 한데 코드를 짤 때에 이미 너무 많은 것들을 찾아봐서 저장하기 어려울지도?
