@@ -768,3 +768,5 @@ git
 DB
 
 - [VS-code에서-MySQL-연동하기](https://velog.io/@milkim0818/VS-code%EC%97%90%EC%84%9C-MySQL-%EC%97%B0%EB%8F%99%ED%95%98%EA%B8%B0)
+
+[다시시도하시옹]
