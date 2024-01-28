@@ -944,6 +944,52 @@ test1과 test2는 usestate를 실행하게 되면 그 때마다 리셋시키기�
 [[commit] 2024-01-28-03-13 문장 하나씩 추출 성공](https://github.com/2023-Winter-Bootcamp-Team-K/Front/commit/251a3a48dd74516b395cd7a5609c35af43e5af37)
 [[commit] 리엑트가 싫다](https://github.com/2023-Winter-Bootcamp-Team-K/Front/commit/c9d1094c818b72f3c651e87c1b6f08190a1ea01c)
 
+## 2024-01-29
+
+### 04-19
+
+```javascript
+interface ImageModalProps {
+  picture: string;
+}
+
+export default function ImageModal({ picture }: ImageModalProps) {
+  const [quokkaImage, setquokkaImage] = useState(false);
+
+  if (picture === "src/assets/img/DefaultResultImage.png") {
+    setquokkaImage(true);
+  } else {
+    setquokkaImage(false);
+  }
+
+  return (
+    <Overlay>
+      <ModalContainer>
+        {quokkaImage ? (
+          <CapturedQuokkaImage src={picture} />
+        ) : (
+          <CapturedImage src={picture} />
+        )}
+      </ModalContainer>
+    </Overlay>
+  );
+}
+```
+
+위 컴포넌트를 실행시키자 무한 렌더링 오류가 발생하였다.
+
+생각해보니 setQuokkaImage가 변경될 때마다 페이지가 다시 렌더링되고 그러면 또 변경하여 무한 반복을 하게 된다.
+
+이를 해결하기 위해 useEffect를 걸었다. 나는 useEffect가 마운트 언마운트 될 때 실행될 수 있게만 해주는 건줄 알았는데 이런식으로 렌더링 제한을 주는 방법은 생각을 못했었다. G선생 인정.
+
+```javascript
+useEffect(() => {
+  if (picture === "src/assets/img/DefaultResultImage.png") {
+    setquokkaImage(true);
+  }
+}, [picture]);
+```
+
 # 공부할 때에 도움이 된 것들
 
 > 이기는 한데 코드를 짤 때에 이미 너무 많은 것들을 찾아봐서 저장하기 어려울지도?
