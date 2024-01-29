@@ -946,7 +946,7 @@ test1과 test2는 usestate를 실행하게 되면 그 때마다 리셋시키기�
 
 ## 2024-01-29
 
-### 04-19
+### 04시 19분
 
 ```javascript
 interface ImageModalProps {
@@ -989,6 +989,47 @@ useEffect(() => {
   }
 }, [picture]);
 ```
+
+[[Feat/#151] 채팅 해결](https://github.com/2023-Winter-Bootcamp-Team-K/Front/pull/155)
+
+### 저녁
+
+페이지의 크기가 변경될 때마다 변수 값을 변경시켜주려 하였다. 찾아보니 EventListener를 통해 '사이즈 변경되고 있을 때'라는 "resize"를 적용해줄 수 있었다. 또한 EventListener는 페이지 마운팅 될 때에 생성하고 unmount 될 때에 EventListner를 삭제시켜주었다.
+
+```javascript
+//크기에 따른 isModal open 값 변경
+const handleResize = () => {
+  setIsModalOpen(window.matchMedia("(max-width: 390px)").matches);
+};
+
+useEffect(() => {
+  window.addEventListener("resize", handleResize);
+  return () => {
+    window.removeEventListener("resize", handleResize);
+  };
+}, []);
+```
+
+도커 빌드 하는 과정에서 아래와 같은 오류를 발견하였다.
+![스크린샷(357)](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/fdf1d8f3-fcab-42a2-a061-96ad10f58ac9)
+
+```log
+Mixed Content: The page at 'https://talktaka.site/signup' was loaded over HTTPS, but requested an insecure XMLHttpRequest endpoint 'http://talktaka.site/check/id/availability/?id=1q2w3e4r'. This request has been blocked; the content must be served over HTTPS.
+```
+
+이유인 즉 "암호화된 Https페이지에 암호화되지 않은 Http를 통해 요청을 할 때에 발생하는 에러" 였다.
+페이지는 HTTPS, API는 HTTP 였다.
+
+해결하기 위해 아래 코드를 index.html \<head>\</head>코드에 추가해주었다.
+
+```html
+<meta
+  http-equiv="Content-Security-Policy"
+  content="upgrade-insecure-requests"
+/>
+```
+
+[[refactor/#157] result 페이지 Refactoring](https://github.com/2023-Winter-Bootcamp-Team-K/Front/pull/158)
 
 # 공부할 때에 도움이 된 것들
 
