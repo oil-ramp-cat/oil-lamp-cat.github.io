@@ -1031,6 +1031,16 @@ Mixed Content: The page at 'https://talktaka.site/signup' was loaded over HTTPS,
 
 [[refactor/#157] result 페이지 Refactoring](https://github.com/2023-Winter-Bootcamp-Team-K/Front/pull/158)
 
+## 2024-01-30
+
+### 오후
+
+![스크린샷(360)](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/0a091b22-192d-4ec5-b441-d474da6bd607)
+
+input 태그가 password 타입일 경우 form 태그로 감싸주라고 한다. 근데 이 문제가 window사용자인 나의 chrome에서만 발생하기에 일단은 냅두고 다른 컴포넌트의 props console 오류를 해결하였다.
+
+[[refactor/#157] result 페이지 Refactoring](https://github.com/2023-Winter-Bootcamp-Team-K/Front/pull/158)
+
 # 공부할 때에 도움이 된 것들
 
 > 이기는 한데 코드를 짤 때에 이미 너무 많은 것들을 찾아봐서 저장하기 어려울지도?
