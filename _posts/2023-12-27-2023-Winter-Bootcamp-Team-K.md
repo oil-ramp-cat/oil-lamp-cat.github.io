@@ -1041,6 +1041,26 @@ input 태그가 password 타입일 경우 form 태그로 감싸주라고 한다.
 
 [[refactor/#157] result 페이지 Refactoring](https://github.com/2023-Winter-Bootcamp-Team-K/Front/pull/158)
 
+## 2024-01-31
+
+빌드하고 배포하는 과정에서 이미지가 출력되지 않는 문제가 생겨 찾아보다 아래 방법을 찾았다.
+
+[[React] Styled-Component 이미지 경로 지정](https://velog.io/@narcoker/React-Styled-Component-%EC%9D%B4%EB%AF%B8%EC%A7%80-%EA%B2%BD%EB%A1%9C-%EC%A7%80%EC%A0%95)
+
+프론트엔드 배포환경을 테스트 할 때에
+
+```console
+yarn build
+
+npx serve -s ./dist
+```
+
+로 테스트 해 볼 수 있다는 것을 알았다. (이걸 이제 알았네)
+
+npm, yarn: 페키지 메니저 (진짜 설치)
+
+npx: cra, serve 등 실행 할 때만 필요하고 그 후에는 삭제시킨다는 의미
+
 # 공부할 때에 도움이 된 것들
 
 > 이기는 한데 코드를 짤 때에 이미 너무 많은 것들을 찾아봐서 저장하기 어려울지도?
