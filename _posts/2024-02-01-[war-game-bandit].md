@@ -1,5 +1,5 @@
 ---
-title: [war game] overthewire bandit
+title: \[war game] overthewire bandit
 date: 2024-02-01 00:25:15 +09:00
 categories: [war game]
 tags: [bandit, overtherwire]
