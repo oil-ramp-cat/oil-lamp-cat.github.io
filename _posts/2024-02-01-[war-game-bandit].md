@@ -644,3 +644,48 @@ The password is JVNBBFSmZwKKOP0XbFXOoW8chDz5yVRv
 ```
 
 비밀번호 : `JVNBBFSmZwKKOP0XbFXOoW8chDz5yVRv`
+
+## Bandit Level 12 -> Level 13
+
+**user_id** : bandit12<br/>
+**password** : JVNBBFSmZwKKOP0XbFXOoW8chDz5yVRv
+
+### 목표
+
+![bandit12_13](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/bd856e0b-0860-41b0-84d5-a5b08b9c6387)
+
+다음 레벨로 가는 비밀번호는 **여러번 압축된** hexdump 파일인 data.txt에 있다. 이번 레벨을 위해서는 mkdir을 이용해서 /tmp 디렉토리 아래 파일을 만들어서 문제를 푸는 것이 좋다. 예를들어: `mkdir /tmp/myname123`. `cp`명령어를 사용해서 datafile을 옮기고 `mv`명령어를 사용해서 이름을 다시 지어라.(manpage를 읽어봐!)
+
+### 해결법
+
+모르는 명령어가 몇개 더 추가되었군요. 한번 정리해 봅시다.
+
+---
+#### mkdir (make directory)
+
+디렉토리(폴더)를 생성할 때 사용하는 명령어입니다.
+
+> `mkdir [옵션] [생성할 디렉토리]`
+
+예를 들어 `호롱고양이의 폴더`를 만든다고 해봅시다.
+
+```mkdir lampcat_folder``` 이렇게 명령어를 이용하면 현 위치를 Default(기본)으로 하여 지금 위치에 폴더를 만들게 됩니다.
+
+그렇다면 이번에는 **/home/** 위치에 폴더를 생성한다고 해봅니다.
+
+```mkdir /home/lampcat_folder``` 이런식으로 폴더를 생성할 수 있다.
+
+##### options (옵션)
+
+- -m : 디렉토리를 생성할 때 권한을 설정합니다. (아직 이해가..)
+- -p : 상위 경로도 함께 생성합니다. (위 예시에서 만약 `/home`경로가 없다면 추가적으로 생성하게 됩니다)
+- -v : 디렉토리를 생성하고 생성된 디렉토리에 대한 메시지를 출력합니다.
+
+---
+#### cp (copy)
+ 
+ 리눅스 혹은 유닉스 환경에서 파일 혹은 디렉토리를 복사할 때 사용합니다.
+
+ ```shell
+ cp [옵션] [복사 대상 디렉터리or파일] [복사될 디렉터리or파일]
+ ```
