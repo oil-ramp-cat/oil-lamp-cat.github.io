@@ -291,7 +291,7 @@ bandit6@bandit:~$ find / -user bandit7 -group bandit6 -size 33c
 - `/`는 서버에서 최상위 경로를 의미한다. 시스템 전부를 토대로 찾겠다는 의미이다.
 - `-user`는 파일의 소유자(user)를 찾는다.
 - `-group`은 파일이 속한 그룹을 찾습니다.
-- `-size`는 Level 5-6에서 사용했던 것처럼 파일의 사이즈를 찾습니다. 그 중 `c`는 `bytes`를 의미합니다. 
+- `-size`는 Level 5-6에서 사용했던 것처럼 파일의 사이즈를 찾습니다. 그 중 `c`는 `bytes`를 의미합니다.
 
 어..음.. 결과가 너무 많이 나왔다. 그것도 그중 "Permission denied" 즉 접근 권한 없음 에러가 매우 많이 나왔다.
 
@@ -315,7 +315,7 @@ find: ‘/run/systemd/inaccessible/dir’: Permission denied
 find: ‘/run/lock/lvm’: Permission denied
 ```
 
-이 긴 결과를 읽다보면 중간에 `/var/lib/dpkg/info/bandit7.password` 라는 파일에 접근이 가능하다는 결과를 볼 수 있다. 
+이 긴 결과를 읽다보면 중간에 `/var/lib/dpkg/info/bandit7.password` 라는 파일에 접근이 가능하다는 결과를 볼 수 있다.
 
 하지만 우리는 좀 더 명령어를 이용하여 깔끔하고 빠른 방법으로 찾아보도록 하자.
 
@@ -337,11 +337,11 @@ find: ‘/run/lock/lvm’: Permission denied
 
 ### I/O Redirection
 
- 직역하자면 Input/Output의 재방향화이다. 입력과 출력의 방향을 바꿔 모니터 출력이 아닌 파일에 저장하거나 파일을 출력하는 뱡향을 바꾸는 식으로 사용할 수 있다. 나중에 이것에 관해 좀 더 깊게 다뤄봐야 할 듯 하지만 일단 간단히 적어보자면.
+직역하자면 Input/Output의 재방향화이다. 입력과 출력의 방향을 바꿔 모니터 출력이 아닌 파일에 저장하거나 파일을 출력하는 뱡향을 바꾸는 식으로 사용할 수 있다. 나중에 이것에 관해 좀 더 깊게 다뤄봐야 할 듯 하지만 일단 간단히 적어보자면.
 
- - A > B : A의 결과를 B로 `보낸(저장)`다.
- - A >> B : A의 결과를 B의 데이터에 `추가`한다.
- - A < B : B의 데이터를 A에 `입력`한다.
+- A > B : A의 결과를 B로 `보낸(저장)`다.
+- A >> B : A의 결과를 B의 데이터에 `추가`한다.
+- A < B : B의 데이터를 A에 `입력`한다.
 
 그렇다면 우리는 `File Descriptor`를 통해 `2`번인 것을 알았고, `Redirection`을 통해 그 출력을 다른 어딘가로 보낼 수 있다는 것을 알았다.
 
@@ -349,7 +349,7 @@ find: ‘/run/lock/lvm’: Permission denied
 
 > `/dev/null` : 리눅스의 블랙홀 이라고도 불리는 이곳은 경로에 나와 있듯 `null`값을 가져 아무것도 남지 않는 공간이다.
 
-> `2 > /dev/null` : 표준에러를 `/dev/null`로! 
+> `2 > /dev/null` : 표준에러를 `/dev/null`로!
 
 ---
 
@@ -407,6 +407,7 @@ velveteen's     46soI2oXIiX1HuXtDXeRLlFrctbGJTYO
 bandit7@bandit:~$ grep millionth data.txt
 millionth       TESKZC0XvTetK0S9xNwm25STk5iWrBvP
 ```
+
 찾았다!
 
 ---
@@ -433,7 +434,6 @@ millionth       TESKZC0XvTetK0S9xNwm25STk5iWrBvP
 
 ![bandit8_9](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/c12b9a02-2f91-4be3-92bb-52697a83a962)
 
-
 ### 목표
 
 다음 레벨로 가는 비밀번호는 `data.txt`에 있고 딱 `한 줄만 나타난다`고 한다.
@@ -450,7 +450,7 @@ millionth       TESKZC0XvTetK0S9xNwm25STk5iWrBvP
 
 > uniq [옵션] [파일 이름]
 
-옵션을 사용하지 않으면 
+옵션을 사용하지 않으면
 
 ```shell
 
@@ -472,6 +472,7 @@ aAd8RbcAAGVRifo0gE2x1nPIGH2fjgZi
 --중략--
 
 ```
+
 이런식으로 문자열 단위로 정렬되어 보이게 된다. 하지만 우리는 한번만 나오는 문자열이 필요하기에 옵션을 추가해줘 비밀번호를 찾아낼 것이다.
 
 #### uniq 옵션들 - options
@@ -525,8 +526,6 @@ EN632PlfYiZbn3PhVK3XOGSlNInNE00t
 
 ![bandit9_10](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/4744e711-77f3-466b-bb3f-0dff4f3cf79f)
 
-
-
 ### 목표
 
 다음 레벨로 가는 비밀번호는 `data.txt` 파일 안에 `human-readable` 즉 사람이 읽을 수 있는 문자열로 몇개의 `=` 문자 뒤에 나온다.
@@ -570,7 +569,7 @@ A�tL[�#��Ƴ���wv..ک!�5��nH�mwQ!2��Fu�cp��B�;�
 
 ![bandit9_10_sol](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/71337889-8e96-4163-af94-f2466eda7b22)
 
-이제야 모든 조건을 사용하면서 비밀번호를 찾아냈다! 
+이제야 모든 조건을 사용하면서 비밀번호를 찾아냈다!
 
 `the password is G7w8LIi6J3kTb8A7j9LgrywtEUlyyp6s`
 
@@ -608,10 +607,10 @@ A�tL[�#��Ƴ���wv..ک!�5��nH�mwQ!2��Fu�cp��B�;�
 
 ![bandit11_12](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/d1b5ee20-b32d-47eb-bcd5-16a43e7f6b3c)
 
-비밀번호는 `data.txt`파일에 대소문자가 13자리씩 회전되어있다고 한다. 
+비밀번호는 `data.txt`파일에 대소문자가 13자리씩 회전되어있다고 한다.
 
 - 카이사르 암호
-> ROT13 : 문자를 알파벳 뒤에 13 번째 문자로 대채하는 대체 암호.
+  > ROT13 : 문자를 알파벳 뒤에 13 번째 문자로 대채하는 대체 암호.
 
 ### 해결법
 
@@ -661,6 +660,7 @@ The password is JVNBBFSmZwKKOP0XbFXOoW8chDz5yVRv
 모르는 명령어가 몇개 더 추가되었군요. 한번 정리해 봅시다.
 
 ---
+
 #### mkdir (make directory)
 
 디렉토리(폴더)를 생성할 때 사용하는 명령어입니다.
@@ -669,11 +669,11 @@ The password is JVNBBFSmZwKKOP0XbFXOoW8chDz5yVRv
 
 예를 들어 `호롱고양이의 폴더`를 만든다고 해봅시다.
 
-```mkdir lampcat_folder``` 이렇게 명령어를 이용하면 현 위치를 Default(기본)으로 하여 지금 위치에 폴더를 만들게 됩니다.
+`mkdir lampcat_folder` 이렇게 명령어를 이용하면 현 위치를 Default(기본)으로 하여 지금 위치에 폴더를 만들게 됩니다.
 
 그렇다면 이번에는 **/home/** 위치에 폴더를 생성한다고 해봅니다.
 
-```mkdir /home/lampcat_folder``` 이런식으로 폴더를 생성할 수 있다.
+`mkdir /home/lampcat_folder` 이런식으로 폴더를 생성할 수 있다.
 
 ##### options (옵션)
 
@@ -682,23 +682,24 @@ The password is JVNBBFSmZwKKOP0XbFXOoW8chDz5yVRv
 - -v : 디렉토리를 생성하고 생성된 디렉토리에 대한 메시지를 출력합니다.
 
 ---
+
 #### cp (copy)
- 
- 리눅스 혹은 유닉스 환경에서 파일 혹은 디렉토리를 복사할 때 사용합니다.
 
- ```shell
- cp [옵션] [복사 대상 디렉터리or파일] [복사될 디렉터리or파일]
- ```
+리눅스 혹은 유닉스 환경에서 파일 혹은 디렉토리를 복사할 때 사용합니다.
 
- ##### options (옵션)
+```shell
+cp [옵션] [복사 대상 디렉터리or파일] [복사될 디렉터리or파일]
+```
 
- - -r : 하위 디렉토리까지 모두 복사
- - -i : 복사될 파일의 이름이 이미 존재한다면
- - -v : cp 명령어를 수행하면서 복사 진행 상태를 출력한다.
- - -f : 복사 파일이 이미 그 위치에 있다면 파일을 지우고, 강제로 복사한다.
- - -p : 파일 혹은 디렉토리를 복사할 때 복사 대상의 소유자(계정), 그룹, 권한등의 정보까지 복사한다.
+##### options (옵션)
 
-마지막 옵션 `-p`를 사용하게 되면 권한까지 복사하게 되므로 원래 `permission denied` 되던 문제를 해결하기 위해 우리가 mkdir로 폴더를 옮겨 작업하던 것이 의미 없게 된다! 
+- -r : 하위 디렉토리까지 모두 복사
+- -i : 복사될 파일의 이름이 이미 존재한다면
+- -v : cp 명령어를 수행하면서 복사 진행 상태를 출력한다.
+- -f : 복사 파일이 이미 그 위치에 있다면 파일을 지우고, 강제로 복사한다.
+- -p : 파일 혹은 디렉토리를 복사할 때 복사 대상의 소유자(계정), 그룹, 권한등의 정보까지 복사한다.
+
+마지막 옵션 `-p`를 사용하게 되면 권한까지 복사하게 되므로 원래 `permission denied` 되던 문제를 해결하기 위해 우리가 mkdir로 폴더를 옮겨 작업하던 것이 의미 없게 된다!
 
 ---
 
@@ -729,7 +730,7 @@ The password is JVNBBFSmZwKKOP0XbFXOoW8chDz5yVRv
 
 > Hex dump?
 
-hex dump는 램 또는 파일이나 저장장치에 있는 컴퓨터 데이터의 십육진법적인 보임새이다. 데이터의 hex dump를 보는 것은 주로 디버깅이나 리버스 엔지니어링의 한 부분이다. hex dump에서, 각 바이트는 2 숫자의 16진법 수로 표현된다. 
+hex dump는 램 또는 파일이나 저장장치에 있는 컴퓨터 데이터의 십육진법적인 보임새이다. 데이터의 hex dump를 보는 것은 주로 디버깅이나 리버스 엔지니어링의 한 부분이다. hex dump에서, 각 바이트는 2 숫자의 16진법 수로 표현된다.
 
 라고 위키백과에서 말했다. 글로만 봐서는 무슨 말인지 이해가 안가 직접 `cat`명령어로 열어보기로 했다.
 
@@ -740,7 +741,7 @@ hex dump는 램 또는 파일이나 저장장치에 있는 컴퓨터 데이터�
 그럼 이제 다시 xxd로 돌아와서 (일단은 쉬운 것만 적어놓겠다.)
 
 - -i : C언어에서 사용가능한 형식으로 출력
-- -E : 오른쪽 문자열을 ASCII에서 *EBCDIC로 변경
+- -E : 오른쪽 문자열을 ASCII에서 \*EBCDIC로 변경
 - -r : 16진수 데이터를 바이너리 데이터로 변환
 - -u : hex 를 소문자 대신 대문자로 출력
 
@@ -749,21 +750,25 @@ hex dump는 램 또는 파일이나 저장장치에 있는 컴퓨터 데이터�
 `gzip`보다 높은 압축률을 갖는 압축방식을 사용한다.
 
 - bzip2 압축 해제
+
 ```shell
 bzip2 -d data.bz2
 ```
 
 - bzip2 압축
+
 ```shell
 bzip2 data.tar
 ```
 
 - bzip2 압축 파일 정보 출력
+
 ```shell
 bzip2 data.bz2
 ```
 
 - bzip2 압축 파일 내용 출력
+
 ```shell
 bzcat data.bz2
 ```
@@ -773,21 +778,25 @@ bzcat data.bz2
 `gzip`은 60~70%의 압축률을 갖습니다. `.gz`, `.tar`, `.bz2`에 관한 내용은 좀 더 찾아봐야겠다.
 
 - gzip 압축 해제
+
 ```shell
 gzip -d data.gz
 ```
 
 - gzip 압축
+
 ```shell
 gzip data.tar
 ```
 
 - gzip 압축 파일 정보 출력
+
 ```shell
 gzip -l data.gz
 ```
 
 - gzip 압축 파일 내용 출력
+
 ```shell
 zcat data.gz
 ```
@@ -822,7 +831,7 @@ zcat data.gz
 
 아.. permission denied 접근 권한 없음 오류가 나온다. 그리고 우리는 사실 이 오류를 예상했었다. 바로? 목표에서!
 
- `mkdir`명령어와 `cp`명령어를 이용해서 디렉토리를 만들고 파일을 복사해서 문제를 풀어보라고 한다. `cp` 명령어를 사용 할 때에 `-p` 명령어가 권한까지 복사하는 것을 보아 그냥 `cp` 명령어를 사용하였을 때에 권한이 복사되지 않기에 변경할 수 있는 것으로 보인다.
+`mkdir`명령어와 `cp`명령어를 이용해서 디렉토리를 만들고 파일을 복사해서 문제를 풀어보라고 한다. `cp` 명령어를 사용 할 때에 `-p` 명령어가 권한까지 복사하는 것을 보아 그냥 `cp` 명령어를 사용하였을 때에 권한이 복사되지 않기에 변경할 수 있는 것으로 보인다.
 
 `mkdir`명령어를 사용해서 `lampcat`이라는 디렉토리를 만들면?
 
