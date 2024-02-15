@@ -86,27 +86,27 @@ bandit을 접속하기 위해서는 ssh로 접속해야하며 shell로도 접속
 
 ### 풀이
 
-- 현재 본인이 어떤 디렉토리에 있는지 확인하기 위해 "pwd"명령어를 써주자.
+- 현재 본인이 어떤 디렉토리에 있는지 확인하기 위해 `pwd`명령어를 써주자.
 
-- 그 후 "ls"명령어를 이용하여 어떤 파일들이 있는지 확인해보자.
+- 그 후 `ls`명령어를 이용하여 어떤 파일들이 있는지 확인해보자.
 
-- 아마 readme 파일이 존재할 것이다.
+- 아마 `readme` 파일이 존재할 것이다.
 
-- 존재하지 않는다면 현재 디렉토리가 home이 아닐테니 "pwd" 명령어를 사용하여 확인해보자.
+- 존재하지 않는다면 현재 디렉토리가 home이 아닐테니 `pwd` 명령어를 사용하여 확인해보자.
 
-- readme 파일은 명령어로 읽어보기 위해서는 "cat" 명령어를 사용한다.
+- `readme` 파일은 명령어로 읽어보기 위해서는 `cat` 명령어를 사용한다.
 
 - 여기서 잠시 명령어들의 유래를 이야기해보자 아무래도 나는 이러는 편이 기억하는데 도움이 되었다.
 
-- "pwd" 명령어는 "print working directory" 현재 일하고 있는 디렉토리 라는 의미이다.
+- `pwd` 명령어는 `print working directory` 현재 일하고 있는 디렉토리 라는 의미이다.
 
-- "ls" 명령어는 "list directory contents" 디렉토리안에 있는 디렉토리 및 파일 리스트를 출력한다.
+- `ls` 명령어는 `list directory contents` 디렉토리안에 있는 디렉토리 및 파일 리스트를 출력한다.
 
-- "cat" 명령어는 "concatenate"는 "연결하다"라는 뜻을 가지고 있는데 본래의 기능은 여러 파일의 내용을 하나로 합쳐주는 역할을 하지만 이번에 사용한 것처럼 파일의 내용을 단순 출력하여 확인하거나, ">" 이나 ">>" 같은 기호와 함께 사용하여 파일을 생성하고, 저장하는 용도로도 사용될 수 있다고 한다.
+- `cat` 명령어는 `concatenate`는 `연결하다`라는 뜻을 가지고 있는데 본래의 기능은 여러 파일의 내용을 하나로 합쳐주는 역할을 하지만 이번에 사용한 것처럼 파일의 내용을 단순 출력하여 확인하거나, `>` 이나 `>>` 같은 기호와 함께 사용하여 파일을 생성하고, 저장하는 용도로도 사용될 수 있다고 한다.
 
 ![bandit0_1_sol](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/7821e92b-0987-4c0b-9244-31e2167cbe52)
 
-여기 아래 보이는 NH2SXQwcBdpmTEzi3bvBHMM9H66vVXjL 이 바로 다음 게임의 비밀번호가 된다!
+여기 아래 보이는 `NH2SXQwcBdpmTEzi3bvBHMM9H66vVXjL` 이 바로 다음 게임의 비밀번호가 된다!
 
 ## Bandit Level 1 -> Level 2
 
@@ -117,28 +117,28 @@ bandit을 접속하기 위해서는 ssh로 접속해야하며 shell로도 접속
 
 ### 목표
 
-다음 레벨의 비밀번호는 home 디렉토리의 '-'라는 이름을 가진 파일에 있다.
+다음 레벨의 비밀번호는 home 디렉토리의 `-`라는 이름을 가진 파일에 있다.
 
 찾아보면 좋을 것들 :
 
-- 구글에 "- 이름을 가진 파일" 이라고 검색해보세요
+- 구글에 `- 이름을 가진 파일` 이라고 검색해보세요
 - (Advanced Bash-scripting Guide - Chapter 3 - Special Characters)[http://tldp.org/LDP/abs/html/special-chars.html]
 
 ### 풀이
 
-- "pwd" 명령어로 현재 위치를 보니 home 디렉토리이다.
+- `pwd` 명령어로 현재 위치를 보니 home 디렉토리이다.
 
-- "ls" 명령어로 리스트를 확인해보니 "-" 라는 파일이 있다.
+- `ls` 명령어로 리스트를 확인해보니 `-` 라는 파일이 있다.
 
-- "cat -" 로 열어봐도 아무것도 나오지 않는다. 이럴 때에는 ctrl+c 혹은 ^c로 빠져나올 수 있다.
+- `cat -` 로 열어봐도 아무것도 나오지 않는다. 이럴 때에는 `ctrl+c` 혹은 `^c`로 빠져나올 수 있다.
 
-- "-" 라는 문자가 리눅스에서 예약된 즉 약속된 특수문자라 file, cat에서 인자로 넘겨받지 못한다. 고로 현재 경로에 있는 파일을 뜻하는 ./를 사용하기로 하자.
+- `-` 라는 문자가 리눅스에서 예약된 즉 약속된 특수문자라 `file`, `cat`에서 인자로 넘겨받지 못한다. 고로 현재 경로에 있는 파일을 뜻하는 `./`를 사용하기로 하자.
 
-- "file ./-" 명령어를 통해 어떤 형식의 파일인지 읽어보자. [ASCII](https://namu.wiki/w/%EC%95%84%EC%8A%A4%ED%82%A4%20%EC%BD%94%EB%93%9C)(아스키코드) text 파일이라고 한다.
+- `file ./-` 명령어를 통해 어떤 형식의 파일인지 읽어보자. [ASCII](https://namu.wiki/w/%EC%95%84%EC%8A%A4%ED%82%A4%20%EC%BD%94%EB%93%9C)(아스키코드) text 파일이라고 한다.
 
-- "cat ./-" 명령어로 파일 내용을 출력해보자.
+- `cat ./-` 명령어로 파일 내용을 출력해보자.
 
-찾았다! rRGizSaX8Mk1RTb1CNQoXTcYZWU6lgzi
+찾았다! `rRGizSaX8Mk1RTb1CNQoXTcYZWU6lgzi`
 
 ![bandit1_2_sol](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/74168a24-1404-4139-8e37-539d92f09f05)
 
@@ -151,17 +151,17 @@ bandit을 접속하기 위해서는 ssh로 접속해야하며 shell로도 접속
 
 ### 목표
 
-다음 레벨의 비밀번호는 home 디렉토리의 'spaces in this filename'에 담겨있습니다.
+다음 레벨의 비밀번호는 `home 디렉토리`의 `spaces in this filename`에 담겨있습니다.
 
 ### 풀이
 
-- home 디렉토리에서 ls명령어를 쳐보면 목표에서 보이듯 'spaces in this filename'이라는 파일이 있다.
+- `home 디렉토리`에서 `ls`명령어를 쳐보면 목표에서 알려주듯 `spaces in this filename`이라는 파일이 있다.
 
-- 띄어쓰기가 되어있는 파일을 읽을 때에는 '' 로 파일을 감싸주면 된다.
+- 띄어쓰기가 되어있는 파일을 읽을 때에는 `''` 로 파일을 감싸주면 된다.
 
 ![bandit2_3_sol](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/22611709-3c82-4419-80d6-433e030d3407)
 
-비밀번호는 aBZ0W5EmUfAf7kHTQeOwd8bauFJ2lAiG 이다!
+비밀번호는 `aBZ0W5EmUfAf7kHTQeOwd8bauFJ2lAiG` 이다!
 
 ## Bandit Level 3 -> Level 4
 
@@ -176,14 +176,14 @@ bandit을 접속하기 위해서는 ssh로 접속해야하며 shell로도 접속
 
 ### 풀이
 
-- home 디렉토리의 inhere 딕셔너리로 들어가 보았을 때 'ls'명령어를 사용해 보면 아무 파일도 보이지 않는다.
-- 목표에서 말했듯 inhere 딕셔너리에 숨겨진 파일이라고 하니 'ls -al' 명령어를 사용하여 모든 파일 보기를 하자.
+- `home 디렉토리`의 `inhere 딕셔너리`로 들어가 보았을 때 `ls`명령어를 사용해 보면 아무 파일도 보이지 않는다.
+- 목표에서 말했듯 `inhere 딕셔너리`에 숨겨진 파일이라고 하니 `ls -al` 명령어를 사용하여 모든 파일 보기를 하자.
 
-- "ls" 명령어의 옵션 중 하나인 'ls -a'는 모든 파일을 보는 옵션이고 'ls -l' 명령어는 파일이 만들어진 시간을 볼 수 있게 해주는 옵션이다. 그리고 그 둘을 합친 옵션이 'ls -al'이다. 이번 문제를 해결하기 위해서 'ls -a' 만 해줘도 된다.
+- `ls` 명령어의 옵션 중 하나인 `ls -a`는 모든 파일을 보는 옵션이고 `ls -l` 명령어는 파일이 만들어진 시간을 볼 수 있게 해주는 옵션이다. 그리고 그 둘을 합친 옵션이 `ls -al`이다. 이번 문제를 해결하기 위해서 `ls -a` 만 해줘도 된다.
 
 ![bandit3_4_sol](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/ae26e9d9-0a0b-49cd-9eb8-3a2bdef9c39e)
 
-숨겨져 있는 비밀번호는 2EW7BBsr6aMMoJ2HjW067dm8EgX26xNe이다.
+숨겨져 있는 비밀번호는 `2EW7BBsr6aMMoJ2HjW067dm8EgX26xNe이다`.
 
 ## Bandit Level 4 -> Level 5
 
@@ -194,21 +194,21 @@ bandit을 접속하기 위해서는 ssh로 접속해야하며 shell로도 접속
 
 ### 목표
 
-다음 레벨로 가는 비밀번호는 inhere 딕셔너리의 **"인간이 읽을 수 있는"** 파일로 저장되어있습니다.
+다음 레벨로 가는 비밀번호는 `inhere 딕셔너리`의 **"인간이 읽을 수 있는"** 파일로 저장되어있습니다.
 
-Tip: 터미널이 더러워졌다면, "reset" 명령어를 사용하세요!
+Tip: 터미널이 더러워졌다면, `reset` 명령어를 사용하세요!
 
-(저는 "reset" 보다는 "clear"를 사용하는 편이랍니다!)
+(저는 `reset` 보다는 `clear`를 사용하는 편이랍니다!)
 
-- "reset" 명령어는 말 그대로 모두 원래대로 되돌리는 기능이고 "clear" 명령어는 터미널의 화면을 깨끗이 지우는 차이가 있다.
+- `reset` 명령어는 말 그대로 모두 원래대로 되돌리는 기능이고 `clear` 명령어는 터미널의 화면을 깨끗이 지우는 차이가 있다.
 
 ### 풀이
 
-- home 디렉토리 안에 inhere 디렉토리가 있고 그 안에는 `-file\*` 파일들이 10개가 있다.
+- `home 디렉토리` 안에 `inhere 디렉토리`가 있고 그 안에는 `-file\*` 파일들이 10개가 있다.
 - 물론 이 파일들을 직접 열어보며 읽을 수 있나 없나 확인 할 수도 있겠지만 `file` 명령어를 이용해서 찾아보기로 하자
 - **file ./\*** 명령어에서 ./\* 부분은 파일 안에 있는 모든 파일의 정보를 볼 수 있게해준다.
 - 찾아보니 ./-file06번 파일이 **"ASCII text"** 로 되어있다고 한다.
-- `cat` 명령어로 비밀번호를 찾았다! lrIWWI6bB37kxfiCQZqUdOIYfr6eEeqR
+- `cat` 명령어로 비밀번호를 찾았다! `lrIWWI6bB37kxfiCQZqUdOIYfr6eEeqR`
 
 ![bandit4_5_sol](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/6bf0529c-dd5a-4c6d-bdf7-4f5a44296ff3)
 
@@ -229,7 +229,7 @@ Tip: 터미널이 더러워졌다면, "reset" 명령어를 사용하세요!
 
 ### 해결법
 
-- inhere 딕셔너리에서 ls 명령어를 쳐보자.
+- inhere 딕셔너리에서 `ls` 명령어를 쳐보자.
 
 ```bash
 bandit5@bandit:~/inhere$ ls -a
@@ -251,9 +251,9 @@ bandit5@bandit:~/inhere$ find . -size 1033c
 ./maybehere07/.file2
 ```
 
-- "cat" 명령어를 이용하여 ./maybehere07/.file2 파일을 읽어보면 비밀번호를 찾을 수 있다!
+- `cat` 명령어를 이용하여 `./maybehere07/.file2` 파일을 읽어보면 비밀번호를 찾을 수 있다!
 
-찾았다! : P4L4vucdmLnm8I7Vl7jG1ApGSfjYKqJU
+찾았다! : `P4L4vucdmLnm8I7Vl7jG1ApGSfjYKqJU`
 
 ![bandit5_6_sol](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/f6977bc4-e750-4be2-89fa-5dbe4be55a3f)
 
