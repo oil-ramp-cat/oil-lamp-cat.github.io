@@ -873,3 +873,25 @@ data: gzip compressed data, was "data2.bin", last modified: Thu Oct  5 06:19:20 
 ![bandit12_13_10](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/029256c9-3d9c-4f18-85fe-65e722a770c8)
 
 이번에는 웬일로 확장자를 붙인 채로 `data5.bin`이라는 이름을 갖고 압축이 해제되었다.
+
+![bandit12_13_11](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/e6204f24-b442-4832-bdd0-0f1a88bc3a76)
+
+이제 이 data5.bin 파일을 읽어보면? 또다시 `tar`압축이 되어있다고 한다.
+
+![bandit12_13_12](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/01ed1050-7d63-4180-a2fd-b5f8a43a3234)
+
+다시 한번 풀어주고 이제는 반복일 뿐이다.
+
+![bandit12_13_13](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/d2eb025f-395c-44c7-a151-315891da7b39)
+
+같은 이름이지만 `file`명령어로 읽어봤을 때에 압축된 방법이 다른 `data8.bin`파일이다.
+
+![bandit12_13_14](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/36e2bcde-2dc4-47e9-b7b1-dd20f4a5fd21)
+
+드디어 비밀번호를 찾을 수 있었다. 확장자는 `.bin`이지만 `file`명령어로 읽어보면 `ASCCI` 텍스트로 이루어져 있다는 것을 알 수 있다.
+
+![bandit12_13_15](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/8e78ddcc-71fb-46f2-bd70-9d420c431176)
+
+비밀번호 : `wbWdlBxEir4CaE8LaPhauuOo6pwRmrDw`
+
+## - 아직 추가중 -
