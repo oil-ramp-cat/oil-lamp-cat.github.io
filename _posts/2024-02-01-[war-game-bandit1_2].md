@@ -1,6 +1,6 @@
 ---
 title: "[wargame] overthewire bandit 1 -> 2"
-date: 2024-02-01 00:25:15 +09:00
+date: 2024-02-01 00:25:17 +09:00
 categories: [war game, Linux]
 tags: [bandit, overtherwire]
 pin: true
