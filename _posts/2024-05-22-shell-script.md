@@ -698,6 +698,10 @@ raen@raen-960QFG:~/문서/ShellScriptStudy$ bash ArrayDelete.sh
 
 `key`와 `value`로 이루어진 배열
 
+기본 문법은 `declare -A 변수` 형태이다
+
+
+
 ## 비교식
 
 |비표 표현|설명|
