@@ -965,4 +965,247 @@ ssh -v [접속할 계정]@[접속할 ip]
 
 그럼 이제 비밀번호(?)를 찾으러 가보자.
 
-## - 아직 추가중 -
+-----아래 내용이랑 전체 내용을 기록할 때 내가 기억을 못하고 새로 작성한 듯 하다-----
+
+#### Shell (쉘)?
+
+ 쉘이란 운영체제 커널과 사용자 간의 소통을 담당해 주는 텍스트 기반의 명령어 해석기이다. 쉘은 마치 커널을 조개껍질처럼 감싸고 있다고 하여 shell(껍데기)라는 이름이 붙었다.
+
+ 쉘은 UI, 즉 유저 인터페이스(User Interface) 사용자로부터 입력을 받아들이는 방식에 따라 두가지로 나뉜다고 한다.
+
+ - GUI (Graphic User Interface) : Gnome, KDE, (윈도우 사용자들이 보는 화면도 포함!) 등
+ - CLI (Command Line Interface) : csh, bash, cmd 등
+
+#### SSH (Secure Shell) - 보안 셸 프로토콜?
+ 
+ SSH는 네트워크 상의 다른 컴퓨터의 셸을 사용할 수 있게 해주는 프로토콜을 의미한다. SSH를 이용하여 보호되지 않은 네트워크를 통해 컴퓨터에 명령을 안전하게 전송할 수 있게 해준다. 계속 서버에 앉아있을 수는 없는 노릇이니 원격으로 SSH를 통해 서버에 접속해 관리할 수 있게 한다.
+ 
+ SSH가 동작할 때에는 SSH서버라는 이름을 가진 데몬([daemon](https://ko.wikipedia.org/wiki/%EB%8D%B0%EB%AA%AC_%EC%BB%B4%ED%93%A8%ED%8C%85))이 항상 작동하면서 접속을 기다리고 있다가 클라이언트가 접속을 시도하면 SSH 서버와 클라이언트간의 보안 연결이 된다. 그 보안을 위해 다음과 같은 보안 방식을 가진다.
+
+ - key는 `private key`와 `public key`의 한 쌍으로 이루어져있고 이 둘을 비대칭 키라고 부른다. `Private key`는 클라이언트(Client)에서 안전하게 보관되어야하는 key이고 `Public key`는 서버(Server)에 공유되는 key를 의미한다.
+  
+  클라이언트가 ssh명령어를 통해 서버에 접속을 시도하게 되면 서버는 클라이언트가 `Private key`를 가졌는지 확인을 하여 연결 여부를 결정하게 되는 것이다.
+
+ 자 그럼 다시 접속을 해보도록 하자.
+
+ ![bandit13_14_1](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/c92303b5-f7c8-4a8d-8c5e-0685fc341189)
+
+ 우리가 읽을 수 있는 파일 중에는 `sshkey.private`라는 파일이 존재한다.
+
+ `file`명령어를 사용해 보았을 때 해당 파일은 PEM RSA private key라고 한다.
+
+ 무슨 파일일까 해서 `cat`명령어를 사용하여 읽어보니 역시 사람이 읽을 파일은 아닌 것 같다.
+
+ 그럼 이 파일을 이용해서 무엇을 하라는 것일까?
+
+ [SSH key로 Linux 접속하기](https://pyromaniac.me/entry/SSH-%ED%82%A4%EB%A1%9C-Linux-%EC%A0%91%EC%86%8D%ED%95%98%EA%B8%B0), [SSH 공개키 인증을 사용하여 접속하기](https://velog.io/@lehdqlsl/SSH-%EA%B3%B5%EA%B0%9C%ED%82%A4-%EC%95%94%ED%98%B8%ED%99%94-%EB%B0%A9%EC%8B%9D-%EC%A0%91%EC%86%8D-%EC%9B%90%EB%A6%AC-i7rrv4de)
+
+ 이곳 저곳을 찾아보니 ssh 명령어 옵션 중 `-i`라는 옵션을 이용하여 private key 파일을 선택하여 접속할 수 있다고 한다.
+
+ ```ssh -i [Private Key FIle] [UserName]@[HostName] [포트]```
+
+ 형식을 이용하여 사용할 수 있다. 자 그럼 이제 접속을 해보도록 하자.
+
+ ```
+ssh -i sshkey.private bandit14@localhost -p 2220
+ ```
+
+ ![bandit13_14_2](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/e315ca59-b035-49f9-99b1-dc42f9121a0f)
+
+
+ 어라 안바뀌었나? 싶지만
+
+ ```
+ !!! You are trying to log into this SSH server with a password on port 2220 from localhost.
+ !!! Connecting from localhost is blocked to conserve resources.
+ !! Please log out and log in again.
+ ```
+
+ ```
+ !!! 로컬 호스트에서 포트 2220의 암호를 사용하여 이 SSH 서버에 로그인하려고 합니다.
+ !!! 리소스를 절약하기 위해 로컬 호스트에서 연결이 차단되었습니다.
+ !!! 로그아웃 후 다시 로그인해 주시기 바랍니다.
+ ```
+
+ 라며 경고를 보내지만
+
+ ![bandit13_14_3](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/fe541693-a864-4442-89b8-b7eddb8efcf3)
+
+ 일단은 접속에 성공한 모습이다. 그럼 이제 이 상태에서 비밀번호를 찾으러 가보자.
+
+ ![bandit13_14_4](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/566d42bb-2236-4a4c-b3d1-ef17c81a603c)
+
+ 수 많은 파일들이 보이지만 이 중 우리가 볼 것은 bandit14의 비밀번호이다. 그리고 다른 폴더를 열어보려 하여도 
+
+ ![bandit13_14_5](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/83659c12-669f-4f26-af30-6cc1987459cb)
+
+ 다른 사용자가 만든 파일은 접근할 수 없어 `permission denied`만 뜰 뿐이다.
+
+ 비밀번호 : `fGrHPx402xGC7U7rXKDaxiWFTOiF0ENq`
+
+## Bandit Level 14 -> Level 15
+
+**user_id** : bandit14<br/>
+**password** : fGrHPx402xGC7U7rXKDaxiWFTOiF0ENq
+
+### 목표
+
+![bandit14_15](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/4a22d422-d5c6-40e2-987a-764ba939b960)
+
+다음 레벨의 암호는 `로컬 호스트`의 `포트 30000`에 `현재 레벨의 암호`를 제출하여 검색할(얻을) 수 있다.
+
+### 해결법
+
+와 이번에는 전보다 더 많은 `Helpful Reading Material`이 있으니 읽어보는 것도 좋을 듯 하다.
+
+일단은 언제나처럼 어떤 파일들이 있을지 살펴보도록 하자.
+
+![bandit14_15_1](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/7dd73462-3d84-4ae2-a4a1-52df74823405)
+
+일..단은 아무래도 파일이 전부 숨겨져있나보다.
+
+![bandit14_15_2](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/c72c9254-3391-4f27-9598-a478064c2745)
+
+물론 `ls -a` 명령어를 이용하여 숨겨진 파일들도 볼 수 있고 그중에는 `.ssh`라는 처음보는 파일도 있기에 한번 읽어보기로 하자
+
+![bandit14_15_3](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/cdb98a52-e536-41c8-be2c-803d48288be4)
+
+저번과 같이 이번에도 딱히 도움이 될 것 같은 느낌은 아니다.
+
+문제에서 말하길 `localhost`의 `30000 포트`로 가보라고 했으니 `ssh`, `telnet`, `nc`명령어 들을 이용해서 접속을 해보도록 하자.
+
+- [Telnet](https://www.ibm.com/docs/ko/i/7.3?topic=services-telnet) : 로컬 네트워크 내에서 직접 연결된 것 처럼 외부컴퓨터에서 로그인 하여 사용할 수 있도록 하는 프로토콜.
+
+- [nc (netcat)](https://ko.wikipedia.org/wiki/Netcat) : TCP 또는 UDP를 사용하여 네트워크 연결을 읽거나 기록하는 컴퓨터 네트워킹 유틸리티이다. (네트워크 해킹과 보안 책에서 메일 서버를 해킹하는 실습에 사용했던 도구)
+
+```
+telnet [port] [hostname]
+
+nc [port] [hostname]
+```
+
+이지만 요즘에는 대부분 ssh로 교체되고 있는 중이라고 한다.
+
+자세한 내용은
+
+[telnet, netcat](https://velog.io/@hyungyoo42/telnet-netcat) 블로그를 참고하면 좋을 듯 하다. 매우 잘 정리가 되어있다.
+
+그럼 첫번째로 계속 해오던 ssh를 이용하여 접속을 시도해보자
+
+![bandit14_15_4](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/0412265c-01b4-4d87-93a3-075165ed9aea)
+
+오류 메시지를 발견하고 바로 검색을 해보았다. 
+
+[kex_exchange_identification: Connection closed by remote host](https://betweencloud.tistory.com/137)
+
+아하 접속은 하였으나 아무일도 하지않아 종료되며 출력된 오류 메시지라고 한다. 그럼 이제 다음 방법을 사용해보자.
+
+`telnet`을 이용하여 접속해보자.
+
+![bandit14_15_5](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/98a69cf2-4bcd-4eec-b4ee-0346838cff5c)
+
+접속 후 문제에서 주어진 것 처럼 bandit14의 비밀번호를 입력하자 bandit15로 가는 비밀번호를 출력해주었다!
+
+비밀번호 : `jN2kgmIXJ6fShzhT2avhotn4Zcka6tnt`
+
+`nc (netcat)`을 이용해보자.
+
+![bandit14_15_6](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/a0fe48db-aea9-4944-ae50-5d5c29187cd7)
+
+`netcat`에서도 동일한 비밀번호를 출력해 주었다.
+
+비밀번호 : `jN2kgmIXJ6fShzhT2avhotn4Zcka6tnt`
+
+## Bandit Level 15 -> Level 16
+
+**user_id** : bandit15<br/>
+**password** : jN2kgmIXJ6fShzhT2avhotn4Zcka6tnt
+
+### 목표
+
+![bandit15_16](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/d468c106-26f1-4d1f-bac5-75d438ceff18)
+
+다음 단계로 가기 위해서 localhost 포트 30001에 현재 레벨의 password를 SSL 암호화를 이용해라
+
+유용한 노트 : ign_eof를 이용해서 "HEARTBEATING"과 "Read R BLOCK?"을 얻고 메뉴 페이지에서 "CONNECTED COMMANDS" 섹션을 읽으십시오. 'R'과 'Q' 옆에 있는 'B'명령어도 이 명령어 버전에서 작동합니다...
+
+### 해결법
+
+음... 솔직히 유용한 노트에서 무엇을 말하는 건지 전혀 감도 잡히지 않는다
+
+일단 문제에 써있는 것들을 하나씩 알아보자
+
+#### SSL(Secure Sockets Layer)?
+
+> 보안 소켓 계층
+
+암호화 기반 인터넷 보안 프로토콜이다.
+
+찾다보니 [CloudFare SSL](https://www.cloudflare.com/ko-kr/learning/ssl/what-is-ssl/)에 아주 자세히 나와있어 첨부한다
+
+간단하게 말하면 두 컴퓨터 사이에 전송되는 데이터를 암호화 하여 인터넷 연결을 보호하는 표준 프로토콜로 현재는 SSL -> TLS로 쓰이고 있다
+
+#### openssl?
+
+ssl을 이용하기 위해 우리가 사용할 명령어는 `openssl`이다
+
+`help`명령어로 무엇을 추가할 수 있을지 알아보자
+
+![bandit15_16_1](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/bbcb1594-9a13-4334-9a14-34847833d223)
+
+보아하니 
+
+- Standard commands
+- Message Digest commands
+- Cipher commands
+
+중 하나를 사용해야 한다
+
+여기에 나와있는 수 많은 명령어 중 우리는 bandit에서 `Commands you may need to solve this level`에 나온 `s_client`를 이용하도록 하자
+
+#### s_client
+
+```
+openssl s_client -[option] [host:port]
+```
+
+처음 보는 명령어이니 다시 `help`를 이용해 옵션을 살펴보자
+
+![bandit15_16_2](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/53888cf4-7cdf-4698-8d31-05a6dacde4e4)
+
+이번에는 아까보다 훨씬 더 많은 옵션들이 존재한다
+
+- General options
+- Network options
+- Identity options
+- Session options
+- Input/Output options
+- Debug options
+- Protocol and version options
+- Random state options
+- TLS/SSL options
+- Validation options
+- Extended certificate options
+- Provider options
+
+그리고 Parameter로는
+
+- host:port
+
+형식을 쓴다고 한다
+
+우리는 연결을 해야하기 떄문에 `Network options`에 있는 `connect`옵션을 사용하도록 하자
+
+![bandit15_16_3](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/bd0590e5-25ed-4f6e-931f-5a4fc244e1a6)
+
+다시 한번 매우 긴 글이 우리를 반겨주지만 드디어 내가 이해하지 못했던 힌트의 `read R BLOCK`를 발견 할 수 있었다
+
+여기에 현재 레벨의 비밀번호를 입력해주게 되면?
+
+![bandit15_16_4](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/3adf321a-9883-4fbf-98fb-cabbc0fdc638)
+
+Correct!라며 bandit 16으로 가는 비밀번호를 알려준다
+
+비밀번호 : `JQttfApK4SeyHwDlI9SXGR50qclOAil1`
+
+글이 길다고 무서워하지 말고 차근차근 읽어보자!
