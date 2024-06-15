@@ -1,7 +1,7 @@
 ---
 title: "[shell script] 포트 스캐닝"
 date: 2024-06-13 20:27:15 +09:00
-categories: [Linux, shell script]
+categories: [Linux, shell script, Port scanning]
 tags: [Bash]
 pin: true
 ---
@@ -252,6 +252,10 @@ do
 done
 ```
 
-다 좋다 하지만 Bash shell로 할 수 있는 통신은 정해진 것 뿐이고 이제 소캣 통신을 위해서는 다른 언어를 쓰는 것이 좋겠다
+위와같이 UDP 스캐너도 추가적으로 넣었으나... 아무래도 출력되는 것을 보아하니 UDP스캔은 안 되는 것 같다
+
+자료조사를 할 때에 분명 있다고 했는데...
+
+Bash shell로 할 수 있는 통신은 /dev/tcp, /dev/udp와 같이 정해진 것 뿐이고 이제 추가적인 기능을 구현하기 위해서는 다른 언어를 쓰는 것이 좋겠다
 
 C, Rust, Python 중 하나를 선택할 것 같다
