@@ -16,9 +16,14 @@ pin: true
 
 그렇기에 이번 기회에 `TCP`, `UTP`의 작동 원리와 shell script를 이용한 포트스캐닝을 만들어 보고자 한다
 
+[포트 스캐닝 기법들](https://isc9511.tistory.com/126)
+
+위 블로그에서 정말 설명이 잘 되어있기에 여기에서는 따로 설명하지 않겠다
+
 # TCP
-# shell script (TCP Port Scanning)
+# shell script (TCP, UDP Port Scanning)
 내가 지금 사용하고 있는 `Bash shell`에는 별도의 패키지 설치가 필요 없는 `/dev/tcp/[대상 IP]/[포트번호]`를 이용해 포트스캔을 구현할 생각이다
+
 ## 1차
 
 아래는 처음 만들었던 스크립트이다
@@ -168,5 +173,85 @@ OPTION="a:b:c:defg"
 - 인자가 있는 실행 옵션은 옵션 뒤에 : 넣기 - a,b,c
 - 인자가 없는 실행 옵션은 옵션 뒤에 아무것도 없음 - d,e,f,g
 
+```bash
+#!/bin/bash
 
-# UTP
+IP_ADDRESS="127.0.0.1"
+
+PORT_START=1
+
+PORT_END=1024
+
+TYPE=tcp
+
+SERVICE=false
+
+OPTIONS=":i:ahtu?"
+
+usage()
+{
+    echo '
+    <options>
+    -i [ip] : ip설정
+    -a : 서비스에 관한 설명까지 추가되어 출력
+    -h : 도움말
+    -t : tcp 스캔 (default)
+    -u : udp 스캔
+    '
+}
+
+while getopts $OPTIONS opts; do
+    case $opts in
+    \?)
+    echo "invalid option"
+    usage
+    exit 1;;
+    a) SERVICE=true
+    ;;
+    i) IP_ADDRESS=$OPTARG
+    ;;
+    t) TYPE=tcp
+    ;;
+    u) TYPE=udp
+    ;;
+    h)
+        usage
+    exit;;
+    :)
+        usage
+    exit;;
+    esac
+done
+
+scan_port(){
+    PORT=$1
+    if [ $SERVICE = true ]; then
+        if [ $TYPE == 'tcp' ]; then
+            (echo >/dev/tcp/"$IP_ADDRESS"/"$PORT") &>/dev/null && echo -e "$PORT/tcp\topen\t`grep $PORT/tcp /etc/services | head -n1 | awk '{print $1}'`\t`grep $PORT/tcp /etc/services | head -n1 | awk '{print $4}'`"
+        else
+            (echo >/dev/udp/"$IP_ADDRESS"/"$PORT") &>/dev/null && echo -e "$PORT/udp\topen\t`grep $PORT/udp /etc/services | head -n1 | awk '{print $1}'`\t`grep $PORT/udp /etc/services | head -n1 | awk '{print $4}'`"
+        fi
+    else
+        if [ $TYPE == 'tcp' ]; then
+            (echo >/dev/tcp/"$IP_ADDRESS"/"$PORT") &>/dev/null && echo -e "$PORT/tcp\topen\t`grep $PORT/tcp /etc/services | head -n1 | awk '{print $1}'`"
+        else
+            (echo >/dev/udp/"$IP_ADDRESS"/"$PORT") &>/dev/null && echo -e "$PORT/udp\topen\t`grep $PORT/udp /etc/services | head -n1 | awk '{print $1}'`"
+        fi
+    fi
+    sleep 0.01
+}
+
+clear
+echo "Scanning $IP_ADDRESS [TCP ports $PORT_START to $PORT_END]"
+
+echo -e "\nPORT\tSTATE\tSERVICE"
+
+for (( PORT=PORT_START; PORT<=PORT_END; PORT++ ))
+do
+    scan_port $PORT
+done
+```
+
+다 좋다 하지만 Bash shell로 할 수 있는 통신은 정해진 것 뿐이고 이제 소캣 통신을 위해서는 다른 언어를 쓰는 것이 좋겠다
+
+C, Rust, Python 중 하나를 선택할 것 같다
