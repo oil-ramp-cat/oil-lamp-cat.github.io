@@ -36,3 +36,20 @@ uninstall:
 pfetch 파일은 [pfetch](https://github.com/unseen-ninja/pfetch/blob/main/pfetch)에서 가져오고 원래는 브라우저 마다 나오는 모습이 다르지만 나는 catppuccin테마를 원했기에 전부 지우고 catppuccin 테마의 고양이만 남겼다
 
 혹시몰라 여기 저장한다 [디스코드 링크](https://discord.com/channels/882162361643986984/1252916468861894728/1252916543936008192)
+
+
+
+```bash
+        ([Uu]buntu*)
+            read_ascii 2 <<-EOF
+                ${c6}
+                ${c6}
+				${c6}       へ
+				${c6}     （• ˕ •マ
+				${c6}       |､  ~ヽ
+				${c6}       じしf_,)〳‎‎
+			EOF
+        ;;
+```
+
+터미널에 계속 나오게 하기 위해 `nano ~/.bashrc` 을 하고 그 파일의 맨 마지막줄에 `pfetch`를 추가해 주면 끝이다
