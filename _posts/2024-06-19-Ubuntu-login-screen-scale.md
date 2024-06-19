@@ -1,8 +1,8 @@
 ---
 title: "[Ubuntu] login screen scale"
-date: 2024-06-15 23:56:15 +09:00
-categories: [Linux, C, Port scanning]
-tags: [C]
+date: 2024-06-19 18:00:15 +09:00
+categories: [Linux]
+tags: [ubuntu]
 pin: true
 ---
 
