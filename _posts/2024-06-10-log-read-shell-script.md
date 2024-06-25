@@ -105,6 +105,9 @@ done
 
 ## 1차
 
+<details><summary>RD_Log.sh</summary>
+<div markdown = "1">
+
 ```bash
 #!/bin/bash
 echo "프로그램을 실행합니다"
@@ -151,6 +154,8 @@ do
 	clear
 done
 ```
+</div>
+</details>
 
 다 좋은데 지금 문제가 DOWN이 감지되면 소리가 난다는 것은 좋다 그런데 한번 문제를 감지하면 계속 소리를 낸 다는 것이다... 아이고
 
@@ -159,6 +164,8 @@ done
 일단 출력되는 것은 나중으로 생각하고 차근차근 해보자
 
 ## 2차
+<details><summary>RD_Log.sh</summary>
+<div markdown = "1">
 
 ```bash
 #!/bin/bash
@@ -222,6 +229,8 @@ do
 	clear
 done
 ```
+</div>
+</details>
 
 이제 소리가 나오는 것 까지 완료 하였다
 
@@ -250,6 +259,9 @@ done
 심지어 `echo`를 이용한 출력에서 비프음을 위한 `\a` 때문에 자꾸 한 줄씩 내려버려 이것을 어떻게 해결해야하나 했는데 `printf`를 이용하면 줄 내림이 없어진 다는 것을 알게 되었다 
 
 이걸 몰랐네
+
+<details><summary>RD_Log.sh</summary>
+<div markdown = "1">
 
 ```bash
 #!/bin/bash
@@ -345,6 +357,8 @@ do
 	clear
 done
 ```
+</div>
+</details>
 
 ## 4차
 
@@ -415,6 +429,9 @@ fi
 5. 그리고 다시 문제점을 찾을 때 까지 모니터링 한다
 
 [스크린캐스트 2024년 06월 11일 17시 33분 30초.webm](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/7c3d91cf-3f05-4601-bf5e-ef15e969559c)
+
+<details><summary>RD_log.sh</summary>
+<div markdown = "1">
 
 ```bash
 #!/bin/bash
@@ -524,6 +541,8 @@ do
 	clear
 done
 ```
+</div>
+</details>
 
 ## 5차
 
@@ -534,7 +553,9 @@ done
 3. 파일은 특정 크기 이후로 그 전 로그는 삭제되고 새로운 것이 들어온다
 
 
-`MKlog.sh`
+<details><summary>MKlog.sh</summary>
+<div markdown = "1">
+
 ```bash
 #!/bin/bash
 
@@ -586,6 +607,8 @@ done < "$LOG_FILE"
 IFS=$PRE_IFS
 echo "Log processing complete. Check the NEW_LOG_FILE.log for entries."
 ```
+</div>
+</details>
 
 ## 6차
 만들다보니 내가 아예 잘못 시작을 해버린 것이 아닌가 싶은 생각이 들어 다시 한번 정리하고 가야겠다
