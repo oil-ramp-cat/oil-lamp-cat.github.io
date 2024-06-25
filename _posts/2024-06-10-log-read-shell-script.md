@@ -1,5 +1,5 @@
 ---
-title: "로그 생성 및 로그에서 에러 잡기 Shell Sciprt"
+title: "[Shell Sciprt]로 구현한 로그 생성 및 로그에서 에러 잡기 스크립트"
 date: 2024-06-10 14:43:15 +09:00
 categories: [Linux, shell script]
 tags: [Bash]
@@ -586,3 +586,37 @@ done < "$LOG_FILE"
 IFS=$PRE_IFS
 echo "Log processing complete. Check the NEW_LOG_FILE.log for entries."
 ```
+
+## 6차
+만들다보니 내가 아예 잘못 시작을 해버린 것이 아닌가 싶은 생각이 들어 다시 한번 정리하고 가야겠다
+
+> MKlog
+
+1. mlat.log(실제 로그)와 test.log(테스트용 로그)파일이 있는지 확인
+2. test.log가 존재한다면 초기화
+3. mlat.log의 첫번 째 로그를 읽어 가장 처음 시간 (UNIX)를 읽어 PREV_TIME으로 저장
+4. 같은 시간로그가 끝나는 시점의 로그를 저장해 놓았다가 그 로그 다음번 시간을 읽고 위 작업을 반복
+
+혹은
+
+1. mlat.log(실제 로그)와 test.log(테스트용 로그)파일이 있는지 확인
+2. test.log가 존재한다면 초기화
+3. 원래 하던 작업과 동일하지만 배열을 이용해서 같은 시간동안의 로그를 한번에 test.log로 옮기기
+
+사실 두번째 방법이 가장 좋을 것이라고 생각하는 바이기는 하다 사실 MKLog같은 경우에는 테스트용 스크립트이기 때문에 빨리 끝낼 수록 좋은데...
+
+뭔가 자꾸 "어 이렇게 하면 이런 문제가 생길텐데"하는 생각이 들어 다시 만들게 된다
+
+![image](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/76af285a-e7a6-4c80-877e-a9420f67df61)
+
+> ReadLog
+
+1. 로그 파일 존재 확인 (나중에 매개변수를 통해 테스트 파일을 따로 설정할 수 있게 할 생각이다)
+2. 파일이 변경되는지를 감지
+3. 변경되었다면 다음 함수 실행 아니라면 다시 카운트 다운(default 15s)
+4. 처음에는 PREV_TIME 값을 비워놔 현재 존재하는 모든 로그를 대상으로 CRITICAL, DOWN등의 에러 확인
+5. 처음 확인을 거친 후 가장 마지막에 있는 줄의 로그에서 UNIX시간을 PREV_TIME으로, []안에 들어있을 것 (가장 처음 []안에 들어있는 것만 추출해야함!!)
+6. 카운트 다운 후에 파일 변경이 감지되었다면 PREV_TIME을 제외한 모든 시간대의 로그를 가지고 비교한다
+7. 위 반복
+
+![image](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/9c23bbfd-6b7b-418b-8e27-c64c8327395a)
