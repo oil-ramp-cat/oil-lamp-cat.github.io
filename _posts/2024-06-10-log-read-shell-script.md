@@ -844,3 +844,8 @@ done
 </details>
 
 ![image](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/9c23bbfd-6b7b-418b-8e27-c64c8327395a)
+
+
+## 7차
+
+일단 `main.sh`랑 연결해서 생각해보자...
