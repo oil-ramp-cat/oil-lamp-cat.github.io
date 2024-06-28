@@ -849,11 +849,14 @@ done
 ## 7차
 
 로그 읽기 스크립트 ReadLog입니다
+```bash
 
     へ 
  （• ˕ •マ 
     |､  ~ヽ         
     じしf_,)〳       made by LampCat
+	
+```
 
 > 실행
 
