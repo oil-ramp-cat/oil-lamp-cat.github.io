@@ -879,3 +879,15 @@ done
 `RDLOG_REPEAT` 로그를 읽을 빈도수 입니다
 
 코드는 내일 조금만 더 다듬고 올리도록 하지요 벌써 1시 10분이네요 ;V
+
+## FINAL
+
+최종 끝났네요!
+
+[github_RDLog](https://github.com/oil-lamp-cat/Log-Reader)
+
+![스크린샷 2024-06-30 15-26-49](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/4713cbd5-e5b0-4d04-ad22-fc19bde12fac)
+
+[youtube](https://www.youtube.com/watch?v=8xagFLWRSwo)
+
+![스크린샷 2024-06-30 15-23-32](https://github.com/oil-lamp-cat/Log-Reader/assets/103806022/3fc15695-194c-42d3-b808-3ef6aa92023f)
