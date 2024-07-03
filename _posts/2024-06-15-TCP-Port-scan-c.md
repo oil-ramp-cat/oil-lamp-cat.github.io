@@ -804,3 +804,395 @@ int main() {
 </div>
 </details>
 <br/>
+
+# 4-1차 이번에는 좀더 코드를 보기 좋게
+
+다른 사람이 만든 예제를 보고 따라하는 중이지만 이번에는 코드를 이해하면서 작성중!
+
+오랜만에 해더파일 작성하려고 하니까 꽤 어렵네요
+
+학교 자료를 보면서 다시 공부했답니다
+
+일단은 `main`실행하면 ip를 받아오고 ip가 2개 이상이면 하나 선택해서 그 ip를 출발 ip로!
+
+나중에 다른 3way-handshaking코드나 udp scan을 구현하게 되면 그것도 한번에 합치려고 make를 이용했습니다
+
+<details><summary>MakeFile</summary>
+<div markdown = "1">
+
+```MakeFile
+HOS: main.o utils.o SynScanner.o 
+	g++ main.o utils.o SynScanner.o -o HOS -pthread
+
+main.o: main.cpp
+	g++ -c main.cpp
+
+utils.o: utils.cpp
+	g++ -c utils.cpp
+
+SynScanner.o: SynScanner.cpp
+	g++ -c SynScanner.cpp
+
+clean:
+	rm *.o HOS
+```
+
+</div>
+</details>
+<br/>
+
+<details><summary>main.cpp</summary>
+<div markdown = "1">
+
+```cpp
+#include "SynScanner.h"
+
+int main(int argc, char ** argv)
+{
+    if(argc < 2 )
+    {
+        fprintf( stderr, "Usage : %s Target\n", argv[0] );
+        exit(1);
+    }
+
+    char* host = argv[1];
+
+    syn_scan(host);
+}
+```
+
+</div>
+</details>
+<br/>
+
+<details><summary>SynScanner.cpp</summary>
+<div markdown = "1">
+
+```cpp
+#include "utils.h"
+#include "SynScanner.h"
+
+void syn_scan(char* host)
+{   
+    //임시
+    int ports = 139;
+
+    //unsigned char packet[40];
+    char packet[4096] = {0};
+
+    struct iphdr *iphdr;
+    struct tcphdr *tcphdr;
+    struct sockaddr_in address;
+
+    std::string ipv4 = getIPv4Address();
+
+    //ip from
+    long source_address = inet_addr(ipv4.c_str());
+    //ip to
+    long dest_address = inet_addr(host);
+    short flags = TH_SYN;
+
+    //socket 생성
+    int send_sock = socket( AF_INET, SOCK_RAW, IPPROTO_RAW );
+    if (send_sock < 0)
+        cerr << "ERROR opening socket" << endl;
+    int recv_sock = socket(AF_INET, SOCK_RAW, IPPROTO_TCP);
+    if (recv_sock < 0)
+        cerr << "ERROR opening socket" << endl;
+
+    // TCP, IP 헤더 초기화
+    //iphdr = (struct iphdr *)packet;
+    //memset( (char *)iphdr, 0, 20 );
+    //tcphdr = (struct tcphdr *)(packet + 20 );
+    //memset( (char *)tcphdr, 0, 20 );
+
+    struct ip *iph = (struct ip *) packet;
+    struct tcphdr *tcph = (struct tcphdr *) (packet + sizeof (struct ip));
+    
+    create_iph(iph, source_address, dest_address);
+    create_tcph(tcph, ports, flags);
+    set_tcph_checksum(tcph, source_address, dest_address);
+
+    address.sin_family = AF_INET;
+
+    if (sendto (send_sock, &packet, sizeof(packet), 0x0, (struct sockaddr *)&address, sizeof (address)) < 0)
+            cerr << "ERROR sending packet" << endl;
+}
+```
+
+</div>
+</details>
+<br/>
+
+<details><summary>SynScanner.h</summary>
+<div markdown = "1">
+
+```cpp
+#ifndef SYN_SCANNER_H
+#define SYN_SCANNER_H
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <iostream>
+
+using namespace std;
+
+void syn_scan(char* host);
+
+#endif
+```
+
+</div>
+</details>
+<br/>
+
+<details><summary>util.cpp</summary>
+<div markdown = "1">
+
+```cpp
+#include "utils.h"
+
+unsigned short checksum(unsigned short *addr, int len) {
+    int nleft = len;
+    int sum = 0;
+    unsigned short *w = addr;
+    unsigned short answer = 0;
+
+    while (nleft > 1)  {
+        sum += *w++;
+        nleft -= 2;
+    }
+
+    if (nleft == 1) {
+        *(unsigned char *)(&answer) = *(unsigned char *)w ;
+        sum += answer;
+    }
+
+    sum = (sum >> 16) + (sum & 0xffff);
+    sum += (sum >> 16);
+    answer = ~sum;
+    return(answer);
+}
+
+void set_tcph_checksum(struct tcphdr *tcph, long source_addr, long dest_addr) {
+    tcph->th_sum = 0;
+    struct tcp_pheader tcp_ph;
+    tcp_ph.source_address = source_addr;
+    tcp_ph.dest_address = dest_addr;
+    tcp_ph.reserved = 0;
+    tcp_ph.protocol = IPPROTO_TCP;
+    tcp_ph.tcp_length = htons( sizeof(struct tcphdr) );
+    memcpy(&tcp_ph.tcph, tcph, sizeof (struct tcphdr));
+    tcph->th_sum = checksum( (unsigned short*) &tcp_ph , sizeof (struct tcp_pheader));
+}
+
+void create_tcph(struct tcphdr *tcph, short port, short flags) {
+    int rand_port = random_number(DYNAMIC_PORT, MAX_PORT);
+    tcph->th_sport = htons(rand_port); // has to be > than the dynamically assigned range
+    tcph->th_dport = htons(port);
+    tcph->th_seq = 0; 
+    tcph->th_ack = 0;
+    tcph->th_off = sizeof(struct tcphdr) / 4; // number of 32-bit words in tcp header(where tcph begins)
+    tcph->th_flags = flags;    
+    tcph->th_win = htons(65535);              // maximum allowed window size 
+    tcph->th_sum = 0;
+    tcph->th_urp = 0;
+    //임시
+    tcph->th_dport = htons(port);
+}
+
+void create_iph(struct ip *iph, long source_addr, long dest_addr) {
+    iph->ip_hl = 5;
+    iph->ip_v = 4;
+    iph->ip_tos = 0;
+    iph->ip_len = sizeof(struct ip) + sizeof (struct tcphdr);
+    iph->ip_id = 0;    
+    iph->ip_off = 0;
+    iph->ip_ttl = 255;
+    iph->ip_p = IPPROTO_TCP;
+    iph->ip_src.s_addr = source_addr;
+    iph->ip_dst.s_addr = dest_addr;
+    iph->ip_sum = 0; // kernel calculates checksum
+}
+
+int random_number(int min, int max){
+	std::random_device seeder;
+
+	std::mt19937 rng(seeder());
+	std::uniform_int_distribution<int> gen(min, max);
+	int r = gen(rng);
+	return r;
+}
+
+std::string getIPv4Address() {
+    char hostname[256];
+    if (gethostname(hostname, sizeof(hostname)) == -1) {
+        perror("gethostname");
+        exit(1);
+    }
+
+    struct addrinfo hints, *info, *p;
+    int gai_result;
+
+    std::memset(&hints, 0, sizeof(hints));
+    hints.ai_family = AF_INET; // Force IPv4
+    hints.ai_socktype = SOCK_STREAM;
+
+    if ((gai_result = getaddrinfo(hostname, "http", &hints, &info)) != 0) {
+        fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(gai_result));
+        exit(1);
+    }
+
+    std::vector<std::string> ipAddresses;
+    for (p = info; p != nullptr; p = p->ai_next) {
+        void *addr;
+        struct sockaddr_in *ipv4 = (struct sockaddr_in *)p->ai_addr;
+        addr = &(ipv4->sin_addr);
+
+        // Convert the IP to a string and store it:
+        char ipstr[INET_ADDRSTRLEN];
+        inet_ntop(p->ai_family, addr, ipstr, sizeof(ipstr));
+        ipAddresses.push_back(ipstr);
+    }
+
+    freeaddrinfo(info); // free the linked list
+
+    if (ipAddresses.size() == 1) {
+        return ipAddresses[0]; // Return the single IP address
+    } else if (ipAddresses.empty()) {
+        return "No IPv4 addresses found.";
+    } else {
+        std::cout << "Available IPv4 addresses:\n";
+        for (int i = 0; i < ipAddresses.size(); ++i) {
+            std::cout << i + 1 << ": " << ipAddresses[i] << "\n";
+        }
+
+        std::cout << "Select an IP address (1-" << ipAddresses.size() << "): ";
+        int choice;
+        std::cin >> choice;
+
+        if (choice < 1 || choice > static_cast<int>(ipAddresses.size())) {
+            return "Invalid selection.";
+        }
+
+        return ipAddresses[choice - 1]; // Return the selected IP address
+    }
+}
+```
+
+</div>
+</details>
+<br/>
+
+<details><summary>utils.h</summary>
+<div markdown = "1">
+
+```cpp
+//일단 전에 짜둔 코드에서 있는거 없는거 다 가져왔지용
+
+#include <random>
+#include <netdb.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <iostream>
+#include <unistd.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <arpa/inet.h>
+#include <netinet/ip.h>
+#include <netinet/tcp.h>
+#include <cstring>
+#include <errno.h>
+#include <sys/wait.h>
+
+const int MAX_PORT = 65535;
+const int DYNAMIC_PORT = 49152;
+
+/* "Pseudo tcp header" used for checksum calculation */
+struct tcp_pheader {
+    unsigned int source_address; // 4 byte/s
+    unsigned int dest_address;   // 4 byte/s
+    unsigned char reserved;      // 1 byte/s
+    unsigned char protocol;      // 1 byte/s
+    unsigned short tcp_length;   // 2 byte/s
+    struct tcphdr tcph;
+};
+
+int random_number(int min, int max);
+void set_tcph_checksum(struct tcphdr *tcph, long source_addr, long dest_addr);
+void create_tcph(struct tcphdr *tcph, short port, short flags);
+void create_iph(struct ip *iph, long source_addr, long dest_addr);
+std::string getIPv4Address();
+```
+
+</div>
+</details>
+<br/>
+
+<details><summary>receive.cpp</summary>
+<div markdown = "1">
+<br/>
+아직 패킷 받는 곳까지 구현하지 못해서 일단은 따로 빼놨지요
+
+```cpp
+#include <iostream>
+#include <cstring>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <netinet/ip.h>
+#include <netinet/tcp.h>
+#include <unistd.h>
+
+#define BUFFER_SIZE 4096
+
+int main() {
+    int raw_socket;
+    char buffer[BUFFER_SIZE] = {0};
+
+    // Raw 소켓 생성
+    if ((raw_socket = socket(AF_INET, SOCK_RAW, IPPROTO_TCP)) < 0) {
+        perror("socket creation failed");
+        return 1;
+    }
+
+    const char* target_ip = "127.0.0.1";
+
+    std::cout << "started" << std::endl;
+    while (true) {
+        memset(buffer, 0, BUFFER_SIZE);
+        ssize_t packet_size = recv(raw_socket, buffer, BUFFER_SIZE, 0);
+        if (packet_size == -1) {
+            perror("recv failed");
+            break;
+        }
+
+        // IP 헤더와 TCP 헤더 파싱
+        struct iphdr *ip_header = (struct iphdr*) buffer;
+        struct tcphdr *tcp_header = (struct tcphdr*) (buffer + ip_header->ihl*4);
+
+        // SYN 패킷인지 확인
+        char dst_ip_str[INET_ADDRSTRLEN];
+        inet_ntop(AF_INET, &(ip_header->daddr), dst_ip_str, INET_ADDRSTRLEN);
+        if (tcp_header->syn && strcmp(dst_ip_str, target_ip) == 0) {
+            std::cout << "========================" << std::endl;
+            std::cout << "Received a SYN packet!" << std::endl;
+            std::cout << "Source IP: " << inet_ntoa(*(struct in_addr *)&ip_header->saddr) << std::endl;
+            std::cout << "Source Port: " << ntohs(tcp_header->source) << std::endl;
+            std::cout << "Destination IP: " << inet_ntoa(*(struct in_addr *)&ip_header->daddr) << std::endl;
+            std::cout << "Destination Port: " << ntohs(tcp_header->dest) << std::endl;
+        }
+    }
+
+    close(raw_socket);
+    return 0;
+}
+
+```
+
+</div>
+</details>
+<br/>
+
+처음은 따라서 만들어가는 것을 시작으로 끝에는 자신만의 것을 만들 수 있기를!
