@@ -159,6 +159,9 @@ raw_socket = socket(AF_INET,SOCK_RAW,IPPROTO_RAW);
 
 nmap으로 `127.0.0.1`을 통해 tryhackme 머신을 스캔해 보았을 때 2.3초가 걸리던 것을 C언어를 통해 0.5초까지 줄일 수 있었다
 
+<details><summary>C - Threading</summary>
+<div markdown = "1">
+
 ```c
 //기본 함수
 #include <stdio.h>
@@ -285,6 +288,9 @@ int main(int argc, char *argv[]) {
 
 ```
 
+</div>
+</details>
+
 ### C++ - async await을 이용
 
 하지만 가만히 생각해보니 쓰레드는 결국 하드웨어에 따라 사용할 수 있는 수가 달라지다보니 이번에는 다른 방법을 사용해 보기로 하였다
@@ -292,6 +298,9 @@ int main(int argc, char *argv[]) {
 그렇게 생각해 낸 것이 async await을 이용한 비동기 처리다
 
 하지만 지금까지 짰던 C언어에서는 불가능 하기에 이번에는 C++를 이용하기로 하였다
+
+<details><summary>C - async await</summary>
+<div markdown = "1">
 
 ```cpp
 #include <iostream>
@@ -426,4 +435,372 @@ int main(int argc, char *argv[]) {
 
 ```
 
+</div>
+</details>
+<br/>
+
 매~우 흡족
+
+## 4차
+
+일단 왜 작동을 안했는지는 찾았다
+
+아무래도 내가 아예 처음부터 배우고 있다보니 여기저기서 코드를 가져와 만들었는데(거의 프랑켄 슈타인)
+
+그 과정에서 패킷이전송되는 것과 받는과정은 wireshark를 통해 확인 했으나 마지막 단계인 `recvfrom`가 갑자기 패킷 전송보다 먼저 실행되면서
+
+'응 패킷 안오네? 계속 대기할거야' 상태가 되어버린다...
+
+C언어를 배우고 나서 정말 이런 경우는 처음이라 (사실 socket프로그래밍은 아예 최초) 일단 좀 더 찾아봐야 해결할 수 있을 것 같다
+
+```c
+// 수신용 패킷 생성
+sleep(0.2);
+```
+
+[네트워크 프로그래밍](https://gdngy.tistory.com/186)
+
+와.. 충격
+
+`sendto`가 실행되고 패킷을 준비한 뒤 보내기 전에 C++코드는 계속 실행되서 `recvfrom`이 먼저 실행되어 멈춰버린 것이였다.. 어쩐지.. wireshark에서도 보내는 패킷도 안보이더라니..
+
+속도가 생명인데 아무래도 중간에 조건을 하나 걸어줘야겠다
+
+> 7/3
+
+아.. 역시 코드가 무슨 역할인지 모르고 그냥 예시를 복사하면 이런 일이 생기는거다..
+
+속도의 문제가 아니였다...
+
+간단히 생각해보면 당연한 것이
+
+sendto를 통해 패킷을 전송한 후 코드에서 바로 recv를 무한루프 돌리면서 내가 원하는 패킷이 왔나 채크하고 있는데 당연히 다음 작업으로 넘어갈 수 있을리가 없다
+
+아무래도 thread를 하나 만들어서 리스너를 뒤에서 실행시켜줘야겠다
+
+아래는 중간 테스트 코드이다
+
+테스트 할 때에는 리스너를 먼저 실행하고 패킷 보내면 된다
+
+<details><summary>패킷 보내기</summary>
+<div markdown = "1">
+
+```C
+#include <stdio.h>
+#include <stdlib.h>
+#include <iostream>
+#include <unistd.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <arpa/inet.h>
+#include <linux/ip.h>
+#include <linux/tcp.h>
+#include <cstring>
+#include <errno.h>
+#include <sys/wait.h>
+
+#define LOCAL_IP "172.30.1.32"
+
+//int send_packet(){}
+
+unsigned short in_cksum(u_short *addr, int len)
+{
+
+        int         sum=0;
+
+        int         nleft=len;
+
+        u_short     *w=addr;
+
+        u_short     answer=0;
+
+ 
+
+        while (nleft > 1){
+
+        sum += *w++;
+
+        nleft -= 2;
+
+        }
+
+ 
+
+        if (nleft == 1){
+
+        *(u_char *)(&answer) = *(u_char *)w ;
+
+        sum += answer;
+
+        }
+
+ 
+
+        sum = (sum >> 16) + (sum & 0xffff);
+
+        sum += (sum >> 16);
+
+        answer = ~sum;
+
+        return(answer);
+
+}
+
+ 
+
+// 가상 헤더 구조체 선언
+
+struct pseudohdr {
+
+        u_int32_t   saddr;
+
+        u_int32_t   daddr;
+
+        u_int8_t    useless;
+
+        u_int8_t    protocol;
+
+        u_int16_t   tcplength;
+
+};
+
+bool syn_ack_response(char* recv_packet, in_addr dest_address)
+{
+        struct iphdr *iph = (struct iphdr *)recv_packet;
+        char iph_protocol = iph->protocol;
+        long source_addr = iph->saddr;
+        int iph_size = iph->ihl * 4;
+
+        if (iph_protocol == IPPROTO_TCP && source_addr == dest_address.s_addr)
+        {
+                struct tcphdr *tcph = (struct tcphdr *)(recv_packet + iph_size);
+        if (tcph->syn == 1 && tcph->ack == 1)
+                return true;
+        }
+        return false;
+}
+
+int main( int argc, char **argv )
+
+{
+
+        unsigned char packet[40];
+
+        int raw_socket, recv_socket;
+
+        int on=1, len ;
+
+        char recv_packet[100], compare[100];
+
+        struct iphdr *iphdr;
+
+        struct tcphdr *tcphdr;
+
+        struct in_addr source_address, dest_address;
+
+        struct sockaddr_in address, target_addr;
+
+        struct pseudohdr *pseudo_header;
+
+        struct in_addr ip;
+
+        struct hostent *target;
+
+        int port;
+ 
+
+        if( argc < 2 ){
+
+                fprintf( stderr, "Usage : %s Target\n", argv[0] );
+
+                exit(1);
+
+        }
+
+        source_address.s_addr = inet_addr( LOCAL_IP );
+
+        dest_address.s_addr = inet_addr( argv[1] );
+
+        strcpy( compare, argv[1] );
+
+        printf( "\n[Wise Scanner Started.]\n\n" );
+ 
+        // 1번에서부터 500번까지 스캔
+
+        for( port=1; port<140; port++ ){
+                printf("%d", port);
+
+                // raw socket 생성
+
+                raw_socket = socket( AF_INET, SOCK_RAW, IPPROTO_RAW );
+                if(raw_socket == -1)
+                {
+                        printf("오류");
+                }
+
+                setsockopt( raw_socket, IPPROTO_IP, IP_HDRINCL, (char *)&on, sizeof(on));
+                if(setsockopt( raw_socket, IPPROTO_IP, IP_HDRINCL, (char *)&on, sizeof(on)) == -1) {    
+                        fprintf(stderr, "socket 생성 error: %s\n", std::strerror(errno));
+                        return -1;
+                }
+ 
+
+                // TCP, IP 헤더 초기화
+
+                iphdr = (struct iphdr *)packet;
+
+                memset( (char *)iphdr, 0, 20 );
+
+                tcphdr = (struct tcphdr *)(packet + 20 );
+
+                memset( (char *)tcphdr, 0, 20 );
+
+ 
+
+                // TCP 헤더 제작
+
+                tcphdr->source = htons( 777 );
+
+                tcphdr->dest = htons( port );
+
+                tcphdr->seq = htonl( 92929292 );
+
+                tcphdr->ack_seq = htonl( 12121212 );
+
+                tcphdr->doff = 5;
+
+                tcphdr->syn = 1;
+
+                tcphdr->window = htons( 512 );
+
+ 
+
+                // 가상 헤더 생성.
+
+                pseudo_header =(struct pseudohdr *)((char*)tcphdr-sizeof(struct pseudohdr));
+
+                pseudo_header->saddr = source_address.s_addr;
+
+                pseudo_header->daddr = dest_address.s_addr;
+
+                pseudo_header->protocol = IPPROTO_TCP;
+
+                pseudo_header->tcplength = htons( sizeof(struct tcphdr) );
+
+ 
+
+                // TCP 체크섬 계산.
+
+                tcphdr->check = in_cksum( (u_short *)pseudo_header,sizeof(struct pseudohdr) + sizeof(struct tcphdr) );
+
+ 
+
+                // IP 헤더 제작
+
+                iphdr->version = 4;
+
+                iphdr->ihl = 5;
+
+                iphdr->protocol = IPPROTO_TCP;
+
+                iphdr->tot_len = 40;
+
+                iphdr->id = htons( 12345 );
+
+                iphdr->ttl = 60;
+
+                iphdr->saddr = source_address.s_addr;
+
+                iphdr->daddr = dest_address.s_addr;
+
+                // IP 체크섬 계산.
+
+                iphdr->check = in_cksum( (u_short *)iphdr, sizeof(struct iphdr));
+
+ 
+
+                address.sin_family = AF_INET;
+
+                address.sin_port = htons( port );
+
+                address.sin_addr.s_addr = dest_address.s_addr;
+
+ 
+
+                // 패킷 전송
+
+                if(sendto( raw_socket, &packet, sizeof(packet), 0x0,(struct sockaddr *)&address, sizeof(address)) < 0)
+                        std::cerr << "ERROR sending packet" << std::endl;
+                
+                close( raw_socket );
+        }
+        printf( "\n[Scan ended.]\n\n" );
+
+}
+```
+
+</div>
+</details>
+<br/>
+
+<details><summary>패킷 받기</summary>
+<div markdown = "1">
+
+```C
+#include <iostream>
+#include <cstring>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <netinet/ip.h>
+#include <netinet/tcp.h>
+#include <unistd.h>
+
+#define BUFFER_SIZE 4096
+
+int main() {
+    int raw_socket;
+    char buffer[BUFFER_SIZE] = {0};
+
+    // Raw 소켓 생성
+    if ((raw_socket = socket(AF_INET, SOCK_RAW, IPPROTO_TCP)) < 0) {
+        perror("socket creation failed");
+        return 1;
+    }
+
+    const char* target_ip = "127.0.0.1";
+
+    std::cout << "started" << std::endl;
+    while (true) {
+        memset(buffer, 0, BUFFER_SIZE);
+        ssize_t packet_size = recv(raw_socket, buffer, BUFFER_SIZE, 0);
+        if (packet_size == -1) {
+            perror("recv failed");
+            break;
+        }
+
+        // IP 헤더와 TCP 헤더 파싱
+        struct iphdr *ip_header = (struct iphdr*) buffer;
+        struct tcphdr *tcp_header = (struct tcphdr*) (buffer + ip_header->ihl*4);
+
+        // SYN 패킷인지 확인
+        char dst_ip_str[INET_ADDRSTRLEN];
+        inet_ntop(AF_INET, &(ip_header->daddr), dst_ip_str, INET_ADDRSTRLEN);
+        if (tcp_header->syn && strcmp(dst_ip_str, target_ip) == 0) {
+            std::cout << "========================" << std::endl;
+            std::cout << "Received a SYN packet!" << std::endl;
+            std::cout << "Source IP: " << inet_ntoa(*(struct in_addr *)&ip_header->saddr) << std::endl;
+            std::cout << "Source Port: " << ntohs(tcp_header->source) << std::endl;
+            std::cout << "Destination IP: " << inet_ntoa(*(struct in_addr *)&ip_header->daddr) << std::endl;
+            std::cout << "Destination Port: " << ntohs(tcp_header->dest) << std::endl;
+        }
+    }
+
+    close(raw_socket);
+    return 0;
+}
+```
+
+</div>
+</details>
+<br/>
