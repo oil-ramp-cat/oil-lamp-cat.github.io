@@ -1,5 +1,5 @@
 ---
-title: "[C] 포트 스캐닝"
+title: "[C,C++] 포트 스캐닝"
 date: 2024-06-15 23:56:15 +09:00
 categories: [Linux, C, Port scanning]
 tags: [C]
@@ -1620,3 +1620,7 @@ clean:
 </div>
 </details>
 <br/>
+
+# 6차 - (2024-07-05)
+
+[C++ 게임 서버 프로그래밍: 비동기 처리를 위한 std::future, std::promise, std::packaged_task 이해하기](https://velog.io/@enamu/C-future-promise-packagedtask)
