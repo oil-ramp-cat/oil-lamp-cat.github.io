@@ -1,8 +1,8 @@
 ---
-title: "[C,C++] 포트 스캐닝"
+title: "[C,C++] 포트 스캐닝 (Synscan, full-open-scan)"
 date: 2024-06-15 23:56:15 +09:00
-categories: [Linux, C, Port scanning]
-tags: [C]
+categories: [Linux, C, C++, Port scanning]
+tags: [C, C++]
 pin: true
 ---
 
@@ -1623,4 +1623,517 @@ clean:
 
 # 6차 - (2024-07-05)
 
+> synscanner 완성
+
 [C++ 게임 서버 프로그래밍: 비동기 처리를 위한 std::future, std::promise, std::packaged_task 이해하기](https://velog.io/@enamu/C-future-promise-packagedtask)
+
+[[C++] char*, char[], string 변수의 차이](https://erjuer.tistory.com/57)
+
+으악 다 만들기는 했는데 역시나 nmap의 속도를 이기기에는 무리가 많이 있네요...
+
+2초라니!! 2초 세상에
+
+난 9초나 걸리는데!!!
+
+![image](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/b202b0f0-4343-4cf8-a042-05817a6918de)
+
+그래도 결과는 같게 나오니까 다르면 이제 그 때는 문제가 많은데 지금은 속도만 다르니까 기분이 좋네요 빵끗
+
+
+그래도 이번 작업은 도전이니까!
+
+그래도 처음에는 `socket`이 무엇이고 `C++`어떻게 짜는지도 모르고 있었는데 2주동안 정말 노력 많이 했네요
+
+확실히 저는 이런게 재밌어요
+
+그런데 뭔가 아쉽달까?
+
+찾아보니 `Synscan`은 큰 폭에서는 `stealth scan`으로 치지만 따로 `xmas scan`, `null scan`등이 있다고 하더군요
+
+나중에 이것도 만들어야겠지?
+
+<details><summary>main.cpp</summary>
+<div markdown = "1">
+<br/>
+
+```cpp
+/*main.cpp*/
+
+#include "SynScanner.h"
+#include "utils.h"
+
+std::map<std::string, std::list<int>> report;
+
+
+void usage(const char* program_name)
+{
+    std::cerr << "Usage: " << program_name << "[-p port_range] Target" << std::endl;
+}
+
+int main(int argc, char ** argv)
+{
+    //char* host = argv[1];
+    int start_port = 1;
+    int end_port = 65535;
+    int opt;
+    int mode=0;
+
+    while ((opt = getopt(argc, argv, "p:hs")) != -1)
+    {
+        switch (opt)
+        {
+            case 'p':
+            {
+                char* dash = std::strchr(optarg, '-');
+                if(dash)
+                {
+                    *dash = '\0';
+                    start_port = std::atoi(optarg);
+                    end_port = std::atoi(dash + 1);
+                }
+                else
+                {
+                    std::cerr << "불가능한 포트 범위";
+                    exit(1);
+                }
+                break;
+            }
+            case 's':
+            {
+                mode=1;
+                break;
+            }
+            case '?':
+            case 'h':
+            {
+                usage(argv[0]);
+                exit(1);
+            }
+            default:
+            {
+                mode=0;
+            }
+        }
+    }
+
+    if (optind >= argc) {
+        usage(argv[0]);
+        exit(1);
+    }
+
+    std::string host = argv[optind];
+
+    switch (mode)
+    {
+        case 0:
+        {
+            std::cout << "full open scan을 시작합니다." << std::endl;
+            sleep(1);
+            break;
+        }
+        case 1:
+        {
+            std::cout << "syn scan을 시작합니다." << std::endl;
+            sleep(1);
+            syn_scan(host, start_port, end_port);
+            break;
+        }
+        default:
+        {
+            std::cout << "mode 선택 오류 발생" << std::endl;
+            break;
+        }
+    }
+
+    resault_report();
+}
+```
+
+</div>
+</details>
+<br/>
+
+<details><summary>Synscanner.cpp</summary>
+<div markdown = "1">
+<br/>
+
+```cpp
+/*Synscanner.cpp*/
+
+#include "utils.h"
+#include "SynScanner.h"
+
+void send_packet(int send_sock, const unsigned char* packet, size_t packet_size, const struct sockaddr* address) {
+    if (sendto(send_sock, packet, packet_size, 0, address, sizeof(struct sockaddr)) < 0) {
+        cerr << "ERROR sending packet" << endl;
+    }
+}
+
+
+void syn_scan(std::string desthost, int start_port, int end_port)
+{   
+    unsigned char packet[40];
+
+    struct timeval start_time, end_time, elapsed_time;
+    struct iphdr *iphdr;
+    struct tcphdr *tcphdr;
+    struct sockaddr_in address;
+
+    std::vector<std::future<int>> futures;
+    std::string ipv4 = getIPv4Address();
+
+    //ip from
+    long source_address = inet_addr(ipv4.c_str());
+    //ip to
+    long dest_address = inet_addr(desthost.c_str());
+    short flags = TH_SYN;
+
+    //socket 생성
+    int send_sock = socket( AF_INET, SOCK_RAW, IPPROTO_RAW );
+    if (send_sock < 0)
+        cerr << "ERROR opening socket" << endl;
+    int recv_sock = socket(AF_INET, SOCK_RAW, IPPROTO_TCP);
+    if (recv_sock < 0)
+        cerr << "ERROR opening socket" << endl;
+
+    struct ip *iph = (struct ip *) packet;
+    struct tcphdr *tcph = (struct tcphdr *) (packet + 20);
+    
+    create_iph(iph, source_address, dest_address);
+    create_tcph(tcph, flags);
+
+    gettimeofday(&start_time, nullptr);
+
+    thread sniffer(packet_sniffer, recv_sock, (struct in_addr ){inet_addr(desthost.c_str())});
+    for (int port=start_port; port <= end_port; port++)
+    {
+        set_tcph_port(tcph, port);
+        set_tcph_checksum(tcph, source_address, dest_address);
+
+        address.sin_family = AF_INET;
+
+        auto future = std::async(std::launch::async, send_packet, send_sock, packet, sizeof(packet), (struct sockaddr *)&address);
+    }   
+    sniffer.detach();
+    close(send_sock);
+    close(recv_sock);
+
+    gettimeofday(&end_time, nullptr);
+
+    timersub(&end_time, &start_time, &elapsed_time);
+    std::cout << "Total elapsed time: " << elapsed_time.tv_sec << " seconds " << elapsed_time.tv_usec << " microseconds" << std::endl;
+}
+```
+
+</div>
+</details>
+<br/>
+<details><summary>Synscanner.h</summary>
+<div markdown = "1">
+<br/>
+
+```cpp
+/*Synscanner.h*/
+
+#ifndef SYNSCANNER_H
+#define SYNSCANNER_H
+
+#include <iostream>
+#include <vector>
+#include <future>
+#include <chrono>
+#include <thread>
+
+using namespace std;
+
+void syn_scan(std::string desthost, int start_port, int end_port);
+
+#endif
+```
+
+</div>
+</details>
+<br/>
+
+<details><summary>utils.cpp</summary>
+<div markdown = "1">
+<br/>
+
+```cpp
+/*utils.cpp*/
+
+#include "utils.h"
+
+std::mutex mtx;
+
+unsigned short checksum(unsigned short *addr, int len) {
+    int nleft = len;
+    int sum = 0;
+    unsigned short *w = addr;
+    unsigned short answer = 0;
+
+    while (nleft > 1)  {
+        sum += *w++;
+        nleft -= 2;
+    }
+
+    if (nleft == 1) {
+        *(unsigned char *)(&answer) = *(unsigned char *)w ;
+        sum += answer;
+    }
+
+    sum = (sum >> 16) + (sum & 0xffff);
+    sum += (sum >> 16);
+    answer = ~sum;
+    return(answer);
+}
+
+void set_tcph_checksum(struct tcphdr *tcph, long source_addr, long dest_addr) {
+    tcph->th_sum = 0;
+    struct tcp_pheader tcp_ph;
+    tcp_ph.source_address = source_addr;
+    tcp_ph.dest_address = dest_addr;
+    tcp_ph.reserved = 0;
+    tcp_ph.protocol = IPPROTO_TCP;
+    tcp_ph.tcp_length = htons( sizeof(struct tcphdr) );
+    memcpy(&tcp_ph.tcph, tcph, sizeof (struct tcphdr));
+    tcph->th_sum = checksum( (unsigned short*) &tcp_ph , sizeof (struct tcp_pheader));
+}
+
+void create_tcph(struct tcphdr *tcph, short flags) {
+    int rand_port = random_number(DYNAMIC_PORT, MAX_PORT);
+    tcph->th_sport = htons(rand_port); // has to be > than the dynamically assigned range
+    tcph->th_win = htons(1460);
+    tcph->th_dport = htons(1);
+    tcph->th_seq = htonl(0); 
+    tcph->th_ack = htonl(0);
+    tcph->th_off = sizeof(struct tcphdr) / 4; // number of 32-bit words in tcp header(where tcph begins)
+    tcph->th_flags = flags;    
+    tcph->th_win = htons(65535);              // maximum allowed window size 
+    tcph->th_sum = 0;
+    tcph->th_urp = 0;
+}
+
+void set_tcph_port(struct tcphdr *tcph, short port) {
+    tcph->th_dport = htons(port);
+}
+
+void create_iph(struct ip *iph, long source_addr, long dest_addr) {
+    iph->ip_hl = 5;
+    iph->ip_v = 4;
+    iph->ip_tos = 0;
+    iph->ip_len = htons(sizeof(struct ip) + sizeof (struct tcphdr));
+    iph->ip_id = htons(0);    
+    iph->ip_off = 0;
+    iph->ip_ttl = 255;
+    iph->ip_p = IPPROTO_TCP;
+    iph->ip_src.s_addr = source_addr;
+    iph->ip_dst.s_addr = dest_addr;
+    iph->ip_sum = 0; // kernel calculates checksum
+}
+
+int random_number(int min, int max){
+	std::random_device seeder;
+
+	std::mt19937 rng(seeder());
+	std::uniform_int_distribution<int> gen(min, max);
+	int r = gen(rng);
+	return r;
+}
+
+void resault_report()
+{
+    std::cout << "Scan results:" << std::endl;
+    mtx.lock();
+    for (const auto& pair : report)
+    {
+        std::cout << "Host: " << pair.first << std::endl;
+        for (int port : pair.second)
+        {
+            std::cout << "Port: " << port << " is open." << std::endl;
+        }
+    }
+    mtx.unlock();
+}
+
+void packet_sniffer(int recv_sock, struct in_addr dest_addr)
+{
+    char* host = inet_ntoa(dest_addr);
+    std::string host_str(host);
+    while(true)
+    {
+        char recv_packet[4096] = {0};
+        int bytes_received = recv(recv_sock ,recv_packet, sizeof(recv_packet), 0);
+
+        if (bytes_received < 0) {
+            std::cerr << "Error receiving packet" << std::endl;
+            continue;
+        }
+
+        bool port_is_open = syn_ack_response(recv_packet, dest_addr);
+        if (port_is_open) {
+            struct tcphdr *tcph=(struct tcphdr*)(recv_packet + sizeof(struct ip));
+            int port = ntohs(tcph->th_sport);
+
+            mtx.lock();
+            report[host].push_back(port);
+            mtx.unlock();
+        }
+    }
+}
+
+// 초 단위 시간을 시, 분, 초로 변환하여 출력하는 함수
+void print_time(struct timeval *timeval) {
+    struct tm *local_time;
+    char time_str[30];
+
+    // 초 단위 시간을 struct tm 구조체로 변환
+    local_time = localtime(&timeval->tv_sec);
+
+    // 시간을 시:분:초 형식의 문자열로 변환
+    strftime(time_str, sizeof(time_str), "%T", local_time);
+
+    // 변환된 문자열과 마이크로초 출력
+    std::cout << time_str << "." << timeval->tv_usec;
+}
+
+bool syn_ack_response(char* recv_packet, struct in_addr dest_addr) {
+    struct ip *iph = (struct ip*)recv_packet;
+    char iph_protocol = iph->ip_p;
+    long source_addr = iph->ip_src.s_addr;
+    int iph_size = iph->ip_hl*4;
+
+
+    if(iph_protocol == IPPROTO_TCP && memcmp(&source_addr, &dest_addr, sizeof(struct in_addr)) == 0) {
+        struct tcphdr *tcph=(struct tcphdr*)(recv_packet + iph_size);
+        if(tcph->th_flags == (TH_SYN|TH_ACK))
+            return true;
+    }
+    return false;
+}
+
+std::string getIPv4Address() {
+    char hostname[256];
+    if (gethostname(hostname, sizeof(hostname)) == -1) {
+        perror("gethostname");
+        exit(1);
+    }
+
+    struct addrinfo hints, *info, *p;
+    int gai_result;
+
+    std::memset(&hints, 0, sizeof(hints));
+    hints.ai_family = AF_INET; // Force IPv4
+    hints.ai_socktype = SOCK_STREAM;
+
+    if ((gai_result = getaddrinfo(hostname, "http", &hints, &info)) != 0) {
+        fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(gai_result));
+        exit(1);
+    }
+
+    std::vector<std::string> ipAddresses;
+    for (p = info; p != nullptr; p = p->ai_next) {
+        void *addr;
+        struct sockaddr_in *ipv4 = (struct sockaddr_in *)p->ai_addr;
+        addr = &(ipv4->sin_addr);
+
+        // Convert the IP to a string and store it:
+        char ipstr[INET_ADDRSTRLEN];
+        inet_ntop(p->ai_family, addr, ipstr, sizeof(ipstr));
+        ipAddresses.push_back(ipstr);
+    }
+
+    freeaddrinfo(info); // free the linked list
+
+    if (ipAddresses.size() == 1) {
+        return ipAddresses[0]; // Return the single IP address
+    } else if (ipAddresses.empty()) {
+        return "No IPv4 addresses found.";
+    } else {
+        std::cout << "Available IPv4 addresses:\n";
+        for (int i = 0; i < ipAddresses.size(); ++i) {
+            std::cout << i + 1 << ": " << ipAddresses[i] << "\n";
+        }
+
+        std::cout << "Select an IP address (1-" << ipAddresses.size() << "): ";
+        int choice;
+        std::cin >> choice;
+
+        if (choice < 1 || choice > static_cast<int>(ipAddresses.size())) {
+            return "Invalid selection.";
+        }
+
+        return ipAddresses[choice - 1]; // Return the selected IP address
+    }
+}
+```
+
+</div>
+</details>
+<br/>
+<details><summary>utils.h</summary>
+<div markdown = "1">
+<br/>
+
+```cpp
+/*utils.h*/
+
+#include <random>
+#include <netdb.h>
+#include <thread>
+#include <future>
+#include <sys/time.h>
+#include <mutex>
+#include <map>
+#include <list>
+#include <string.h>
+
+//일단 원래 필요했던 것들 전부 포함
+#include <stdio.h>
+#include <stdlib.h>
+#include <iostream>
+#include <unistd.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <arpa/inet.h>
+#include <netinet/ip.h>
+#include <netinet/tcp.h>
+#include <cstring>
+#include <errno.h>
+#include <sys/wait.h>
+
+using std::thread;
+extern std::map<std::string, std::list<int>> report;
+extern std::mutex mtx;
+
+
+const int MAX_PORT = 65535;
+const int DYNAMIC_PORT = 49152;
+
+/* "Pseudo tcp header" used for checksum calculation */
+struct tcp_pheader {
+    unsigned int source_address; // 4 byte/s
+    unsigned int dest_address;   // 4 byte/s
+    unsigned char reserved;      // 1 byte/s
+    unsigned char protocol;      // 1 byte/s
+    unsigned short tcp_length;   // 2 byte/s
+    struct tcphdr tcph;
+};
+
+int random_number(int min, int max);
+void resault_report();
+void set_tcph_checksum(struct tcphdr *tcph, long source_addr, long dest_addr);
+void create_tcph(struct tcphdr *tcph, short flags);
+void create_iph(struct ip *iph, long source_addr, long dest_addr);
+void set_tcph_port(struct tcphdr *tcph, short port);
+void packet_sniffer(int recv_sock, struct in_addr dest_addr);
+void print_time(struct timeval *timeval);
+bool syn_ack_response(char* recv_packet, struct in_addr dest_addr);
+std::string getIPv4Address();
+```
+
+</div>
+</details>
+<br/>
+
+> **2024-07-05-22-34 ENDING**
