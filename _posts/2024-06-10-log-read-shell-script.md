@@ -880,9 +880,9 @@ done
 
 코드는 내일 조금만 더 다듬고 올리도록 하지요 벌써 1시 10분이네요 ;V
 
-## FINAL
+## FINAL?
 
-최종 끝났네요!
+최종 드디어 길고 긴 스크립트 여정이 끝났네요!?
 
 [github_RDLog](https://github.com/oil-lamp-cat/Log-Reader)
 
