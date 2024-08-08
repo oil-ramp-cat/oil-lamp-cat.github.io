@@ -227,6 +227,14 @@ asde2@raspberrypi2:~ $ sudo service mysql restart
 
 [파이썬과 mysql 데이터베이스 연동하기](https://hongong.hanbit.co.kr/%ED%8C%8C%EC%9D%B4%EC%8D%AC%EA%B3%BC-mysql-%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4-%EC%97%B0%EB%8F%99%ED%95%98%EA%B8%B0-pymysql-%EB%9D%BC%EC%9D%B4%EB%B8%8C%EB%9F%AC%EB%A6%AC-%EC%84%A4/)
 
+## 컬럼 추가
+
+```
+ALTER TABLE 테이블
+ADD COLUMN 컬럼명 변수종류,
+ADD COLUMN 컬럼명2 변수종류;
+```
+
 ## 실사용
 
 ### 어...?
