@@ -424,3 +424,21 @@ numpy: Error importing numpy: you should not try to import numpy from
 [[라즈베리파이] numpy 관련 Pandas import error](https://amatoroi.tistory.com/54)
 
 난 모르겠다
+
+## 2024-08-08 3차
+
+![image](https://github.com/user-attachments/assets/39fd918a-3385-498c-b824-491b86e16397)
+
+일단 그래프를 넣는것 까지는 해냈다
+
+지금 계속 시도해 보고 있는 것이 버튼을 누르면 그래프가 사라졌으면 좋겠는데... 정말 질기다
+
+그래프를 사라지게 하면 그냥 시작부터 그래프가 없고
+
+그래프를 냅두면 사라지지 않고... 끄응... 내가 디자인은 진짜 별로라 기능부터 만들고 있는데 쉽지 않다
+
+다른 기능들 Hot, Cool 토글, 실시간 온도 저장 및 디스플레이는 아주 잘된다
+
+사실 그래프가 보이는 것만으로 따지면 아주 잘된다만 쉽지 않다
+
+리액트 쓰는게 좋으려나...
