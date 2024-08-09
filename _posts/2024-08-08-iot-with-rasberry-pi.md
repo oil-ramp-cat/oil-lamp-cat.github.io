@@ -233,7 +233,6 @@ $conn->close();
 
 </div>
 </details>
-</br>
 
 일단은 내 노트북 하스팟을 이용하기에 ip를 가릴 필요는 없다만 혹시 모르기에 가렸다
 
@@ -352,9 +351,485 @@ def insert_data(data):
 
 </div>
 </details>
-</br>
 
 # 구성 - 2차
+
+```
+.
+├── control.py - flask
+├── graph.py - 그래프 생성
+├── insert_data.php - 삭제
+├── insert_data.py - DB 저장
+├── mktable.py - 테이블 백업용
+└── templates
+    ├── graph1.html - Temp, Hue
+    ├── graph2.html - Cool, Hot
+    └── iot.html - 메인 html
+```
+
+외부에서 접속은 불가하기에 이번에는 굳이 ip를 가리지는 않겠다
+
+## control.py
+
+그래프 생성, 그래프 띄우기 등 여러가지가 추가되었다.
+
+<details><summary>control.py</summary>
+<div markdown = "1">
+
+```python
+import RPi.GPIO as GPIO
+import Adafruit_DHT
+from insert_data import insert_data
+from graph import create_graph_temp_hue, create_graph_cool_hot
+import os
+from flask import Flask, render_template, jsonify, send_from_directory
+
+GPIO.setwarnings(False)
+app = Flask(__name__)
+
+hum_temp_pin = 4
+relay_Cool = 5  # 임시
+relay_Hot = 14
+sensor = Adafruit_DHT.DHT11
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(relay_Cool, GPIO.OUT)
+GPIO.setup(relay_Hot, GPIO.OUT)
+
+G1path = "templates/graph1.html"
+G2path = "templates/graph2.html"
+
+relay_status = {'Cool': 0, 'Hot': 0}
+hum_temp = {'Humidity': 0, 'Temperature': 0}
+
+@app.route('/')
+def home():
+    return render_template('iot.html', relay_status=relay_status, hum_temp=hum_temp)
+
+@app.route('/update')
+def update():
+    humidity, temperature = Adafruit_DHT.read_retry(sensor, hum_temp_pin)
+    hum_temp['Humidity'] = humidity
+    hum_temp['Temperature'] = temperature
+    send_data(humidity, temperature)
+    return jsonify(hum_temp=hum_temp)
+
+def send_data(humidity, temperature):
+    data = {
+        'humidity': humidity,
+        'temperature': temperature,
+        'cool': relay_status['Cool'],
+        'hot': relay_status['Hot']
+    }
+    insert_data(data)
+
+@app.route('/graph1')
+def graph1():
+    if not os.path.exists(G1path):
+        create_graph_temp_hue()  # 그래프가 없으면 생성
+    return send_from_directory('templates', 'graph1.html')
+
+@app.route('/graph2')
+def graph2():
+    if not os.path.exists(G2path):
+        create_graph_cool_hot()  # 그래프가 없으면 생성
+    return send_from_directory('templates', 'graph2.html')
+
+@app.route('/generate_graph1')
+def generate_graph1():
+    create_graph_temp_hue()
+    return send_from_directory('templates', 'graph1.html')
+
+@app.route('/generate_graph2')
+def generate_graph2():
+    create_graph_cool_hot()
+    return send_from_directory('templates', 'graph2.html')
+
+@app.route('/toggle_cool')
+def toggle_cool():
+    relay_status['Cool'] = 1 if relay_status['Cool'] == 0 else 0
+    GPIO.output(relay_Cool, GPIO.HIGH if relay_status['Cool'] else GPIO.LOW)
+    return jsonify(relay_status=relay_status)
+
+@app.route('/toggle_hot')
+def toggle_hot():
+    relay_status['Hot'] = 1 if relay_status['Hot'] == 0 else 0
+    GPIO.output(relay_Hot, GPIO.HIGH if relay_status['Hot'] else GPIO.LOW)
+    return jsonify(relay_status=relay_status)
+
+if __name__ == '__main__':
+    app.run(debug=True, port=8080, host='0.0.0.0')
+```
+
+</div>
+</details>
+
+## graph.py
+
+Temperature과 Humidity, Cool, Hot 그래프를 생성한다
+
+데이터는 라즈베리파이2에 있는 MariaDB에 있다
+
+문제점 : 네트워크 통신이다보니 새로 만드는데 속도가 꽤나 느리다
+
+해결 : 이전에 만들어 놓은 그래프를 띄워놓고 후에 새로운 그래프가 만들어지면 그것을 띄운다
+
+<details><summary>graph.py</summary>
+<div markdown = "1">
+
+```python
+import pymysql
+import plotly.graph_objs as go
+import plotly
+import json
+
+def create_graph_temp_hue():
+    # MariaDB 연결
+    connection = pymysql.connect(
+        host='192.168.137.243',
+        user='dev',
+        password='pwd',
+        db='TestDB',
+        charset='utf8',
+        cursorclass=pymysql.cursors.DictCursor
+    )
+    
+    try:
+        with connection.cursor() as cursor:
+            # 쿼리 업데이트: Temperature, Humidity 데이터를 가져오기
+            sql = """
+                SELECT Daytime, 
+                       SUM(Humidity) AS Humidity, 
+                       SUM(Temperature) AS Temperature
+                FROM TempHue
+                GROUP BY Daytime
+                ORDER BY Daytime
+            """
+            cursor.execute(sql)
+            data = cursor.fetchall()
+            
+            # 데이터 가공
+            daytimes = [row['Daytime'] for row in data]
+            humidities = [row['Humidity'] for row in data]
+            temperatures = [row['Temperature'] for row in data]
+
+            # 그래프 생성
+            fig = go.Figure()
+            
+            # Humidity 데이터 - 곡선 그래프
+            fig.add_trace(go.Scatter(x=daytimes, y=humidities, mode='lines', name='Humidity'))
+            
+            # Temperature 데이터 - 곡선 그래프
+            fig.add_trace(go.Scatter(x=daytimes, y=temperatures, mode='lines', name='Temperature'))
+            
+            # 레이아웃 업데이트
+            fig.update_layout(
+                title='Temperature and Humidity Over Time',
+                xaxis_title='Daytime',
+                yaxis_title='Value',
+                legend_title='Legend'
+            )
+
+            # 그래프를 JSON 형식으로 변환
+            graph_json = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+            
+            # 생성한 그래프를 HTML로 저장
+            with open("templates/graph1.html", "w") as f:
+                f.write(f'<div id="graph_div1"></div><script src="https://cdn.plot.ly/plotly-latest.min.js"></script><script>var graph_json = {graph_json}; Plotly.newPlot("graph_div1", graph_json.data, graph_json.layout);</script>')
+
+    finally:
+        connection.close()
+
+def create_graph_cool_hot():
+    # MariaDB 연결
+    connection = pymysql.connect(
+        host='192.168.137.243',
+        user='dev',
+        password='pwd',
+        db='TestDB',
+        charset='utf8',
+        cursorclass=pymysql.cursors.DictCursor
+    )
+    
+    try:
+        with connection.cursor() as cursor:
+            # 쿼리 업데이트: Cool과 Hot 데이터를 가져오기
+            sql = """
+                SELECT Daytime, 
+                       SUM(Cool) AS Cool, 
+                       SUM(Hot) AS Hot
+                FROM TempHue
+                GROUP BY Daytime
+                ORDER BY Daytime
+            """
+            cursor.execute(sql)
+            data = cursor.fetchall()
+            
+            # 데이터 가공
+            daytimes = [row['Daytime'] for row in data]
+            cools = [row['Cool'] for row in data]
+            hots = [row['Hot'] for row in data]
+
+            # 그래프 생성
+            fig = go.Figure()
+            
+            # Cool 데이터 - 막대 그래프
+            fig.add_trace(go.Bar(x=daytimes, y=cools, name='Cool'))
+            
+            # Hot 데이터 - 막대 그래프
+            fig.add_trace(go.Bar(x=daytimes, y=hots, name='Hot'))
+            
+            # 레이아웃 업데이트
+            fig.update_layout(
+                title='Cool and Hot Over Time',
+                xaxis_title='Daytime',
+                yaxis_title='Count',
+                legend_title='Legend',
+                barmode='group'  # 막대 그래프를 나란히 배치
+            )
+
+            # 그래프를 JSON 형식으로 변환
+            graph_json = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+            
+            # 생성한 그래프를 HTML로 저장
+            with open("templates/graph2.html", "w") as f:
+                f.write(f'<div id="graph_div2"></div><script src="https://cdn.plot.ly/plotly-latest.min.js"></script><script>var graph_json = {graph_json}; Plotly.newPlot("graph_div2", graph_json.data, graph_json.layout);</script>')
+
+    finally:
+        connection.close()
+```
+
+</div>
+</details>
+
+## insert_data.py
+
+데이터를 라즈베리파이2의 db로 보낸다
+
+문제 : 느리다
+해결법 : 라즈베리파이1에 db를 만들고 가져다 쓰는 것이 훨씬 빠를것
+
+<details><summary>insert_data.py</summary>
+<div markdown = "1">
+
+```python
+import pymysql
+from datetime import datetime
+
+def insert_data(data):
+    try:
+        # 데이터베이스 연결
+        connection = pymysql.connect(
+            host='192.168.137.243',
+            user='dev',
+            password='pwd',
+            database='TestDB'
+        )
+
+        with connection.cursor() as cursor:
+            # 현재 날짜와 시간 가져오기
+            daytime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+            # SQL 쿼리 작성
+            sql = "INSERT INTO TempHue (Daytime, Temperature, Humidity, Cool, Hot) VALUES (%s, %s, %s, %s, %s)"
+            values = (daytime, data['temperature'], data['humidity'], data['cool'], data['hot'])
+
+            # 쿼리 실행
+            cursor.execute(sql, values)
+            connection.commit()
+            print("New record created successfully")
+
+    except pymysql.MySQLError as e:
+        print(f"Error: {e}")
+
+    finally:
+        connection.close()
+```
+
+</div>
+</details>
+
+## mktable.py
+
+실제 작동시에는 없어도 된다
+
+테이블을 삭제하였을 때 백업 용으로 만들어 놓았다
+
+<details><summary>mktable.py</summary>
+<div markdown = "1">
+
+```python
+#테이블 삭제되면 백업용
+
+import pymysql
+
+conn = pymysql.connect(host='192.168.137.243', user='dev', password='pwd', db='TestDB', charset='utf8')
+
+cur = conn.cursor()
+
+sql = '''CREATE TABLE TempHue(Daytime varchar(50), Temperature varchar(20), Humidity varchar(20), Cool varchar(20), Hot varchar(20))'''
+
+cur.execute(sql)
+
+conn.commit()
+
+conn.close()
+
+print("done")
+```
+</div>
+</details>
+
+## graph1.html
+
+`Temperature`과 `Humidity` 데이터를 담고 있는 html 그래프이다
+
+`graph.py`를 통해 만들어진다
+
+선 그래프이다
+
+## graph2.html
+
+`Cool`과 `Hot` 릴레이 데이터를 담고 있는 html 그래프이다
+
+`graph.py`를 통해 만들어진다
+
+막대 그래프이다
+
+## iot.html
+
+실제 가장 메인이 되는 html 코드이다
+
+<details><summary>iot.html</summary>
+<div markdown = "1">
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>IoT Dashboard</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script>
+        function updateData() {
+            $.ajax({
+                url: '/update',
+                method: 'GET',
+                success: function(data) {
+                    $('#humidity').text(data.hum_temp.Humidity);
+                    $('#temperature').text(data.hum_temp.Temperature);
+                }
+            });
+        }
+
+        function toggleCool() {
+            $.ajax({
+                url: '/toggle_cool',
+                method: 'GET',
+                success: function(data) {
+                    $('#cool_status').text(data.relay_status.Cool ? '1' : '0');
+                }
+            });
+        }
+
+        function toggleHot() {
+            $.ajax({
+                url: '/toggle_hot',
+                method: 'GET',
+                success: function(data) {
+                    $('#hot_status').text(data.relay_status.Hot ? '1' : '0');
+                }
+            });
+        }
+
+        function loadTempHueGraph() {
+            if ($('#graph1').is(':visible')) {
+                $('#graph1').slideUp(); // 그래프 숨기기
+            } else {
+                $.ajax({
+                    url: '/graph1',
+                    method: 'GET',
+                    success: function(data) {
+                        $('#graph1').html(data).slideDown();
+                        //실행 후 새로운 그래프 가져오기
+                        $.ajax({
+                            url: '/generate_graph1',
+                            method: 'GET',
+                            success: function(newGraphData1) {
+                                $('#graph1').html(newGraphData1);
+                            },
+                            error: function() {
+                                $('#graph1').html('<p>Error generating new Temperature and Humidity graph.</p>');
+                            }
+                        });
+                    },
+                    error: function() {
+                        $('#graph1').html('<p>Error loading Temperature and Humidity graph.</p>');
+                    }
+                });
+            }
+        }
+
+        function loadCoolHotGraph() {
+            if ($('#graph2').is(':visible')) {
+                $('#graph2').slideUp(); // 그래프 숨기기
+            } else {
+                $.ajax({
+                    url: '/graph2',
+                    method: 'GET',
+                    success: function(data) {
+                        $('#graph2').html(data).slideDown();
+                        //실행 후 새로운 그래프 가져오기
+                        $.ajax({
+                            url: '/generate_graph2',
+                            method: 'GET',
+                            success: function(newGraphData2) {
+                                $('#graph2').html(newGraphData2);
+                            },
+                            error: function(){
+                                $('#graph2').html('<p>Error loading Cool and Hot graph.</p>')
+                            }
+                        })
+                    },
+                    error: function() {
+                        $('#graph2').html('<p>Error loading Cool and Hot graph.</p>');
+                    }
+                });
+            }
+        }
+
+        $(document).ready(function() {
+            $('#cool_button').click(toggleCool);
+            $('#hot_button').click(toggleHot);
+            $('#temphue_graph_button').click(loadTempHueGraph);
+            $('#cool_hot_graph_button').click(loadCoolHotGraph);
+            setInterval(updateData, 5000); // 5 seconds interval for data refresh
+        });
+    </script>
+</head>
+<body>
+    <h1>IoT Dashboard</h1>
+    <h2>Relay Status</h2>
+    <p>Cool: <span id="cool_status">{{ relay_status['Cool'] }}</span></p>
+    <button id="cool_button">Toggle Cool</button>
+    <p>Hot: <span id="hot_status">{{ relay_status['Hot'] }}</span></p>
+    <button id="hot_button">Toggle Hot</button>
+
+    <h2>Temperature and Humidity</h2>
+    <p>Humidity: <span id="humidity">{{ hum_temp['Humidity'] }}</span>%</p>
+    <p>Temperature: <span id="temperature">{{ hum_temp['Temperature'] }}</span>°C</p>
+
+    <h2>Graphs</h2>
+    <button id="temphue_graph_button">Temperature and Humidity Graph</button>
+    <button id="cool_hot_graph_button">Cool and Hot Graph</button>
+    <div id="graph1" style="display:none;"></div> <!-- Temperature and Humidity graph -->
+    <div id="graph2" style="display:none;"></div> <!-- Cool and Hot graph -->
+</body>
+</html>
+```
+
+</div>
+</details>
 
 # 중간점검 모음집
 
@@ -442,3 +917,17 @@ numpy: Error importing numpy: you should not try to import numpy from
 사실 그래프가 보이는 것만으로 따지면 아주 잘된다만 쉽지 않다
 
 리액트 쓰는게 좋으려나...
+
+## 2024-08-09 
+
+보아하니 데이터의 시간이 자꾸 이상하게 하루가 지났음에도 8월 8일 이라기에 확인을 해보니 라즈베리파이 시간이 유럽으로 잡혀있었다
+
+어쩐지...
+
+아니 그런데 다른 문제가 생겼다 
+
+[![video](https://res.cloudinary.com/marcomontalbano/image/upload/v1723174577/video_to_markdown/images/youtube--E8QD6WVKMUY-c05b58ac6eb4c4700831b2b3070cd403.jpg)](https://youtu.be/E8QD6WVKMUY "video")
+
+어째서 그래프를 띄우고 생성하는 부분이 데이터 통신을 하지도 않고 실행이 될 수 있단 말인가?
+
+이거 해결해야하는데...
