@@ -18,21 +18,21 @@ pin: true
 |릴레이 모듈|SRD-05VDC-SL-C|에어컨, 히터 온오프 제어|
 |습온 측정 모듈|DHT11|방 습도 및 온도 측정용 센서|
 
-## 라즈베리파이 1
+### 라즈베리파이 1
 
 1. 사용자(나)가 접속하여 에어컨 제어 및 히터를 제어할 수 있게 한다
 2. 방 습도 및 온도를 측정하여 사용자에게 띄워준다
 3. 에어컨 및 히터의 사용량에 따른 그래프를 보여준다
 4. 사용시간을 계산하여 전기사용량 및 비용을 계산한다
 
-## 라즈베리파이 2
+### 라즈베리파이 2
 
 1. DB테이블을 세팅하여 일정 시간마다 온습정보와 에어컨 혹은 히터의 사용량을 저장한다
 2. 끝이다
 
 이렇게 보니까 되게 라즈베리파이 1에 db를 만들어서 하나로 구동시키는 것도 방법일 것 같다.. 만 이번에는 외부 db와 통신하는 연습을 할 것이기에 2대를 가지고 구현해본다
 
-# 구성 - 1차
+## 구성 - 1차
 
 ```cmd
 .
@@ -43,7 +43,7 @@ pin: true
     └── iot.html
 ```
 
-## control.py
+### control.py
 
 이름과 같이 실제 http 서비스를 띄워주고 백엔드 데이터들을 제어하는 역할을 한다
 
@@ -176,7 +176,7 @@ GPIO핀 값 조정 및 `insert_data` 파이썬으로 교체
 </div>
 </details>
 
-## insert_data.php - 삭제
+### insert_data.php - 삭제
 
 라즈베리파이 1에서 얻은 temphue, on,off 데이터를 라즈베리파이 2의 mariaDB로 옮겨 저장
 
@@ -238,7 +238,7 @@ $conn->close();
 
 일단은 내 노트북 하스팟을 이용하기에 ip를 가릴 필요는 없다만 혹시 모르기에 가렸다
 
-## insert_data.py
+### insert_data.py
 `inset_data.php`사용하는 것에 실패하고 내가 자주 쓰던 언어인 python으로 넘어왔다
 
 다시 구현을 해보자면 일단은 다음과 같다
@@ -283,7 +283,7 @@ def insert_data(data):
 </div>
 </details>
 
-## iot.html
+### iot.html
 
 사용자에게 보여줄 페이지
 
@@ -353,8 +353,9 @@ def insert_data(data):
 
 </div>
 </details>
+</br>
 
-# 구성 - 2차
+## 구성 - 2차
 
 ```
 .
@@ -371,7 +372,7 @@ def insert_data(data):
 
 외부에서 접속은 불가하기에 이번에는 굳이 ip를 가리지는 않겠다
 
-## control.py
+### control.py
 
 그래프 생성, 그래프 띄우기 등 여러가지가 추가되었다.
 
@@ -465,7 +466,7 @@ if __name__ == '__main__':
 </div>
 </details>
 
-## graph.py
+### graph.py
 
 Temperature과 Humidity, Cool, Hot 그래프를 생성한다
 
@@ -603,7 +604,7 @@ def create_graph_cool_hot():
 </div>
 </details>
 
-## insert_data.py
+### insert_data.py
 
 데이터를 라즈베리파이2의 db로 보낸다
 
@@ -650,7 +651,7 @@ def insert_data(data):
 </div>
 </details>
 
-## mktable.py
+### mktable.py
 
 실제 작동시에는 없어도 된다
 
@@ -681,7 +682,7 @@ print("done")
 </div>
 </details>
 
-## graph1.html
+### graph1.html
 
 `Temperature`과 `Humidity` 데이터를 담고 있는 html 그래프이다
 
@@ -689,7 +690,7 @@ print("done")
 
 선 그래프이다
 
-## graph2.html
+### graph2.html
 
 `Cool`과 `Hot` 릴레이 데이터를 담고 있는 html 그래프이다
 
@@ -697,7 +698,7 @@ print("done")
 
 막대 그래프이다
 
-## iot.html
+### iot.html
 
 실제 가장 메인이 되는 html 코드이다
 
@@ -833,7 +834,7 @@ print("done")
 </div>
 </details>
 
-# 구성 - 3차 (2024-08-19)
+## 구성 - 3차 (2024-08-19)
 
 아... 드디어 해결
 
@@ -922,7 +923,7 @@ scp asde@라즈베리파이IP:/home/asde/iot D:/ssh
 
 일단 이번에는 바뀐 부분만 확인하자
 
-## requirements.txt
+### requirements.txt
 
 혹시 내가 나중에 필요할까 하여 저장해 둔다
 
@@ -957,7 +958,7 @@ typing_extensions==4.12.2
 Werkzeug==3.0.3
 ```
 
-## control.py
+### control.py
 
 이번에는 DB, 웹 서버 모두 라즈베리파이 하나를 이용하여 만들었다
 
@@ -1072,7 +1073,7 @@ if __name__ == '__main__':
 </div>
 </details>
 
-## insert_data.py, graph.py
+### insert_data.py, graph.py
 
 로컬 DB로 변경 되었으니 그것만 바꿔주면 된다
 
@@ -1085,9 +1086,9 @@ connection = pymysql.connect(
         )
 ```
 
-# 중간점검 모음집
+## 중간점검 모음집
 
-## 2024-08-08
+### 2024-08-08
 
 php에서 파이썬으로 넘어오고 테스트를 해보았다
 
@@ -1131,7 +1132,7 @@ MariaDB [TestDB]> SELECT * FROM TempHue;
 
 일단 데이터가 저장되는 부분은 해결했으니 릴레이 저장할 수 있도록 테이블을 추가해야겠다
 
-## 2024-08-08 2차
+### 2024-08-08 2차
 
 ```
 asde@raspberrypi:~/iot/webapp $ python control.py
@@ -1154,7 +1155,7 @@ numpy: Error importing numpy: you should not try to import numpy from
 
 난 모르겠다
 
-## 2024-08-08 3차
+### 2024-08-08 3차
 
 ![image](https://github.com/user-attachments/assets/39fd918a-3385-498c-b824-491b86e16397)
 
@@ -1172,7 +1173,7 @@ numpy: Error importing numpy: you should not try to import numpy from
 
 리액트 쓰는게 좋으려나...
 
-## 2024-08-09 
+### 2024-08-09 
 
 보아하니 데이터의 시간이 자꾸 이상하게 하루가 지났음에도 8월 8일 이라기에 확인을 해보니 라즈베리파이 시간이 유럽으로 잡혀있었다
 
@@ -1186,7 +1187,7 @@ numpy: Error importing numpy: you should not try to import numpy from
 
 이거 해결해야하는데...
 
-## 2024-08-19 , Unable to set line 4 to input 문제
+### 2024-08-19 , Unable to set line 4 to input 문제
 
 장장 10일만에 드디어 라즈베리파이를 고치는데 성공했다
 
@@ -1255,7 +1256,7 @@ Press CTRL+C to quit
 
 이 맛에 코딩하지 이게 되네
 
-## Error reading DHT11 sensor: Checksum did not validate. Try again. 문제
+### Error reading DHT11 sensor: Checksum did not validate. Try again. 문제
 
 아니 이건 또 뭐람...
 
@@ -1310,7 +1311,7 @@ Error reading DHT11 sensor: Checksum did not validate. Try again.
 
 어떻게 하던간에 바로 당장에 해결 방법은 없고 계속 작동하면서 거진 5번중 1번 생기는 문제이며 DB에는 오류가 저장되지 않기에 문제가 없다고 판단했다
 
-## 이번엔 그래프가...
+### 이번엔 그래프가...
 
 ![image](https://github.com/user-attachments/assets/d5ffca52-e32e-4f49-858d-5a80a86fb306)
 
@@ -1318,6 +1319,6 @@ Error reading DHT11 sensor: Checksum did not validate. Try again.
 
 아  graph.py 코드를 잘못짰었네
 
-## 2024-08-19 영상
+### 2024-08-19 영상
 
 [![IOT_20240819](https://img.youtube.com/vi/8yL2oCGO0xQ/0.jpg)](https://youtu.be/8yL2oCGO0xQ)
