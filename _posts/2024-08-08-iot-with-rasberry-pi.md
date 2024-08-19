@@ -1318,4 +1318,4 @@ Error reading DHT11 sensor: Checksum did not validate. Try again.
 
 ## 2024-08-19 영상
 
-[![IOT_20240819](http://img.youtube.com/vi/8yL2oCGO0xQ/0.jpg)](https://youtu.be/8yL2oCGO0xQ)
+[![IOT_20240819](https://img.youtube.com/vi/8yL2oCGO0xQ/0.jpg)](https://youtu.be/8yL2oCGO0xQ)
