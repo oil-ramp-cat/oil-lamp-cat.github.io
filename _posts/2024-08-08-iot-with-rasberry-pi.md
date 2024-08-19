@@ -1321,4 +1321,4 @@ Error reading DHT11 sensor: Checksum did not validate. Try again.
 
 ### 2024-08-19 영상
 
-[![IOT_20240819](https://img.youtube.com/vi/8yL2oCGO0xQ/0.jpg)](https://youtu.be/8yL2oCGO0xQ)
+<iframe width="560" height="315" src="https://www.youtube.com/embed/8yL2oCGO0xQ" title="Raspberry Pi로 IOT를 만들어보자" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
