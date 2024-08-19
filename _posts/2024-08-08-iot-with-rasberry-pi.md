@@ -1,5 +1,5 @@
 ---
-title: "라즈베리파이를 가지고 iot를 만들어보자"
+title: "라즈베리파이로 iot를 만들어보자"
 date: 2024-08-08 15:57:15 +09:00
 categories: [raspberry pi, mariaDB, mysql, php]
 tags: [command, iot]
@@ -831,6 +831,258 @@ print("done")
 </div>
 </details>
 
+# 구성 - 3차 (2024-08-19)
+
+아... 드디어 해결
+
+당장 전날만 해도 잘 작동하던 코드가 다음날이 되니 갑자기
+
+```
+asde@raspberrypi:~/iot/webapp $ python control.py
+Traceback (most recent call last):
+  File "/home/asde/iot/webapp/control.py", line 16, in <module>
+    GPIO.setup(relay_Cool, GPIO.OUT)
+RuntimeError: Not running on a RPi!
+```
+
+라며 `이건 라즈베리파이에서 작동중인 코드가 아니에욧!` 이러는데 미칠 지경이었다.. 아니 어제는 됬잖아요...
+
+난 분명 ssh에서 실행중이었고 코드는 라즈베리파이4에서 실행중이었기에.. 일단은 마음을 가다듬고 검색을 해보았다
+
+여기저기 찾아봤지만 지금 생각해보면 아무래도 노트북에서 작업한다고 vscode에 ssh로 파일을 열어서 실행한 것이 문제가 되지 않았나 하는 생각이 든다
+
+처음에는 pip를 통해 다 지우고 다시 설치 하려고 했더니 `Adafruit_dht`은 이제 오래되서 지원을 안한다고 하질 않나.. 결국에는 `Adafruit_CircuitPython_DHT`을 설치해서 해결했다만.. 또 파이썬이 문제인가 싶어서 파이썬을 삭제했다가 다시 깔았더니 용량이 부족하다고 하기에..
+
+뭐 결국에는 RPI(라즈베리파이)에 있던 모든 자료를 scp명령어를 통해 내 노트북으로 가져와 라즈비안을 다시 설치했다
+
+scp명령어가 이렇게 유용할 줄은 생각도 못했다. 사용법이라면
+
+> 로컬에서 원격으로 보낼 때
+
+```
+scp [전송할 파일 경로] [유저명]@[IP주소]:[받을 경로]
+```
+
+> 원격에서 로컬로 보낼 때
+
+```
+scp [유저명]@[IP주소]:[전송할 파일 경로] [받을 경로]
+```
+
+> 원격에서 원격으로 보낼 때는
+
+```
+scp [유저명]@[IP주소]:[전송할 파일 경로] [유저명]@[IP주소]:[받을 경로]
+```
+
+으로 사용하면 된다고 한다
+
+그중에 나는 RPI에서 로컬로 가져와야 했기에
+
+```
+scp asde@라즈베리파이IP:/home/asde/iot D:/ssh
+```
+
+를 이용하였다
+
+그 후 다시 싹 포멧하고 이번에는 저번과 달리 파이썬 가상환경 venv를 이용하기로 했다
+
+파이썬을 다룬지 좀 되서 까먹었었는데 가상환경을 이용하면 루트 패키지를 건드리지 않고 안전하게 작업할 수 있기에 거진 필수 작업이다. 그렇게 만들어진 tree는 다음과 같다
+
+```
+(iotvenv) asde@raspberrypi:~/iot/webapp $ tree -L 2
+.
+├── control.py
+├── graph.py
+├── insert_data.php
+├── insert_data.py
+├── iotvenv
+│   ├── bin
+│   ├── etc
+│   ├── include
+│   ├── lib
+│   ├── lib64 -> lib
+│   ├── pyvenv.cfg
+│   └── share
+├── mktable.py
+├── __pycache__
+│   ├── graph.cpython-311.pyc
+│   └── insert_data.cpython-311.pyc
+├── requirements.txt
+└── templates
+    ├── favicon.ico
+    ├── graph1.html
+    ├── graph2.html
+    └── iot.html
+```
+
+`iotvenv`가 바로 파이썬 가상환경이고 안에 내용물이 너무 많아 `tree -L 2`로 깊이 설정을 해줘 편하게 볼 수 있다
+
+일단 이번에는 바뀐 부분만 확인하자
+
+## requirements.txt
+
+혹시 내가 나중에 필요할까 하여 저장해 둔다
+
+```
+Adafruit-Blinka==8.47.0
+adafruit-circuitpython-busdevice==5.2.9
+adafruit-circuitpython-connectionmanager==3.1.1
+adafruit-circuitpython-dht==4.0.4
+adafruit-circuitpython-requests==4.1.6
+adafruit-circuitpython-typing==1.11.0
+Adafruit-PlatformDetect==3.73.0
+Adafruit-PureIO==1.1.11
+binho-host-adapter==0.1.6
+blinker==1.8.2
+click==8.1.7
+Flask==3.0.3
+Flask-Cors==4.0.1
+itsdangerous==2.2.0
+Jinja2==3.1.4
+MarkupSafe==2.1.5
+packaging==24.1
+plotly==5.23.0
+pyftdi==0.55.4
+PyMySQL==1.1.1
+pyserial==3.5
+pyusb==1.2.1
+rpi-ws281x==5.0.0
+RPi.GPIO==0.7.1
+sysv-ipc==1.1.0
+tenacity==9.0.0
+typing_extensions==4.12.2
+Werkzeug==3.0.3
+```
+
+## control.py
+
+이번에는 DB, 웹 서버 모두 라즈베리파이 하나를 이용하여 만들었다
+
+아무래도 데이터 전송되는 속도가 로컬이 훨씬 빠르기에 이 방법이 좋을듯 싶었다
+
+그리고 위에서 말했듯 `Adafruit_dht`는 오래되어서 못쓰기에 (직접 레포지토리를 받아서 쓸 수는 있다) `Adafruit_CircuitPython_DHT`을 이용했다
+
+<details><summary>control.py</summary>
+<div markdown = "1">
+
+```python
+import RPi.GPIO as GPIO
+import board
+import adafruit_dht
+from insert_data import insert_data
+from graph import create_graph_temp_hue, create_graph_cool_hot
+import os
+from flask import Flask, render_template, jsonify, send_from_directory
+
+GPIO.setwarnings(False)
+app = Flask(__name__)
+
+relay_Cool = 5  # 임시
+relay_Hot = 14
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(relay_Cool, GPIO.OUT)
+GPIO.setup(relay_Hot, GPIO.OUT)
+
+# DHT11 센서 객체 생성
+dht_device = adafruit_dht.DHT11(board.D17, use_pulseio=False)
+
+G1path = "templates/graph1.html"
+G2path = "templates/graph2.html"
+
+relay_status = {'Cool': 0, 'Hot': 0}
+hum_temp = {'Humidity': 0, 'Temperature': 0}
+
+@app.route('/')
+def home():
+    return render_template('iot.html', relay_status=relay_status, hum_temp=hum_temp)
+
+@app.route('/update')
+def update():
+    try:
+        temperature = dht_device.temperature
+        humidity = dht_device.humidity
+        
+        hum_temp['Humidity'] = humidity
+        hum_temp['Temperature'] = temperature
+        
+        send_data(humidity, temperature)
+    except RuntimeError as e:
+        print(f"Error reading DHT11 sensor: {e}")
+        return jsonify({'error': str(e)}), 500
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        return jsonify({'error': 'An unexpected error occurred.'}), 500
+    return jsonify(hum_temp=hum_temp)
+
+def send_data(humidity, temperature):
+    data = {
+        'humidity': humidity,
+        'temperature': temperature,
+        'cool': relay_status['Cool'],
+        'hot': relay_status['Hot']
+    }
+    insert_data(data)
+
+@app.route('/graph1')
+def graph1():
+    if not os.path.exists(G1path):
+        create_graph_temp_hue()  # 그래프가 없으면 생성
+    print("create_graph_temp_hue 함수 호출됨")
+    return send_from_directory('templates', 'graph1.html')
+
+@app.route('/graph2')
+def graph2():
+    if not os.path.exists(G2path):
+        create_graph_cool_hot()  # 그래프가 없으면 생성
+    return send_from_directory('templates', 'graph2.html')
+
+@app.route('/generate_graph1')
+def generate_graph1():
+    create_graph_temp_hue()
+    return send_from_directory('templates', 'graph1.html')
+
+@app.route('/generate_graph2')
+def generate_graph2():
+    create_graph_cool_hot()
+    return send_from_directory('templates', 'graph2.html')
+
+@app.route('/toggle_cool')
+def toggle_cool():
+    print("릴레이 실행됨c")
+    relay_status['Cool'] = 1 if relay_status['Cool'] == 0 else 0
+    GPIO.output(relay_Cool, GPIO.HIGH if relay_status['Cool'] else GPIO.LOW)
+    return jsonify(relay_status=relay_status)
+
+@app.route('/toggle_hot')
+def toggle_hot():
+    print("릴레이 실행됨2")
+    relay_status['Hot'] = 1 if relay_status['Hot'] == 0 else 0
+    GPIO.output(relay_Hot, GPIO.HIGH if relay_status['Hot'] else GPIO.LOW)
+    return jsonify(relay_status=relay_status)
+
+if __name__ == '__main__':
+    app.run(debug=True, port=8080, host='0.0.0.0')
+
+```
+
+</div>
+</details>
+
+## insert_data.py, graph.py
+
+로컬 DB로 변경 되었으니 그것만 바꿔주면 된다
+
+```python
+connection = pymysql.connect(
+            host='localhost', #이 부분
+            user='dev',
+            password='pwd',
+            database='TestDB'
+        )
+```
+
 # 중간점검 모음집
 
 ## 2024-08-08
@@ -931,3 +1183,139 @@ numpy: Error importing numpy: you should not try to import numpy from
 어째서 그래프를 띄우고 생성하는 부분이 데이터 통신을 하지도 않고 실행이 될 수 있단 말인가?
 
 이거 해결해야하는데...
+
+## 2024-08-19 , Unable to set line 4 to input 문제
+
+장장 10일만에 드디어 라즈베리파이를 고치는데 성공했다
+
+정확히는 고친다기보다는 이것저것 시도해 보다가 포맷한 거지만..
+
+```
+MariaDB [TestDB]> SELECT * FROM TempHue;
++---------------------+-------------+----------+------+------+
+| Daytime             | Temperature | Humidity | Cool | Hot  |
++---------------------+-------------+----------+------+------+
+| 2024-08-18 21:53:09 | 50          | 50       | 1    | 0    |
+| 2024-08-19 11:26:14 | NULL        | NULL     | 0    | 0    |
+| 2024-08-19 11:46:03 | NULL        | NULL     | 0    | 0    |
+| 2024-08-19 11:46:08 | NULL        | NULL     | 0    | 0    |
+| 2024-08-19 12:15:56 | 31          | 60       | 0    | 0    |
+| 2024-08-19 12:16:00 | 31          | 61       | 0    | 0    |
+| 2024-08-19 12:16:04 | 31          | 60       | 0    | 0    |
++---------------------+-------------+----------+------+------+
+7 rows in set (0.001 sec)
+```
+
+DB를 보면 NULL인 부분이 있는데 신기하게도 코드를 이것저것 뜯어보는 중에 그래도 값이 들어가기는 했었나보다
+
+flask 콘솔 로그를 보면
+
+```shell
+asde@raspberrypi:~/iot/webapp $ python control.py
+ * Serving Flask app 'control'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://192.168.137.134:8080
+Press CTRL+C to quit
+ * Restarting with stat
+Unable to set line 4 to input
+ * Debugger is active!
+ * Debugger PIN: 138-328-485
+```
+
+중간에 이상하게 `Unable to set line 4 to input`이라는 부분이 있는데 이 친구가 어떻게 보면 이번 가장 큰 문제였다
+
+코드가 RPI에서 실행되고 있지 않아요! 하는 문제는 그저 파이썬 실행이 내 컴퓨터로 맞물려 버리는 정말 이상한 상황이었지만 위 문제는 도무지 찾아봐도 정보가 없었다 심지어 github페이지에도 [adafruit/Adafruit_CircuitPython_DHT/issue](https://github.com/adafruit/Adafruit_CircuitPython_DHT/issues) 비슷한 문제들이 있었지만 결국 해결되지 않았다
+
+그러다 딱 하나 눈에 들어온 문장이 있었다. `pulseio`라는 친구가 문제라고 하기에 더 찾아보니 `use_pulseio=False`라는 옵션을 넣을 수 있었다
+
+```python
+dht_device = adafruit_dht.DHT11(board.D17, use_pulseio=False)
+```
+
+와 진짜 설마 하고 넣은뒤 실행시켜보니 
+
+```shell
+(iotvenv) asde@raspberrypi:~/iot/webapp $ python control.py
+ * Serving Flask app 'control'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://192.168.137.134:8080
+Press CTRL+C to quit
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 138-328-485
+```
+
+이 맛에 코딩하지 이게 되네
+
+## Error reading DHT11 sensor: Checksum did not validate. Try again. 문제
+
+아니 이건 또 뭐람...
+
+[[RaspberryPi 4B & DHT11] Checksum did not validate. /A full buffer was not returned. #72](https://github.com/adafruit/Adafruit_CircuitPython_DHT/issues/72)
+
+3년전 글인데 아직도 해결이 안 되었다..? 어우... 그래도 조금만 더 찾아보자
+
+[issue](https://github.com/adafruit/Adafruit_CircuitPython_DHT/issues/33#issuecomment-2027533058)
+
+허..
+
+```
+온도 센서를 바꿨기 때문에 더 이상 문제가 되지 않습니다. 하지만 다음 프로젝트에서는 다시 추가하겠습니다. 습도를 추적할 수 있는 것이 좋아요. 고마워요-숀
+야후 메일: 검색, 정리, 정복
+
+  2024년 3월 29일 금요일 오전 11시 30분 ***@**.**>는 다음과 같이 썼습니다:
+
+
+2년이 지났지만, 여전히 같은 문제에 부딪혔습니다. 올래스터의 제안을 따르고 "use_pulseio = True"(대부분의 설명서에 나와 있듯이, "use_so False")를 사용하는 것이 제게 효과가 있었습니다.
+
+—
+이 이메일에 직접 회신하거나 GitHub에서 보거나 구독을 취소하십시오.
+말씀하신 내용을 전달받으셨기 때문에 전달드립니다. 메시지 ID : ***@***.***>
+```
+
+결국 use_pulseio를 쓰거나 오류를 마주하거나...
+
+일단은 그냥 쓰기로 했다
+
+```
+(iotvenv) asde@raspberrypi:~/iot/webapp $ python control.py
+ * Serving Flask app 'control'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://192.168.137.134:8080
+Press CTRL+C to quit
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 138-328-485
+192.168.137.1 - - [19/Aug/2024 13:03:09] "GET /update HTTP/1.1" 200 -
+192.168.137.1 - - [19/Aug/2024 13:03:09] "GET / HTTP/1.1" 200 -
+create_graph_temp_hue 함수 호출됨
+192.168.137.1 - - [19/Aug/2024 13:03:11] "GET /graph1 HTTP/1.1" 200 -
+DONE cgth
+192.168.137.1 - - [19/Aug/2024 13:03:11] "GET /generate_graph1 HTTP/1.1" 200 -
+Error reading DHT11 sensor: Checksum did not validate. Try again.
+192.168.137.1 - - [19/Aug/2024 13:03:15] "GET /update HTTP/1.1" 500 -
+192.168.137.1 - - [19/Aug/2024 13:03:20] "GET /update HTTP/1.1" 200 -
+```
+
+어떻게 하던간에 바로 당장에 해결 방법은 없고 계속 작동하면서 거진 5번중 1번 생기는 문제이며 DB에는 오류가 저장되지 않기에 문제가 없다고 판단했다
+
+## 이번엔 그래프가...
+
+![image](https://github.com/user-attachments/assets/d5ffca52-e32e-4f49-858d-5a80a86fb306)
+
+아니 왜? 어째서? 데이터도 있는데 가져오질 못하니..
+
+아  graph.py 코드를 잘못짰었네
+
+## 2024-08-19 영상
+
+[![IOT_20240819](http://img.youtube.com/vi/8yL2oCGO0xQ/0.jpg)](https://youtu.be/8yL2oCGO0xQ)
