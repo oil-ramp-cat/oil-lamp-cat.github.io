@@ -9,7 +9,7 @@ pin: true
 ## Bandit Level 9 -> Level 10
 
 **user_id** : bandit9<br/>
-**password** : EN632PlfYiZbn3PhVK3XOGSlNInNE00t
+**password** : 4CKMh1JI91bUIZZPXDqGanal4xvAg0JM
 
 ![bandit9_10](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/4744e711-77f3-466b-bb3f-0dff4f3cf79f)
 
@@ -58,6 +58,6 @@ A�tL[�#��Ƴ���wv..ک!�5��nH�mwQ!2��Fu�cp��B�;�
 
 이제야 모든 조건을 사용하면서 비밀번호를 찾아냈다!
 
-`the password is G7w8LIi6J3kTb8A7j9LgrywtEUlyyp6s`
+`the password is FGUW5ilLVJrxX9kMYMmlN4MgbpfMiqey`
 
-비밀번호 : `G7w8LIi6J3kTb8A7j9LgrywtEUlyyp6s`
+비밀번호 : `FGUW5ilLVJrxX9kMYMmlN4MgbpfMiqey`

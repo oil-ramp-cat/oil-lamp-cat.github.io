@@ -9,7 +9,7 @@ pin: true
 ## Bandit Level 15 -> Level 16
 
 **user_id** : bandit15<br/>
-**password** : jN2kgmIXJ6fShzhT2avhotn4Zcka6tnt
+**password** : 8xCjnmgoKbGLhHFAZlGE5Tmu4M2tKJQo
 
 ### 목표
 
@@ -96,6 +96,6 @@ openssl s_client -[option] [host:port]
 
 Correct!라며 bandit 16으로 가는 비밀번호를 알려준다
 
-비밀번호 : `JQttfApK4SeyHwDlI9SXGR50qclOAil1`
+비밀번호 : `kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx`
 
 글이 길다고 무서워하지 말고 차근차근 읽어보자!

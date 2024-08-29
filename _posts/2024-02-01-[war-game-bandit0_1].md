@@ -36,4 +36,4 @@ pin: true
 
 ![bandit0_1_sol](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/7821e92b-0987-4c0b-9244-31e2167cbe52)
 
-여기 아래 보이는 NH2SXQwcBdpmTEzi3bvBHMM9H66vVXjL 이 바로 다음 게임의 비밀번호가 된다!
+여기 아래 보이는 `ZjLjTmM6FvvyRnrb2rfNWOZOTa6ip5If` 이 바로 다음 게임의 비밀번호가 된다!

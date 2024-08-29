@@ -9,7 +9,7 @@ pin: true
 ## Bandit Level 2 -> Level 3
 
 **user_id** : bandit2<br/>
-**password** : rRGizSaX8Mk1RTb1CNQoXTcYZWU6lgzi
+**password** : 263JGJPfgU6LtdEvgfWU1XP5yac29mFx
 
 ![bandit 2_3](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/05e19646-795b-4af7-9c5b-d7b6e94d99fc)
 
@@ -25,4 +25,4 @@ pin: true
 
 ![bandit2_3_sol](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/22611709-3c82-4419-80d6-433e030d3407)
 
-비밀번호는 aBZ0W5EmUfAf7kHTQeOwd8bauFJ2lAiG 이다!
+비밀번호는 `MNk8KNH3Usiio41PRUEoDFPqfxLPlSmx` 이다!

@@ -9,7 +9,7 @@ pin: true
 ## Bandit Level 12 -> Level 13
 
 **user_id** : bandit12<br/>
-**password** : JVNBBFSmZwKKOP0XbFXOoW8chDz5yVRv
+**password** : 7x16WNeHIi5YkIhWsfFIqoognUTyj9Q4
 
 ### 목표
 
@@ -254,4 +254,4 @@ data: gzip compressed data, was "data2.bin", last modified: Thu Oct  5 06:19:20 
 
 ![bandit12_13_15](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/8e78ddcc-71fb-46f2-bd70-9d420c431176)
 
-비밀번호 : `wbWdlBxEir4CaE8LaPhauuOo6pwRmrDw`
+비밀번호 : `FO5dwFsc0cbaIiH0h8J2eUks2vdTDwAn`

@@ -9,7 +9,7 @@ pin: true
 ## Bandit Level 6 -> Level 7
 
 **user_id** : bandit6<br/>
-**password** : P4L4vucdmLnm8I7Vl7jG1ApGSfjYKqJU
+**password** : HWasnPhtq9AVKe0dmk45nxy20cvUa6EG
 
 ![bandit6_7](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/b36e65f3-e0a5-4abb-b40f-4fa1b5a06468)
 
@@ -105,13 +105,13 @@ find: ‘/run/lock/lvm’: Permission denied
 그럼 이제야말로 정말 비밀번호를 찾아내보자.
 
 ```shell
-bandit6@bandit:~$ find / -user bandit7 -group bandit6 size 33c 2>/dev/null
+bandit6@bandit:~$ find / -size 33c -user bandit7 -group  bandit6 2> /dev/null
 /var/lib/dpkg/info/bandit7.password
 
-bandit6@bandit:~$ cat /var/lib/dpkg/info/bandit7.password z7WtoNQU2XfjmMtWA8u5rN4vzqu4v99S
+bandit6@bandit:~$ cat /var/lib/dpkg/info/bandit7.password morbNTDkSW6jIlUc0ymOdMaLnOlFVAaj
 ```
 
-비밀번호 : z7WtoNQU2XfjmMtWA8u5rN4vzqu4v99S
+비밀번호 : morbNTDkSW6jIlUc0ymOdMaLnOlFVAaj
 
 ![bandit6_7_sol](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/aa431231-ee86-4059-8846-35483ffba8a9)
 

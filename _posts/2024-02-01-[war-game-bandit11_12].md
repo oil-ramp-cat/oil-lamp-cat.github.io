@@ -9,7 +9,7 @@ pin: true
 ## Bandit Level 11 -> Level 12
 
 **user_id** : bandit11<br/>
-**password** : 6zPeziLdR2RKNdNYFNb6nVCKzphlXHBM
+**password** : dtR173fZKb0RRsDFSGsg2RWnpNVj3qRr
 
 ### 목표
 
@@ -47,7 +47,7 @@ Gur cnffjbeq vf WIAOOSFzMjXXBC0KoSKBbJ8puQm5lIEi
 
 ```shell
 bandit11@bandit:~$ cat data.txt | tr 'A-Za-z' 'N-ZA-Mn-za-m'
-The password is JVNBBFSmZwKKOP0XbFXOoW8chDz5yVRv
+The password is 7x16WNeHIi5YkIhWsfFIqoognUTyj9Q4
 ```
 
-비밀번호 : `JVNBBFSmZwKKOP0XbFXOoW8chDz5yVRv`
+비밀번호 : `7x16WNeHIi5YkIhWsfFIqoognUTyj9Q4`

@@ -9,7 +9,7 @@ pin: true
 ## Bandit Level 10 -> Level 11
 
 **user_id** : bandit10<br/>
-**password** : G7w8LIi6J3kTb8A7j9LgrywtEUlyyp6s
+**password** : FGUW5ilLVJrxX9kMYMmlN4MgbpfMiqey
 
 ### 목표
 
@@ -27,4 +27,4 @@ pin: true
 
 ![bandit10_11_sol](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/942c774b-8f40-4ec7-8b46-57cd8c2ca000)
 
-비밀번호 : `6zPeziLdR2RKNdNYFNb6nVCKzphlXHBM`
+비밀번호 : `dtR173fZKb0RRsDFSGsg2RWnpNVj3qRr`

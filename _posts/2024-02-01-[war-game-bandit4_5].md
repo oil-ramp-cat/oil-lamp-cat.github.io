@@ -9,7 +9,7 @@ pin: true
 ## Bandit Level 4 -> Level 5
 
 **user_id** : bandit4<br/>
-**password** : 2EW7BBsr6aMMoJ2HjW067dm8EgX26xNe
+**password** : 2WmrDFRmJIq3IPxneAaMGhap0pFhF3NJ
 
 ![bandit4_5](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/37f951f2-9b84-4074-8471-b35aaac5321e)
 
@@ -29,6 +29,6 @@ Tip: 터미널이 더러워졌다면, "reset" 명령어를 사용하세요!
 - 물론 이 파일들을 직접 열어보며 읽을 수 있나 없나 확인 할 수도 있겠지만 `file` 명령어를 이용해서 찾아보기로 하자
 - **file ./\*** 명령어에서 ./\* 부분은 파일 안에 있는 모든 파일의 정보를 볼 수 있게해준다.
 - 찾아보니 ./-file06번 파일이 **"ASCII text"** 로 되어있다고 한다.
-- `cat` 명령어로 비밀번호를 찾았다! lrIWWI6bB37kxfiCQZqUdOIYfr6eEeqR
+- `cat` 명령어로 비밀번호를 찾았다! `4oQYVPkxZOOEOO5pTW81FB8j8lxXGUQw`
 
 ![bandit4_5_sol](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/6bf0529c-dd5a-4c6d-bdf7-4f5a44296ff3)

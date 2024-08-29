@@ -9,7 +9,7 @@ pin: true
 ## Bandit Level 5 -> Level 6
 
 **user_id** : bandit5<br/>
-**password** : lrIWWI6bB37kxfiCQZqUdOIYfr6eEeqR
+**password** : 4oQYVPkxZOOEOO5pTW81FB8j8lxXGUQw
 
 ![bandit5_6](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/dcdc812c-c3b9-4a42-ae9e-06c57b7a37c4)
 
@@ -47,6 +47,6 @@ bandit5@bandit:~/inhere$ find . -size 1033c
 
 - "cat" 명령어를 이용하여 ./maybehere07/.file2 파일을 읽어보면 비밀번호를 찾을 수 있다!
 
-찾았다! : P4L4vucdmLnm8I7Vl7jG1ApGSfjYKqJU
+찾았다! : HWasnPhtq9AVKe0dmk45nxy20cvUa6EG
 
 ![bandit5_6_sol](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/f6977bc4-e750-4be2-89fa-5dbe4be55a3f)

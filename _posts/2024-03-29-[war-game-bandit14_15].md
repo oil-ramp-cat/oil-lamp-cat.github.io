@@ -9,7 +9,7 @@ pin: true
 ## Bandit Level 14 -> Level 15
 
 **user_id** : bandit14<br/>
-**password** : fGrHPx402xGC7U7rXKDaxiWFTOiF0ENq
+**password** : MU4VWeTyJk8ROof1qqmcBPaLh7lDCPvS
 
 ### 목표
 
@@ -77,4 +77,4 @@ nc [port] [hostname]
 
 `netcat`에서도 동일한 비밀번호를 출력해 주었다.
 
-비밀번호 : `jN2kgmIXJ6fShzhT2avhotn4Zcka6tnt`
+비밀번호 : `8xCjnmgoKbGLhHFAZlGE5Tmu4M2tKJQo`

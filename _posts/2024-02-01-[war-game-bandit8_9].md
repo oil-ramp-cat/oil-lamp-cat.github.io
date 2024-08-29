@@ -9,7 +9,7 @@ pin: true
 ## Bandit Level 8 -> Level 9
 
 **user_id** : bandit8<br/>
-**password** : TESKZC0XvTetK0S9xNwm25STk5iWrBvP
+**password** : dfwvzFQi4mU0wfNbFOe9RoWskMLg7eEc
 
 ![bandit8_9](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/c12b9a02-2f91-4be3-92bb-52697a83a962)
 
@@ -90,10 +90,10 @@ bandit8@bandit:~$ cat data.txt | sort | uniq -c
 ```shell
 
 bandit8@bandit:~$ cat data.txt | sort | uniq -u
-EN632PlfYiZbn3PhVK3XOGSlNInNE00t
+4CKMh1JI91bUIZZPXDqGanal4xvAg0JM
 
 ```
 
 오호 이 녀석이 우리가 찾던 비밀번호다!
 
-비밀번호 : `EN632PlfYiZbn3PhVK3XOGSlNInNE00t`
+비밀번호 : `4CKMh1JI91bUIZZPXDqGanal4xvAg0JM`

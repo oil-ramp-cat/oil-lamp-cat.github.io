@@ -9,7 +9,7 @@ pin: true
 ## Bandit Level 13 -> Level 14
 
 **user_id** : bandit13<br/>
-**password** : wbWdlBxEir4CaE8LaPhauuOo6pwRmrDw
+**password** : FO5dwFsc0cbaIiH0h8J2eUks2vdTDwAn
 
 ### 목표
 
@@ -96,4 +96,4 @@ ssh -i sshkey.private bandit14@localhost -p 2220
 
  다른 사용자가 만든 파일은 접근할 수 없어 `permission denied`만 뜰 뿐이다.
 
- 비밀번호 : `fGrHPx402xGC7U7rXKDaxiWFTOiF0ENq`
+ 비밀번호 : `MU4VWeTyJk8ROof1qqmcBPaLh7lDCPvS`

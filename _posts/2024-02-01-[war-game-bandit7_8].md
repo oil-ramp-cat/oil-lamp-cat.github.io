@@ -9,7 +9,7 @@ pin: true
 ## Bandit Level 7 -> Level 8
 
 **user_id** : bandit7<br/>
-**password** : z7WtoNQU2XfjmMtWA8u5rN4vzqu4v99S
+**password** : morbNTDkSW6jIlUc0ymOdMaLnOlFVAaj
 
 ![bandit7_8](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/2b5b9153-6a88-4cb1-a0ff-3a78cadecde9)
 
@@ -56,11 +56,11 @@ millionth       TESKZC0XvTetK0S9xNwm25STk5iWrBvP
 
 ```shell
 bandit7@bandit:~$ cat data.txt | grep millionth
-millionth       TESKZC0XvTetK0S9xNwm25STk5iWrBvP
+millionth       dfwvzFQi4mU0wfNbFOe9RoWskMLg7eEc
 ```
 
 같은 결과가 나온다.
 
 ---
 
-비밀번호는 `TESKZC0XvTetK0S9xNwm25STk5iWrBvP`이다.
+비밀번호는 `dfwvzFQi4mU0wfNbFOe9RoWskMLg7eEc`이다.

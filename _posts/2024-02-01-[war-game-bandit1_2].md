@@ -9,7 +9,7 @@ pin: true
 ## Bandit Level 1 -> Level 2
 
 **user_id** : bandit1<br/>
-**password** : NH2SXQwcBdpmTEzi3bvBHMM9H66vVXjL (언제든 바뀔 수 있다.)
+**password** : ZjLjTmM6FvvyRnrb2rfNWOZOTa6ip5If (언제든 바뀔 수 있다.)
 
 ![bandit1_2](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/d76a3a34-31d1-42eb-9c35-d473593df16f)
 
@@ -36,6 +36,6 @@ pin: true
 
 - "cat ./-" 명령어로 파일 내용을 출력해보자.
 
-찾았다! rRGizSaX8Mk1RTb1CNQoXTcYZWU6lgzi
+찾았다! 263JGJPfgU6LtdEvgfWU1XP5yac29mFx
 
 ![bandit1_2_sol](https://github.com/oil-lamp-cat/oil-lamp-cat.github.io/assets/103806022/74168a24-1404-4139-8e37-539d92f09f05)
