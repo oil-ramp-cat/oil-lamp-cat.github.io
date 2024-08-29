@@ -9,7 +9,7 @@ pin: true
 ## Bandit Level 17 -> Level 18
 
 **user_id** : bandit17<br/>
-**password** : 
+**password** : EReVavePLFHtFlFsjn3hyzMlvSuSAcRD
 
 ### 목표
 
