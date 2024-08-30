@@ -1,6 +1,6 @@
 ---
 title: "[wargame] overthewire bandit 17 -> 18"
-date: 2024-08-29 17:13:15 +09:00
+date: 2024-08-30 17:13:15 +09:00
 categories: [war game, Linux, bandit]
 tags: [bandit, overtherwire]
 pin: true
@@ -13,6 +13,7 @@ pin: true
 
 ### 목표
 
+![image](https://github.com/user-attachments/assets/1670f61d-d9bf-4e1c-ad5c-a9f9888027f0)
 
 
 
