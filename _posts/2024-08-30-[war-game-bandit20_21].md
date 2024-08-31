@@ -41,7 +41,7 @@ pin: true
 
 ![image](https://github.com/user-attachments/assets/56a5cd4d-c718-40e9-b783-56039ae5880a)
 
-terminus에서는 터미널 나누기를 사용할 수 있다
+termius에서는 터미널 나누기를 사용할 수 있다
 
 ![image](https://github.com/user-attachments/assets/33da9e3a-b580-4049-93af-2c7ff7b5963e)
 

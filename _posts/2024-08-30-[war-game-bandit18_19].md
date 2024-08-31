@@ -37,7 +37,7 @@ bash + Run Command 의 줄인말
 
 그렇다면 접속을 하기 위한 쉘인 ssh에 관해 조금 더 생각을 해보자
 
-원래 우리는 ssh를 연결할 때 (terminus말고) 
+원래 우리는 ssh를 연결할 때 (termius말고) 
 
 ```sh
 ssh [옵션] [사용자명]@[호스트 주소]
@@ -51,7 +51,7 @@ ssh [옵션] [사용자명]@[호스트 주소] [명령어]
 
 원래는 이런 형태로도 사용이 가능했던 것이다!
 
-이번에는 터미널을 통해 연결해보자 (Terminus)
+이번에는 터미널을 통해 연결해보자 (termius)
 
 ![image](https://github.com/user-attachments/assets/74cc8d8d-34f4-4a62-88ce-f955cc49f724)
 

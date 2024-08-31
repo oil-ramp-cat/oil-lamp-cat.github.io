@@ -75,7 +75,7 @@ cat명령어를 통해 읽어보니
 
 비밀번호 : `x2gLTTjFwMOhQ8oWNbMN362QKxfRqGlO`
 
-그런데 여기서 잠깐 다음 문제로 넘어가게 되면 연결을 시도했을 때 Terminus를 사용하는 사람이라면 바로 종료가 되어 session log를 확인해 보았을 때
+그런데 여기서 잠깐 다음 문제로 넘어가게 되면 연결을 시도했을 때 termius를 사용하는 사람이라면 바로 종료가 되어 session log를 확인해 보았을 때
 
 ![image](https://github.com/user-attachments/assets/ce3d3643-4469-487d-9d36-a8542a72cef3)
 

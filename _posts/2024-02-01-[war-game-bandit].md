@@ -1,6 +1,6 @@
 ---
-title: "[wargame] overthewire bandit"
-date: 2024-02-01 00:25:15 +09:00
+title: "[wargame] overthewire bandit 0_34"
+date: 2024-08-31 00:25:15 +09:00
 categories: [war game, Linux, bandit]
 tags: [bandit, overtherwire]
 pin: true
@@ -26,6 +26,20 @@ pin: true
 이 있고 그 중 이 페이지에서는 bandit을 다룰 것이다.
 
 [overthewire-bandit](https://overthewire.org/wargames/bandit/)
+
+## bandit 모음집
+
+> 2024-02-01에 시작해서 2024-08-31에 완성하였으며 bandit16-34까지 비밀번호는 최신일 수 있으나 나머지는 다를 수 있음
+
+<details><summary>Over The Wire : Bandit 목차 </summary>
+<div markdown = "1">
+
+[Bandit 파일읽기 (0 -> 1)](https://oil-lamp-cat.github.io/posts/war-game-bandit0_0/)
+
+[Bandit (1 -> 2)](https://www.naver.com/)
+
+</div>
+</details>
 
 ## Bandit Information (bandit 소개)
 
@@ -1041,7 +1055,7 @@ ssh -i sshkey.private bandit14@localhost -p 2220
 
  다른 사용자가 만든 파일은 접근할 수 없어 `permission denied`만 뜰 뿐이다.
 
- 비밀번호 : `fGrHPx402xGC7U7rXKDaxiWFTOiF0ENq`
+ 비밀번호 : `MU4VWeTyJk8ROof1qqmcBPaLh7lDCPvS`
 
 ## Bandit Level 14 -> Level 15
 
@@ -1114,7 +1128,7 @@ nc [port] [hostname]
 
 `netcat`에서도 동일한 비밀번호를 출력해 주었다.
 
-비밀번호 : `jN2kgmIXJ6fShzhT2avhotn4Zcka6tnt`
+비밀번호 : `8xCjnmgoKbGLhHFAZlGE5Tmu4M2tKJQo`
 
 ## Bandit Level 15 -> Level 16
 
@@ -1206,6 +1220,1041 @@ openssl s_client -[option] [host:port]
 
 Correct!라며 bandit 16으로 가는 비밀번호를 알려준다
 
-비밀번호 : `JQttfApK4SeyHwDlI9SXGR50qclOAil1`
+비밀번호 : `kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx`
 
 글이 길다고 무서워하지 말고 차근차근 읽어보자!
+
+## Bandit Level 17 -> Level 18
+
+**user_id** : bandit17<br/>
+**password** : EReVavePLFHtFlFsjn3hyzMlvSuSAcRD
+
+### 목표
+
+![image](https://github.com/user-attachments/assets/1670f61d-d9bf-4e1c-ad5c-a9f9888027f0)
+
+홈 디렉토리에는 passwords.old와 passwords.new 두 개의 파일이 있습니다. 다음 단계의 암호는 passwords.new에 있으며 passwords.old와 passwords.new 사이에서 변경된 유일한 줄입니다
+
+참고: 이 레벨을 해결하고 bandit18에 로그인하려고 할 때 'Bye bye!'를 보게 될 것인데, 이것은 다음 레벨인 bandit19와 관련이 있습니다
+
+### 해결법
+
+![image](https://github.com/user-attachments/assets/f132c113-6a35-4085-bfff-c62054c8897d)
+
+정말로 파일은 .new와 .old가 존재하고 둘 다 읽을 수 있는 파일로 되어있네요
+
+cat명령어를 통해 읽어보니 
+
+![image](https://github.com/user-attachments/assets/d1f4ee66-57f8-4923-a923-97ddf2c9ddab)
+
+어우 사진에 보이는 것 보다 더 길군요
+
+일단 bandit에서 힌트를 주길 `cat`,`grep`,`ls`,`diff`를 쓰라고 했으며 왠지모르게 `diff`라는 명령어가 이번 문제의 키일 것 같은 느낌이 드네요
+
+> diff : 두 파일을 비교하고 차이점 추출
+
+`-q` : 파일이 다른 경우 `Files passwords.new and passwords.old differ`이런 식으로 간단하게 다르다, 라고만 알려준다
+
+`-r` : 디렉토리 비교를 위해 사용
+
+`-u` : 유니파일 형식으로 파일의 차이를 출력
+
+예를들어 다음과 같다
+
+![image](https://github.com/user-attachments/assets/da2d41cf-20ba-4623-8dc6-edea1036bd1f)
+
+`-c` : 파일의 차이를 문장 형태로 보여준다
+
+![image](https://github.com/user-attachments/assets/ee5e1253-d249-492e-a933-c8f80ea19865)
+
+'39에서 45번째 줄 중 이 부분이 틀렸어요!' 하고 알려준다
+
+`-i` : 대/소문자를 무시하고 비교
+
+`-w` : 공백 문자 무시
+
+`-B` : 빈줄 무시
+
+`-y` : 이중 컬럼 출력 모드
+
+![image](https://github.com/user-attachments/assets/02de73ce-2f1a-48bf-aa75-2404534d5268)
+
+이런 식으로 github commit 내용처럼 비교하여 출력함
+
+`-l` : 변경된 줄의 개수만 출력
+
+우리는 굳이 옵션을 넣어줄 필요는 없어 보인다
+
+![image](https://github.com/user-attachments/assets/5ea5064a-a7ec-434a-8096-4514c32c2f95)
+
+위 부분이 new파일이고 아래 부분이 old파일 부분이다
+
+그렇다면 바뀐 비밀번호는? 위에 부분인 것이다
+
+비밀번호 : `x2gLTTjFwMOhQ8oWNbMN362QKxfRqGlO`
+
+그런데 여기서 잠깐 다음 문제로 넘어가게 되면 연결을 시도했을 때 termius를 사용하는 사람이라면 바로 종료가 되어 session log를 확인해 보았을 때
+
+![image](https://github.com/user-attachments/assets/ce3d3643-4469-487d-9d36-a8542a72cef3)
+
+`Byebye!`라며 바로 나를 내보내 버린다
+
+처음 문제에서 말했듯 이것은 bandit19번과 관련이 있으며 우리는 잘 해결한 것이 맞다!
+
+## Bandit Level 18 -> Level 19
+
+**user_id** : bandit18<br/>
+**password** : x2gLTTjFwMOhQ8oWNbMN362QKxfRqGlO
+
+### 목표
+
+![image](https://github.com/user-attachments/assets/1da9fdce-e977-4e55-823e-c3b68378c370)
+
+다음 레벨의 암호는 홈 디렉토리의 readme 파일에 저장됩니다. 불행히도 SSH로 로그인할 때 누군가가 .bashrc를 로그아웃하도록 수정했습니다.
+
+그래서 자꾸 로그아웃 당했던 거구만
+
+일단 readme파일에 비밀번호가 있다고 하니 들어갈 수만 있다면 오케이다
+
+### 해결법
+
+> 일단 `bashrc`가 무엇인가? 
+
+bash + Run Command 의 줄인말
+
+> `./bashrc` 는?
+
+[bashrc 설정하기](https://slamwithme.oopy.io/bb4e942f-65f1-4c8d-8188-203eca2b8fde)에 자세히 설명되어있으며 간단히 말하면 `bash`에 미리 입력하고 싶은 내용을 작성해두어 쉘을 열면 자동으로 실행되는 것을 뜻한다
+
+그렇다면 [[Ubuntu] terminal에 pfetch 실행하기](https://oil-lamp-cat.github.io/posts/pfetch-terminal/) 이것도 bashrc에 명령어를 미리 입력해 두어 실행할 수도 있겠네!
+
+그런데 이번 문제에서는 누군가 `.bashrc`파일을 변경해두어 ssh를 이용해 쉘을 연결하면 기본 쉘인 `bash`가 실행되면서 `Byebye`를 출력하고 우리를 쫒아낸 것이다
+
+그렇다면 접속을 하기 위한 쉘인 ssh에 관해 조금 더 생각을 해보자
+
+원래 우리는 ssh를 연결할 때 (termius말고) 
+
+```sh
+ssh [옵션] [사용자명]@[호스트 주소]
+```
+
+을 통해 연결했었다 하지만 만약 접속 전에 명령어를 넘겨줄 수 있다면?
+
+```sh
+ssh [옵션] [사용자명]@[호스트 주소] [명령어]
+```
+
+원래는 이런 형태로도 사용이 가능했던 것이다!
+
+이번에는 터미널을 통해 연결해보자 (termius)
+
+![image](https://github.com/user-attachments/assets/74cc8d8d-34f4-4a62-88ce-f955cc49f724)
+
+터미널을 열고
+
+![image](https://github.com/user-attachments/assets/6f9a2186-a8cc-4dcf-89c2-f593537f0940)
+
+`bash`쉘이 아닌 `sh`가장 기본 쉘을 통해 접속에 성공했다
+
+또한 처음에 비밀번호를 입력했을 때 따로 출력이 뜨지 않는다고 뭐지? 생각할 수도 있다
+
+따로 password incorrect와 같은 오류가 뜨지 않았다면 접속에 성공한 것이니 하던대로 파일을 읽으면 된다!
+
+비밀번호 : `cGWpMaKXVwDUNgPAVJbWYuGHVn9zl3j8`
+
+## Bandit Level 19 -> Level 20
+
+**user_id** : bandit19<br/>
+**password** : cGWpMaKXVwDUNgPAVJbWYuGHVn9zl3j8
+
+### 목표
+
+![image](https://github.com/user-attachments/assets/07e3af78-dba4-4b62-94dc-2067f65c28d7)
+
+다음 레벨에 액세스하려면 홈 디렉토리에서 setuid 바이너리를 사용해야 합니다. 사용 방법을 알아보려면 인수 없이 실행하십시오. 이 레벨의 암호는 setuid 바이너리를 사용한 후 일반적인 자리(/etc/bandit_pass)에서 찾을 수 있습니다.
+
+#### 1. 홈 디렉토리에서 setuid binary를 이용해라
+
+> binary가 뭘까?
+
+2진수 숫자로된 데이터 파일을 의미한다
+
+그럼 여기서 말하는 setuid binary는 setuid가 설정된 데이터 파일을 의미한다
+
+> setuid가 뭘까?
+
+SetUID는 유닉스 환경에서 일시적으로 접근 권한이 없는 파일에 접근을 허용하는 특수 권한을 부여할 수 있게 된다
+
+자세한 설명은 [SetUID를 이용한 권한상승의 위험성](https://www.igloo.co.kr/security-information/setuid%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%9C-%EA%B6%8C%ED%95%9C%EC%83%81%EC%8A%B9%EC%9D%98-%EC%9C%84%ED%97%98%EC%84%B1/) 이곳을 참고하면 좋을 것이다
+
+혹시 모르니 바로 한번 `/etc/bandit_pass/bandit20`를 읽어보자
+
+![image](https://github.com/user-attachments/assets/6ff43497-9bfb-4592-aab0-ad94d096f360)
+
+역시 권한이 없다
+
+### 해결법
+
+#### 권한
+
+진작에 한번 공부를 했어야 했는데
+
+[리눅스 권한 설정](https://danmilife.tistory.com/8), [리눅스 파일 & 디렉토리 권한](https://inpa.tistory.com/entry/LINUX-%F0%9F%93%9A-%ED%8C%8C%EC%9D%BC-%EA%B6%8C%ED%95%9C-%EC%86%8C%EC%9C%A0%EA%B6%8C%ED%97%88%EA%B0%80%EA%B6%8C-%F0%9F%92%AF-%EC%A0%95%EB%A6%AC)을 먼저 보고 오면 좋다
+
+```
+-rwsr-x--- 1 bandit20 bandit19 14880 Jul 17 15:57 bandit20-do
+```
+
+위와 같은 권한이 있다고 해보자
+
+> `-` (file type)
+
+`-`  : 파일이다
+
+> rws (User) 
+
+`r` : 읽기 권한 있음
+
+`w` : 쓰기 권한 있음
+
+`s` : setUID 설정이 되어있어 사용자 권한이 있어야 실행할 수 있음
+
+> r-x (Group)
+
+`r` : 읽기 권한 있음
+
+`-` : 쓰기 권한 없음
+
+`x` : 실행 권한 있음
+
+> --- (Other)
+
+아무 권한 없음
+
+> bandit20 (User)
+
+파일을 만든 소유주
+
+> bandit19 (Group)
+
+파일을 만든 소유주가 속한 그룹
+
+> 14880 (File size)
+
+파일 크기 byte로 되어있음
+
+> Jul 17 15:57 (마지막 변경 날짜)
+
+> bandit20-do (파일 이름)
+
+![image](https://github.com/user-attachments/assets/0a5d9eb1-bebe-464f-aaca-e776afd4aaa5)
+
+파일을 확인해 보면 권한이 `rws`로 `s`가 바로 setuid 설정이 되어있는 것이다
+
+보통은 rwx로 권한이 설정되어있어서 실행 권한을 나타낸다고 한다
+
+#### 일단 한번 실행해보자
+
+![image](https://github.com/user-attachments/assets/71580daf-76e8-43b2-88a7-a2fb86612632)
+
+다른 user권한으로 실행하라고 한다
+
+예시에 `./bandit20-do id`라고 하니 그대로 실행시켜보자
+
+![image](https://github.com/user-attachments/assets/f0164f7b-afcc-4c30-81e5-96b1809ff08a)
+
+오 우리가 권한에 관해 이야기 할 때 봤듯 `setUID`가 설정되어있어 `bandit20`의 권한으로 실행이 된다
+
+더 쉽게 알 수 있는 방법은 실행시켰을 때 `uid`는 `bandit19`로 뜨지만 옆에 `euid`가 `bandit20`으로 뜨고 있는 것을 볼 수 있다
+
+이 `euid`는 파일을 실행했을 때 실제 사용하는 `uid`를 의미한다
+
+#### 비밀번호를 가져오자
+
+문제에서 `/etc/bandit_pass/bandit20`에 비밀번호가 있다고 하니 읽어보도록 하자
+
+![image](https://github.com/user-attachments/assets/fe548a42-e460-4152-a819-04838907a4e2)
+
+> 비밀번호 : **0qXahG8ZjOVMN9Ghs7iOWsCfZyXOUbYO**
+
+와 솔직히 계속 bandit을 통해 리눅스 지식을 접하거나 bash스크립트를 짤 때 자꾸 사람들이 `chmod`니 권한 상승이니 하는 말들이 많았고 사실 그 때는 그냥 필요하면 따라하기만 했었는데 이렇게 중요한 것이라고는 생각을 못했었다
+
+나중에 따로 아예 리눅스에 관한 책 혹은 글을 읽어봐야겠다
+
+## Bandit Level 20 -> Level 21
+
+**user_id** : bandit20<br/>
+**password** : 0qXahG8ZjOVMN9Ghs7iOWsCfZyXOUbYO
+
+이제 드디어 앞자리가 2로 바뀌었다
+
+### 목표
+
+![image](https://github.com/user-attachments/assets/1a076556-f8b2-4204-ae8b-32f52187de2c)
+
+홈 디렉토리에는 명령줄 인수로 지정한 포트의 로컬 호스트에 연결하는 `setuid` 바이너리가 있습니다. 그런 다음 연결에서 텍스트 한 줄을 읽어 `이전 레벨(bandit20)`의 비밀번호와 비교합니다. 비밀번호가 정확하면 `다음 레벨(bandit21)`의 비밀번호를 전송합니다.
+
+참고: 네트워크 데몬에 연결하여 네트워크 데몬이 생각하는 대로 작동하는지 확인해 보십시오
+
+그러니까 `setuid binary`가 설정되어있고 네트워크 연결한 뒤 거기에 맞는 비밀번호를 입력하면 다음 레벨의 비밀번호를 준다
+
+그런데 참고 부분이 있는 것을 보아하니 또 지금까지 해오던 것과는 다른 느낌인가보다
+
+### 해결법
+
+![image](https://github.com/user-attachments/assets/72f2317d-51b6-4ef8-b68a-7e327869b975)
+
+이번에도 `setuid`설정이 된 파일이 보인다
+
+일단 실행시켜보면
+
+![image](https://github.com/user-attachments/assets/910726de-36bd-4bd5-a820-2e1953cae6bb)
+
+`이 프로그램은 TCP를 사용하여 로컬 호스트의 지정된 포트에 연결합니다. 만약 다른 쪽에서 올바른 암호를 받으면 다음 암호는 다시 전송됩니다.`
+
+음... 그니까 내가 bandit20으로 두개의 터미널로 연결해서 서로 통신을 하게 해야한다는 의미인 거겠지?
+
+![image](https://github.com/user-attachments/assets/56a5cd4d-c718-40e9-b783-56039ae5880a)
+
+termius에서는 터미널 나누기를 사용할 수 있다
+
+![image](https://github.com/user-attachments/assets/33da9e3a-b580-4049-93af-2c7ff7b5963e)
+
+이제 한쪽에서는 로컬에 포트 `7777(원하는 대로)`로 통신을 열어보자
+
+![image](https://github.com/user-attachments/assets/c1f4f017-6362-4e94-9637-697063a9aad2)
+
+아래 화면과 같이 로컬호스트에 연결되었다고 뜨면 이제 `bandit20`의 비밀번호를 넘겨주면 된다
+
+![image](https://github.com/user-attachments/assets/3d0b745b-8b9a-422c-898b-9cefa9d7a9e1)
+
+그러면 순식간에 비밀번호를 발송해준다!
+
+> 비밀번호 : **EeoULMCra2q0dSkYj561DX7s1CpBuOBt**
+
+그저 막연한 호기심으로 한번 파일을 읽어봤다
+
+![image](https://github.com/user-attachments/assets/602dc3fb-221d-4f7f-9fa7-9a734b7e5929)
+
+음.. 그만 알아보도록 하자
+
+## Bandit Level 21 -> Level 22
+
+**user_id** : bandit21<br/>
+**password** : EeoULMCra2q0dSkYj561DX7s1CpBuOBt
+
+
+### 목표
+
+![image](https://github.com/user-attachments/assets/94fe9975-33f7-4f86-ac1d-ca0a4332cb3b)
+
+시간 기반 작업 스케줄러인 `cron`에서 일정한 간격으로 프로그램이 자동으로 실행되고 있습니다. `/etc/cron.d/`에서 구성을 확인하고 어떤 명령어가 실행되고 있는지 확인하십시오.
+
+### 해결법
+
+오오 이미 `cron`은 [우분투 소리 안나옴 문제](https://oil-lamp-cat.github.io/posts/ubuntu-no-sound/)에서 한번 찾아본 적이 있기에 생각보다 쉽게 할 수 있지 않을까 싶다
+
+`cron`에 관해 간단하게 설명하자면 일정 시간, 혹은 컴퓨터가 꺼지고 켜질 때에 자동으로 명령어 프로그램이 실행되게 만드는 프로그램이다
+
+![image](https://github.com/user-attachments/assets/f6749c55-1603-47d3-bb05-cddf8e5bf1cd)
+
+`cron`의 실행될 파일들이 있는 `/etc/cron.d`폴더에 들어가 확인할 수 있다
+
+아마 우리는 `bandit21`문제를 풀고 있으니  `cronjob_bandit22` 가 우리가 찾던 것이 아닐까 싶다
+
+![image](https://github.com/user-attachments/assets/22d35daa-45bc-462a-a87c-73bbad8346f6)
+
+오잉 읽어보니 `1분마다 /usr/bin/cronjob_bandit22.sh`가 실행되고 있다
+
+그렇다면 바로 찾아가 주도록 하자
+
+![image](https://github.com/user-attachments/assets/d97a6be2-68db-4bd6-ba4e-5f00222f2278)
+
+`tmp`디렉토리에 `/tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv`라는 파일을 만들고 bandit22의 비밀번호를 cat을 통해 `/tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv`파일에 저장을 하고 있다
+
+이번엔 `/tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv`을 읽어보도록 하자
+
+![image](https://github.com/user-attachments/assets/c1c71192-351a-4b49-8c9a-eb6d6f217682)
+
+비밀번호가 저장되어있다!
+
+> 비밀번호 : **tRae0UfB9v0UzbCdn9cY0gQnds9GF58Q**
+
+## Bandit Level 22 -> Level 23
+
+**user_id** : bandit22<br/>
+**password** : tRae0UfB9v0UzbCdn9cY0gQnds9GF58Q
+
+
+### 목표
+
+![image](https://github.com/user-attachments/assets/f561c320-8261-48f2-969e-84efe8a596f4)
+
+시간 기반 작업 스케줄러인 cron에서 일정한 간격으로 프로그램이 자동으로 실행되고 있습니다. /etc/cron.d/에서 구성을 확인하고 어떤 명령어가 실행되고 있는지 확인하십시오.
+
+참고: 다른 사람이 작성한 셸 스크립트를 보는 것은 매우 유용한 기술입니다. 이 수준의 스크립트는 의도적으로 읽기 쉽게 만들어졌습니다. 만약 그것이 무엇을 하는지 이해하는 데 문제가 있다면, 그것이 출력하는 디버그 정보를 보기 위해 실행해 보세요.
+
+어... 저번이랑 거의 다른 것은 없고 참고가 추가되었다
+
+### 해결법
+
+![image](https://github.com/user-attachments/assets/a0862211-8068-4e25-b385-4e221b16ca35)
+
+저번처럼 들어가서 `cron`에 연결된 파일을 후딱 읽어보면 이번에는 `/usr/bin/cronjob_bandit23.sh`파일로 연결되어있다고 한다
+
+
+![image](https://github.com/user-attachments/assets/fe22702e-16a4-497d-b3ef-ab1c1af06451)
+
+매우 간단한 스크립트가 있다
+
+```bash
+#!/bin/bash
+
+myname=$(whoami)
+mytarget=$(echo I am user $myname | md5sum | cut -d ' ' -f 1)
+
+echo "Copying passwordfile /etc/bandit_pass/$myname to /tmp/$mytarget"
+
+cat /etc/bandit_pass/$myname > /tmp/$mytarget
+```
+
+> myname=$(whoami)
+
+`whoami`명령어를 통해 유저 id를 넣는다
+
+> mytarget=$(echo I am user $myname | md5sum | cut -d ' ' -f 1)
+
+`I am user bandit23`을 `md5`해시 변환 하고 ''을 구분하여 첫번째 부분만 `mytarget` 변수에 넣는다
+
+> cat /etc/bandit_pass/$myname > /tmp/$mytarget
+
+`tmp/$mytarget`에 `bandit23`의 비밀번호가 저장되게 된다
+
+![ezgif-3-6b2e5d6e92](https://github.com/user-attachments/assets/aad031c4-edea-4b33-9c77-8c66535cc56f)
+
+우리는 현재 `whoami`를 하였을 때 `bandit22`가 나오고 우리가 찾고 싶은 것은 `bandit23`의 비밀번호이기에 찾기위해 그 부분을 직접 입력해주자
+
+![image](https://github.com/user-attachments/assets/7781a8df-4282-4dfa-9b6f-a9dd8db94959)
+
+위에서 파일이 `/tmp/$mytarget`에 저장되어있다고 하였고 우리는 `$mytarget`이 `8ca319486bfbbc3663ea0fbe81326349`라는 것을 알아냈다
+
+![image](https://github.com/user-attachments/assets/51560e85-dc0a-4bef-89dd-e4e1629fd958)
+
+읽어보면 `bandit23`의 비밀번호를 알아낼 수 있다
+
+> 비밀번호 : **0Zf11ioIjMVN551jX3CmStKLYqjk54Ga**
+
+## Bandit Level 23 -> Level 24
+
+**user_id** : bandit23<br/>
+**password** : 0Zf11ioIjMVN551jX3CmStKLYqjk54Ga
+
+
+### 목표
+
+![image](https://github.com/user-attachments/assets/252e8dcf-8fa9-4a42-85b4-9c7f5fe93b37)
+
+시간 기반 작업 스케줄러인 `cron`에서 일정한 간격으로 프로그램이 자동으로 실행되고 있습니다. `/etc/cron.d/`에서 구성을 확인하고 어떤 명령어가 실행되고 있는지 확인하십시오.
+
+참고: 이 레벨은 여러분 자신의 첫 번째 쉘 스크립트를 만들어야 합니다. 이것은 매우 큰 단계이며 이 레벨을 통과할 때 자신을 자랑스러워 해야 합니다!
+
+참고 2: 쉘 스크립트는 한번 실행되면 제거되므로 복사본을 보관하세요…
+
+
+### 해결법
+
+와 이번에는 직접 쉘 스크립트를 만들어야 한다고 한다!
+
+![image](https://github.com/user-attachments/assets/16f1f694-8bf3-435a-8504-c0c644b35b6d)
+
+보아하니 이번에는 `/usr/bin/cronjob_bandit24.sh`을 확인해 봐야 하는 것 같은데 어쨰서 쉘 스크립트를 만들어야 한다고 하는걸까?
+
+![image](https://github.com/user-attachments/assets/373c7942-f0d5-4f1a-a264-89e1f39cb805)
+
+1. `/var/spool/bandit24/foo`로 이동
+2. 해당 경로의 모든 스크립트를 실행 후 삭제
+3. 파일이 `.`이거나 `..`이 아닐 경우 실행
+4. 파일 소유자가 `bandit23`이면 60초 동안 실행되고 `-s 9` 즉 `9(SIGKILL)`을 보내서 명령어를 강제종료한다. 그 후 삭제된다
+
+저번과 다른 점이라면 아무래도 
+
+```
+cat /etc/bandit_pass/$myname > /tmp/$mytarget
+```
+
+비밀번호를 가져오는 이 부분이 빠졌기에 그 부분을 가져오고 `/var/spool/bandit24/`의 위치한 스크립트는 계속 삭제될 것이기에 따로 스크립트를 만들어 주고 옮기면 될 것 같다
+
+```
+#!/bin/bash
+cat /etc/bandit_pass/bandit24 > /tmp/lampcat23/bandit24_password
+```
+
+![image](https://github.com/user-attachments/assets/fafd820e-6542-42bb-8638-7c3c50aa28c6)
+
+스크립트를 만든 뒤 옮기려 하였는데 `/var/spool/bandit24/`가 없네?
+
+아 잘못했구나 경로가 `/var/spool/$myname/foo`이니까 우리는 `/var/spool/bandit24/foo`가 될 것이다
+
+다시 해보면?
+
+![image](https://github.com/user-attachments/assets/207bd3c5-795f-45f9-b7dd-8043fdecd01e)
+
+> 비밀번호 : **gb8KRRCsshuZXI0tUuR6ypOFjiZbf3G8**
+
+## Bandit Level 24 -> Level 25
+
+**user_id** : bandit24<br/>
+**password** : gb8KRRCsshuZXI0tUuR6ypOFjiZbf3G8
+
+
+### 목표
+
+![image](https://github.com/user-attachments/assets/41841481-3d50-43cb-8384-31c248f060e1)
+
+데몬은 `포트 30002`에서 듣고 있으며, `bandit24의 암호`와 `비밀 숫자 4자리 핀코`드가 주어지면 `bandit25`의 암호를 알려줍니다. `10000 가지 조합`을 모두 거치는 것 외에는 핀코드를 검색할 수 있는 방법이 없습니다.
+매번 새 연결을 만들 필요가 없습니다
+
+1. 30002번 포트는 열려있다
+2. bandit24의 암호 + 비밀 숫자 4자리 를 보내면 bandit25의 암호를 돌려준다
+3. 비밀 숫자는 10000가지 조합중 하나이다
+4. 한번 연결하면 굳이 새 연결을 만들 필요가 없다
+
+### 해결법
+
+간단한 [brute force](https://hcr3066.tistory.com/26)공격 문제이다
+
+스크립트를 만들고 무차별 대입을 해보자
+
+![image](https://github.com/user-attachments/assets/c09c59c7-557b-4b91-b62e-e7efd07e449f)
+
+일단 혹시해서 `nmap`을 통해 포트 스캐닝을 해보니 30002번 포트가 열려있는 것이 확실해 졌다
+
+![image](https://github.com/user-attachments/assets/d1278d87-a400-49ca-8596-dbd79f62c006)
+
+스크립트 생성을 위해 하던대로 내 작업장을 만들었다
+
+`btureforce`를 위한 비밀번호 조합 생성 스크립트는 다음과 같다
+
+```
+#!/bin/bash
+pwd24=gb8KRRCsshuZXI0tUuR6ypOFjiZbf3G8
+
+for i in {0000..9999}
+do
+    echo $pwd24 $i >> pwdlist.txt
+done
+```
+
+![image](https://github.com/user-attachments/assets/bb1b0c50-6b5f-4c35-8137-50eb8ed1fc02)
+
+리스트를 만들고 나면 이제 접속을 시도해 보자
+
+#### ERROR
+
+![image](https://github.com/user-attachments/assets/2d689044-7a6b-4bd8-ba0b-1689937e916d)
+
+혹시 나처럼 결과가 반복문이 실행되지 않는 분들을 위해 하나 말하자면
+
+실행할 때 `sh`로 실행하는 것이 아니라
+
+![image](https://github.com/user-attachments/assets/6617cbd7-8c24-4bf5-a15f-39d8dc87116d)
+
+이렇게 `./`로 실행해 보아라
+
+물론 실행하기 전에 권한도 줘야하고
+
+[스크립트 실행하는 방법에 따른 차이점](https://m.blog.naver.com/darkpegasus/221962662113)이 글을 읽고 나면 어느정도 이해가 간다
+
+`bash쉘`이 아니라 `sh 기본 쉘`로 실행되다 보니 반복문의  `{ }` 부분을 이해하지 못한 것 같다
+
+#### 다시 접속
+
+그럼 이제 만들어진 리스트를 가지고 접속을 시도해보자
+
+![image](https://github.com/user-attachments/assets/2b8d6447-c643-4aae-997a-2bbc97765bcf)
+
+순식간에 결과가 나왔다
+
+역시 한번 틀려봐야 지식이 늘어난다
+
+> 비밀번호 : **iCi86ttT4KSNe1armKiwbQNmB3YJP3q4**
+
+## Bandit Level 25 -> Level 26
+
+**user_id** : bandit25<br/>
+**password** : iCi86ttT4KSNe1armKiwbQNmB3YJP3q4
+
+
+### 목표
+
+![image](https://github.com/user-attachments/assets/88d2184c-f33a-4324-b756-d805e5870f12)
+
+`bandit25`에서 `bandit26`에 로그인하는 것은 꽤 쉬울 것입니다… 사용자 `bandit26`의 쉘은 /bin/bash가 아니라 다른 것입니다. 그것이 무엇인지, 어떻게 작동하는지, 그리고 그것을 탈출하는 방법을 알아보세요.
+
+참고: Windows 사용자이고 일반적으로 Powershell을 사용하여 밴디트에 ssh를 적용하는 경우: Powershell은 이 수준의 의도된 솔루션에 문제가 발생하는 것으로 알려져 있습니다. 대신 명령 프롬프트를 사용해야 합니다.
+
+나는 termius 쓸 거라서 참고사항은 패스
+
+### 해결법
+
+![image](https://github.com/user-attachments/assets/5f84f8cc-f20a-46c0-b934-40e276ee2dec)
+
+일단 파일을 읽어보니 바로 `bandit26.sshkey`가 보인다
+
+그리고 `bandit25@bandit:~$ ssh -i bandit26.sshkey bandit26@localhost -p 2220`를 통해 접속시도를 하게 되면
+
+![image](https://github.com/user-attachments/assets/59321c9b-c6e8-4524-a62c-82b443f0d85a)
+
+바로 쫒겨난다 목표에서 말하듯 쉘이 `/bin/bash`가 아닌 다른 것이기에 생긴 문제인 것 같다
+
+![image](https://github.com/user-attachments/assets/81db3c03-0cb4-49ae-b879-7bcb5c020f0c)
+
+`/etc/passwd`폴더에서 계정들이 사용하는 쉘을 볼 수 있다
+
+[/etc/passwd에 관해](https://feccle.tistory.com/32)
+
+![image](https://github.com/user-attachments/assets/2c44fac9-54bd-429a-ba54-ae3aaabe6f7e)
+
+확인해 보면
+
+`bandit26:x:11026:11026:bandit level 26:/home/bandit26:/usr/bin/showtext`
+
+`(1):(2):(3):(4):(5):(6):(7)` 로 나눠 보았을 때
+
+`:` : 구분자
+
+`(1)` : 사용자 계정
+
+`(2)` : 사용자 암호가 들어갈 자리, x는 /etc/shadow 파일에 암호가 저장되어있음
+
+`(3)` : 사용자의 ID, root는 0
+
+`(4)` : Group id, root그룹은 0
+
+`(5)` : 기타 정보, 보통 사용자의 이름
+
+`(6)` : 홈 디렉토리 정보
+
+`(7)` : 사용자가 기본으로 사용하는 shell 정보
+
+여기서 우리는 `bandit26`이 `/usr/bin/showtext`라는 쉘? 을 사용하고 있다는 것을 알 수 있다
+
+![image](https://github.com/user-attachments/assets/10482587-19b3-4cde-a5b4-57cc43a54deb)
+
+`/usr/bin/showtext`파일을 읽어보면 
+
+> export TERM=linux
+
+`TERM`이라는 환경변수에 linux를 저장
+
+> exec more ~/text.txt
+
+`/home bandit26/text.txt`에 `more`라는 명령어를 실행한다
+
+처음보는 명령어이기에 [Linux 기본 명령어 more](https://incodom.kr/Linux/%EA%B8%B0%EB%B3%B8%EB%AA%85%EB%A0%B9%EC%96%B4/more)을 읽으면 좋다
+
+일단 창을 줄이는 것과 관련된 명령어라는 것은 이해를 했다
+
+![image](https://github.com/user-attachments/assets/42d234f7-dcfc-4118-a018-f866848aabb1)
+
+termius에서는 안되는 걸로
+
+![image](https://github.com/user-attachments/assets/ac91b62c-37a3-49c3-9184-5b4b0092c687)
+
+`putty`에서는 성공했다
+
+![image](https://github.com/user-attachments/assets/8903b7b5-5d7e-4bbd-8fdf-94cf350a15a4)
+
+이 상태에서 v를 누르니 vi 편집기가 실행되었다
+
+![image](https://github.com/user-attachments/assets/11d653e3-cbf4-41cc-9725-6aa4493d1acd)
+
+`:set shell=/bin/bash` 명령어를 입력하여 `bash쉘`로 기본쉘을 설정하고
+
+![image](https://github.com/user-attachments/assets/4c86a5c7-4f2b-42ec-a63d-c328b0440c96)
+
+`:sh` 명령어를 입력해 익숙한 `bash쉘`로 들어올 수 있었다
+
+![image](https://github.com/user-attachments/assets/1f894a43-72e2-4789-ac8c-da8258bf5899)
+
+비밀번호가 출력되었다!
+
+> 비밀번호 : **s0773xxkk0MXfdqOfPRVr9L3jJBUOgCZ**
+
+이 다음 문제인 `bandit26`도 termius를 통해 접속하게 되면  다음과 같이 보인다만
+
+분명 아무것도 눌리지 않을 것이다..
+
+![image](https://github.com/user-attachments/assets/4490423e-f718-4128-89d6-599fa7bc4240)
+
+그렇다.. 26번 문제도 아직 25번 문제에서 이어진 문제였던 것이다
+
+여기서 부터는 다음번에
+
+## Bandit Level 26 -> Level 27
+
+**user_id** : bandit26<br/>
+**password** : s0773xxkk0MXfdqOfPRVr9L3jJBUOgCZ
+
+
+### 목표
+
+![image](https://github.com/user-attachments/assets/864fb736-7eec-4938-91d2-9017e1ffa8ec)
+
+...? shell을 얻고 bandit27의 비밀번호를 가져라! 라는데?
+
+### 해결법
+
+![image](https://github.com/user-attachments/assets/9fc17c8b-12be-4bc8-acbf-9f609a3db3f2)
+
+다시 보니 반가운 `-do`파일이 보입니다
+
+그리고 `text.txt`파일도 보이네요?
+
+![image](https://github.com/user-attachments/assets/dbca4502-ffae-4b61-ad89-0f68b84a4b48)
+
+일단 `text.txt`는 `Ascii Art`를 띄워주는 거였군요
+
+![image](https://github.com/user-attachments/assets/fad7078b-a751-4774-9b4f-df3129ff2594)
+
+역시 `euid`가 `bandit27`로 뜨네요
+
+![image](https://github.com/user-attachments/assets/14459964-c2fc-4a8f-9fba-b06de3b8ceda)
+
+그리고 잡았다 요놈
+
+> 비밀번호 : **upsNCc7vzaRDx6oZC6GiR6ERwe1MowGB**
+
+## Bandit Level 27 -> Level 28
+
+**user_id** : bandit27<br/>
+**password** : upsNCc7vzaRDx6oZC6GiR6ERwe1MowGB
+
+
+### 목표
+
+![image](https://github.com/user-attachments/assets/41515042-9551-4e9b-a93c-79bda581eec7)
+
+포트 2220의 `ssh://bandit27-git@localhost/home/bandit27-git/repo`에 `git 저장소`가 있습니다. 사용자 `bandit27-git`의 암호는 사용자 `bandit27`의 암호와 동일합니다.
+
+리포지토리를 복제하고 다음 단계의 암호를 찾습니다.
+
+### 해결법
+
+git 사용에 관한 내용이네요
+
+이건 이미 팀 프로젝트를 할 때 조금 써봤었죠
+
+![image](https://github.com/user-attachments/assets/a8f4cc4b-42e4-49d5-b568-ff6c34d553ff)
+
+작업 폴더를 만들고 `git clone`을 해줍시다
+
+`ssh://bandit27-git@localhost:2220/home/bandit27-git/repo`
+
+포트 설정을 해준 것은 2220번 포트로 가져올 수 있다고 했으니 이렇게 해야 한답니다
+
+![image](https://github.com/user-attachments/assets/102510c8-d462-4188-9e83-ca36298ade9e)
+
+비밀번호는 bandit27과 같다고 했었죠?
+
+![image](https://github.com/user-attachments/assets/55060951-1b0d-4252-a60a-189e4ff2c045)
+
+자 다운이 다 되었습니다
+
+![image](https://github.com/user-attachments/assets/67a5d618-ad63-4eff-bc37-e0aaf7526971)
+
+안에 들어있는 파일을 열어 비밀번호를 찾아낼 수 있었네요
+
+> 비밀번호 : **Yz9IpL0sBcCeuG7m9uQFt8ZNpS4HZRcN**
+
+## Bandit Level 28 -> Level 29
+
+**user_id** : bandit28<br/>
+**password** : Yz9IpL0sBcCeuG7m9uQFt8ZNpS4HZRcN
+
+
+### 목표
+
+![image](https://github.com/user-attachments/assets/a21f31c5-a7c5-44f2-8491-1e9e8a170fa8)
+
+포트 2220을 통해 `ssh://bandit28-git@localhost/home/bandit28-git/repo`에 `git 저장소`가 있습니다. 사용자 bandit28-git의 암호는 사용자 bandit28의 암호와 동일합니다.
+
+리포지토리를 복제하고 다음 단계의 암호를 찾습니다.
+
+어? 문제가 같다?
+
+### 해결법
+
+`ssh://bandit28-git@localhost:2220/home/bandit28-git/repo`
+
+![image](https://github.com/user-attachments/assets/4221b250-395a-4872-ba8a-ced81335520e)
+
+전 처럼 `git clone`을 해오면 된다
+
+![image](https://github.com/user-attachments/assets/b76dabf0-53dd-42d5-8ae9-7ea85a4b9f34)
+
+그리고 `README`파일 내용이 변했다
+
+그런데 이게 무슨 말인지 알 수가 없다
+
+힌트는 아닌 것 같고
+
+그렇다면 혹시 누군가 파일 정보를 바꾼거라면?
+
+![image](https://github.com/user-attachments/assets/23cc9115-ab1d-49ac-ac09-941e999cf875)
+
+`git clone`을 해왔으니 당연히 `.git`파일이 존재한다 
+
+![image](https://github.com/user-attachments/assets/8723ab60-d7a3-4459-90b7-19689ec97c52)
+
+오 바로 `fix info leak`이라는 문구를 찾았다
+
+아마 이게 비밀번호를 숨긴 부분이지 않을까 한다
+
+![image](https://github.com/user-attachments/assets/a1627c72-253f-4873-9378-fee99c400fc8)
+
+그럼 고치기 전으로 넘어가주자
+
+![image](https://github.com/user-attachments/assets/be521a71-c3d8-4cd7-83c0-b4f12760c2a7)
+
+비밀번호 발견~
+
+> 비밀번호 : **4pT1t5DENaYuqnqvadYs1oE4QLCdjmJ7**
+
+이러니 `git`을 사용할 때 중요한 정보들은 `.gitignore`을 사용하여 git에 올라가지 않도록 하자
+
+까딱하면 api 비용을 엄청나게 내야할 수도 있다
+
+## Bandit Level 29 -> Level 30
+
+**user_id** : bandit29<br/>
+**password** : 4pT1t5DENaYuqnqvadYs1oE4QLCdjmJ7
+
+
+### 목표
+
+![image](https://github.com/user-attachments/assets/a5d16349-cf78-436d-ac45-d0c429355603)
+
+음 그래 그럴거 같았어
+
+### 해결법
+
+`ssh://bandit29-git@localhost:2220/home/bandit29-git/repo`
+
+![image](https://github.com/user-attachments/assets/9aee9e26-e327-43d7-9cea-cbfb1c6512a6)
+
+기본세팅
+
+![image](https://github.com/user-attachments/assets/2dae1c6f-df0a-4f81-8757-12d4baedf077)
+
+`README`가 말하길 `no passwords in production!`이라신다 
+
+여긴 비밀번호 없음!
+
+![image](https://github.com/user-attachments/assets/7d3e8035-915f-4279-9d43-e9fc7dc4da32)
+
+로그도 딱히 뭔가 문제될 것이 없어보인다
+
+그렇다면 브랜치는?
+
+![image](https://github.com/user-attachments/assets/b329a284-cb62-4371-8297-d5baa91288dc)
+
+오케이 여러 갈래의 브랜치가 있는 것을 확인했다
+
+가장 위에있는 `origin/dev`로 가보자
+
+![image](https://github.com/user-attachments/assets/e59995be-9ca7-48ee-b106-546b3179c7ea)
+
+찾았다
+
+> 비밀번호 : **qp30ex3VLz5MDG1n91YowTv4Q8l7CDZL**
+
+그런데 저 code는 뭐가 있을까?
+
+![image](https://github.com/user-attachments/assets/ec52159e-87f3-4126-b993-35ae311081fc)
+
+gif를 ascii코드로 출력해주는 파이썬 파일인걸까?
+
+![image](https://github.com/user-attachments/assets/4f6fd820-fb5c-4f8e-a9f6-8a9181e35302)
+
+비었다?
+
+![image](https://github.com/user-attachments/assets/d949368f-704f-47d4-abc9-24de113a5e31)
+
+특별할 거 없는 1byte짜리 파일이였다
+
+기대했는데...
+
+## Bandit Level 30 -> Level 31
+
+**user_id** : bandit30<br/>
+**password** : qp30ex3VLz5MDG1n91YowTv4Q8l7CDZL
+
+벌써 앞자리가 3이라니 고지가 멀지 않았다
+
+### 목표
+
+![image](https://github.com/user-attachments/assets/9eaae2af-ab1e-4cb5-b9bd-50d28f67a6ce)
+
+오케이 이번에도 git문제군
+
+### 해결법
+
+`ssh://bandit30-git@localhost:2220/home/bandit30-git/repo`
+
+![image](https://github.com/user-attachments/assets/15c5487b-e3c4-43b0-a8f5-925a5a0e3529)
+
+어..? 아 잘못 썼다
+
+![image](https://github.com/user-attachments/assets/5b8b8661-d8fb-4022-885c-5e37a7267da6)
+
+이번에는 성공했다
+
+![image](https://github.com/user-attachments/assets/27c47228-0ba9-4c9e-aeef-a733fd84f3d9)
+
+허 이번에는 비었다며 웃는다
+
+![image](https://github.com/user-attachments/assets/08b6c05c-ddfb-4cc2-a5a4-95406a0efe72)
+
+그리고 딱히 다른 변경사항도 없다
+
+![image](https://github.com/user-attachments/assets/666fce4a-e0b1-4f3a-819e-0e40a2397e82)
+
+그리고 브랜치도 `HEAD`와 `master`뿐이다
+
+[git tag](https://velog.io/@devp1023/GIT-Tag-%EC%BB%A4%EB%B0%8B%EC%97%90-%EC%9D%B4%EB%A6%84-%EB%B6%99%EC%9D%B4%EA%B8%B0)라는 것은 써본 적이 없어서 몰랐는데 이 친구가 이번 문제의 핵심이였다
+
+![image](https://github.com/user-attachments/assets/a032f2ce-6137-4a64-a442-3c3e7a6c7541)
+
+찾았다
+
+> 비밀번호 : **fb5S2xb7bRyFmAvQYQGEqsbhVyJqhnDy**
+
+## Bandit Level 31 -> Level 32
+
+**user_id** : bandit31<br/>
+**password** : qp30ex3VLz5MDG1n91YowTv4Q8l7CDZL
+
+### 목표
+
+![image](https://github.com/user-attachments/assets/f5d43b85-d4c3-40a0-9fd3-0e249981ab8b)
+
+### 해결법
+
+`ssh://bandit31-git@localhost:2220/home/bandit31-git/repo`
+
+![image](https://github.com/user-attachments/assets/b25bcbd2-7550-4c64-a865-52beecca5a79)
+
+기본
+
+![image](https://github.com/user-attachments/assets/73b68989-bfb8-46ca-bc6e-40a6f6241b49)
+
+이번에는 원격 레포지토리에 파일을 `push`하라고 한다
+
+May I come in?을 내용으로 제목을 key.txt로 master브렌치에 push하란다
+
+![image](https://github.com/user-attachments/assets/c523b7a0-de04-4244-b83e-6cce2b6cf1a3)
+
+보낼 파일을 만들고
+
+![image](https://github.com/user-attachments/assets/1f67cdc5-3c11-4cff-a66a-3c65709d6c40)
+
+push해보면 지금 .gitignore 파일에 *.txt파일을 넣지 못하게 되어있고 강제로 넣고자 한다면 `-f`옵션을 사용하라고 한다
+
+![image](https://github.com/user-attachments/assets/a7cdbc56-e778-40ac-815d-f18d21769ead)
+
+강제로 넣고 `commit`을 날린 뒤 `push`를 하면
+
+![image](https://github.com/user-attachments/assets/164d6ffc-223c-4a30-8b96-8e9addc7ab57)
+
+원격에서 `push` 하는 것을 막아놨기에 `push`는 안되었지만 비밀번호를 얻어내었다
+
+> 비밀번호 : **3O9RfhqyAlVBEZpVb6LYStshZoqoSx5K**
+
+## Bandit Level 32 -> Level 33
+
+**user_id** : bandit32<br/>
+**password** : 3O9RfhqyAlVBEZpVb6LYStshZoqoSx5K
+
+### 목표
+
+![image](https://github.com/user-attachments/assets/38ca4633-a9c3-4744-a095-050c5a4622bc)
+
+git 관련 문제가 끝난 뒤에, 또 다른 탈출을 할 시간입니다. 행운을 빌어요!
+
+아니 선생님 문제는요?
+
+### 해결법
+
+![image](https://github.com/user-attachments/assets/e6c2ddda-0db2-47c2-8039-67eaa92a881a)
+
+이번에는 시작부터 `bash`쉘이 아닌 `UPPERCASE SHELL`이라고 한다
+
+일명 `대문자 쉘`
+
+이게 무슨..
+
+![image](https://github.com/user-attachments/assets/9101bad4-5dfc-49c1-bd3e-657a60798da2)
+
+정말로 일단 소문자는 입력이 안된다
+
+말 그대로 대문자만 받는 쉘인가보다
+
+![image](https://github.com/user-attachments/assets/5192b1b7-0e2a-4be0-8a20-36128694d087)
+
+`$0`은 현재 쉘을 반환하는 환경변수인데 실행하면 쉘안에 쉘이 생긴다
+
+환경변수는 또 받네?
+
+![image](https://github.com/user-attachments/assets/a817ca33-f951-43e3-849b-66b4c2306dc8)
+
+`bash`쉘로 실행을 시키니 놀랍게도 제 계정이 `bandit33`으로 바뀌어있습니다??
+
+지금은 32번 문젠데?
+
+![image](https://github.com/user-attachments/assets/5f05d5ce-f3cd-4a74-b355-40f0fda98e68)
+
+이렇게 비밀번호를 바로 찾아낼 수 있었답니다
+
+> 비밀번호 : **tQdtbs5D5i2vJwkO8mEyYEyTL8izoeJ0**
+
+## Bandit Level 33 -> Level 34
+
+**user_id** : bandit33<br/>
+**password** : tQdtbs5D5i2vJwkO8mEyYEyTL8izoeJ0
+
+### 목표
+
+![image](https://github.com/user-attachments/assets/34acb541-a209-46cd-8bd1-1e342389b8b1)
+
+아직 문제가 없음
+
+### 해결법
+
+> 비밀번호 : **공백**
+
+## FIN
+
+이렇게 나의 첫 워게임인 `Over The Wire`의 `Bandit`을 끝내게 되었다
+
+초반에는 오히려 내가 리눅스에 관해 알고있는 것 없이 무작정 달려들었다 보니 글 쓰는 것이 매우 느려지고 왜인지 모르게 손이 잘 안가는 포스트 였다
+
+하지만 bandit14번 까지 끝내고 나서 [[Shell Sciprt]로 구현한 로그 생성 및 로그에서 에러 잡기 스크립트](https://oil-lamp-cat.github.io/posts/log-read-shell-script/)라던가 [[shell script] 포트 스캐닝](https://oil-lamp-cat.github.io/posts/TCP-Port-scan-bash-script/)과 같은 여러 스크립트를 짜면서 리눅스에 관해 어느정도 이해를 하게 되었고 한참이 지난 지금에 와서야 6개월 만에 bandit34를 끝내게 되었다
+
+정말 내가 해낼 수 있을까 하면서 계속 미루던 것을 끝내니 너무 속이 편해진다
+
+이제는 다른 워게임이나 공부를 하기 전에 먼저 [Udemy](https://oil-lamp-cat.github.io/posts/Udemy-%ED%99%94%EC%9D%B4%ED%8A%B8-%ED%95%B4%ED%82%B9-101-%EC%9C%A4%EB%A6%AC%EC%A0%81-%ED%95%B4%ED%82%B9-%EA%B8%B0%EC%B4%88%EB%B6%80%ED%84%B0-%EB%B0%B0%EC%9A%B0%EA%B8%B0/)에서 신청한 강의를 들어야겠다
+
+![bye](https://github.com/user-attachments/assets/f2c60fd6-0781-427d-b4a0-f08c53b3a8c9)
+
+아 참 블로그를 작성하다가 생긴 요령인데
+
+![image](https://github.com/user-attachments/assets/72cf65de-17fe-40cf-9936-98a96dc84798)
+
+이런 사이트에서 문제를 캡쳐해 올 때 오른쪽 위의 `Donate`와 `Help`같은 찍었을 때 없앴으면 좋겠는 부분이 있으면
+
+![image](https://github.com/user-attachments/assets/aab7ba2b-9605-4d3c-93cc-4c8f9821d96c)
+
+F12로 관리자 모드에 들어가서 `Delete Elements`로 삭제해 버리면 된다
+
+> 정말로 끝
