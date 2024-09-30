@@ -169,6 +169,54 @@ pin: true
 
 ## 3. MITRE ATT&CK 프래임워크의 이해(3)
 
+[TTP(Tactic, Technique, Procedures)란 무엇인가? 사이버 보안에서의 중요성](https://dev-with-wish.tistory.com/entry/TTPTactic-Technique-Procedures%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80-%EC%82%AC%EC%9D%B4%EB%B2%84-%EB%B3%B4%EC%95%88%EC%97%90%EC%84%9C%EC%9D%98-%EC%A4%91%EC%9A%94%EC%84%B1)
+
+다시한번 보고 옵시다!
+
+### TTPs (Tactics, Techniques, Procedures)
+
+- TTP는 위협 행위를 체계적으로 설명하기 위한 일종의 모델이다.
+- Tactics (전술)은 `위협 행위의 목적`을 나타낸다.
+- Techniques (테크닉)은 위협 행위의 목적을 달성하기 위해 `사용하는 테크닉`을 의미한다.
+- Procedures (프로시저)는 테크닉을 `구현하기 위한 구체적인 절차와 방법`을 의미한다.
+
+### TTPs 예시
+
+|전술(Tactics)|테크닉/서브테크닉|프로시저 (Procedures)|
+|:---:|:---:|:---:|
+|최초 접근 (Initial Access) : 교두보 확보와 관련 있는 기법| 스피어 피싱/첨부파일, 링크 등을 이용한 스피어 피싱|- 악성 고스트스크립트가 포함된 HWP 파일을 이메일에 첨부 <br/> - 사용자가 첨부된 HWP 파일을 오픈하면 mshta.exe가 실행되어 외부에서 세컨 스테이지 악성 스크립트를 다운로드 받아 실행 <br/> - 악성 스크립트가 실행되면 HTTP를 이용하여 비콘(beacon) 악성코드를 실행|
+
+```
+스피어피싱의 서브 테크닉
+
+- 링크
+- 서비스 : 카카오톡 등
+- 첨부파일
+- etc
+```
+
+#### 비콘 (beacon)?
+
+감염된 장비가 명령이나 추가 페이로드를 전달받기 위해 특정 시간에 공격자의 C2 서버에 연결을 시도하는 클라이언트 악성코드
+
+[C2 서버를 이용하는 악성행위 분석](https://www.igloo.co.kr/security-information/command-control-%EC%84%9C%EB%B2%84%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%98%EB%8A%94-%EC%95%85%EC%84%B1%ED%96%89%EC%9C%84-%EB%B6%84%EC%84%9D/)
+
+#### Ghost 스크립트?
+
+[한글 파일에 숨어든 ‘고스트’](https://image.ahnlab.com/atip/content/atcp/tistory/1239_AhnLab_ASEC_%ED%95%9C%EA%B8%80%ED%8C%8C%EC%9D%BC%EC%97%90%EC%88%A8%EC%96%B4%EB%93%A0%EA%B3%A0%EC%8A%A4%ED%8A%B8.pdf)
+
+#### 사이버 킬 체인?
+
+[사이버전 - 사이버 킬 체인(Cyber Kill Chain)](https://charstring.tistory.com/473)
+
+#### 탐지 기술의 발전
+
+`시그니처 기반` -> `IOC 기반` -> `행위기반의 탐지(ex : TTPs 중 대표적으로 EDR)`
+
+[엔드포인트 탐지 및 대응(EDR)이란 무엇인가요?](https://www.ibm.com/kr-ko/topics/edr)
+
+`MITRE-ATT&CK(TTPs)`은 그 전에 비해 공격자의 관점에서 보는 보안 전략
+
 ## 4.[이론] MITRE-ATT&CK-프래임워크의 이해 (4)
 
 ## 5. [이론] MITRE ATT&CK 프래임워크의 이해(5)
