@@ -285,6 +285,70 @@ STIX로 표현되는 위협 정보를 교환하는 프로토콜, 프레임워크
 
 ## 5. [이론] MITRE ATT&CK 프래임워크의 이해(5)
 
+[MITRE ATT&CK Framework 이해하기](https://www.igloo.co.kr/security-information/mitre-attck-framework-%EC%9D%B4%ED%95%B4%ED%95%98%EA%B8%B0/)
+
+- Matrices (매트릭스)
+- Tactics (전술)
+- Techniques (기술)
+- Data Sources (소스)
+- Mitigations (공격 완화 정보)
+- Groups (그룹)
+- Software (소프트웨어)
+
+였는데 이제는 
+
+- Matrices
+- Tactics
+- Techniques
+- Defenses
+- CTI
+- Resources
+- Benefactors
+
+로 바뀌었다.
+
+### Matrices (매트릭스)
+
+- 테크닉/서브테크닉을 전술을 기준으로 분류해 놓은 표
+- 각 컬럼은 전술, 각 행은 해당 전술을 수행하는데 사용되는 테크닉의 정보를 포함
+- ATT&CK 매트릭스는 `Enterprise`(윈도우, 맥OS, 리눅스, 클라우드, 네트워크, 컨테이너), `Mobile`(안드로이드, ios), `ICS`(사업제어시스템)
+
+### Tactics
+
+|Tactics(전술)|설명|
+|:---:|:---:|
+|Reconnaissance (정찰) |공격을 계획하는데 사용할 수 있는 정보를 수집|
+|Resource Development (리소스 개발)|공격에 사용할 인프라와 서비스, 악성코드 등 필요한 기능을 개발/구매/탈취|
+|Initial Access (초기 접근)|네트워크에 침입하여 초기 거점을 확보|
+|Execution (실행)|악성 행위 수행을 위한 코드를 실행, 더 관범위한 목표를 달성하기 위해 다른 전술의 테크닉들과 견합됨|
+|Persistence (퍼시스턴스)|시스템 재시작, 크레덴셜 변경 등에도 시스템으로의 접근이 지속될 수 있도록 하여 확보한 거점을 유지|
+|Privilege Escalation (권한 상승)|공격 중 시스템 또는 네트워크에서 보다 높은 수준의 권한을 획득|
+|Defense Evasion (방어 우회)|공격 중 탐지 및 차단 등 방어 체계를 우회|
+|Credential Acess (크레덴셜 접근)|자격 증명을 위한 인증 정보 (계정 이름과 패스워드 등)을 탈취|
+|Discovery (정찰)|타겟 네트워크에 침투한 이후 행동 방법과 공격 전략을 수립하기 전 시스템 및 네트워크 환경을 관찰하고 정보를 수집|
+|Lateral Movement (레터럴 무브먼트)|최종 목표 시스템으로의 접근을 위해 타겟 네트워크 내부의 다른 시스템들에 침투하고 권한을 확장|
+|Collection (데이터 수집)|공격을 통해 탈취하고자 한 데이터를 수집함|
+|Command and Control (C&C, C2)|침투에 성공한 시스템과 통신하고 제어함|
+|Exfiltration (유출)|데이터를 타겟 네트워크 외부로 반출|
+|Impact (임팩트)|시스템 또는 데이터를 조작, 방해, 파괴함|
+
+### Cyber Kill Chain과의 차이점
+
+![image](https://github.com/user-attachments/assets/67c1b3ad-bbea-4788-becb-b97825240371)
+
+> 사이버 킬 체인
+
+- 공격 시 거쳐야 하는 절차/단계를 모델화 한 것
+- 각 단계별로 사용되는 구체적인 테크닉 등에 대해는 다루지 않음
+- 각 절차별로 대응 전략을 수립하여 위협 요소를 제거하거나 완화하는데 활용
+
+> MITRE ATT&CK
+
+- 공격 수행에 필요한 절차보다는 공격자들의 TTPs를 집대성 하는데 중점을 둠
+- 각 TTPs에 대한 탐지 및 대응 현황을 분석(AS-IS)하고 TO-BE 전략을 수립하는데 활용된다.
+
+[AS-IS / TO-BE 란 무슨 뜻 일까?](https://inpa.tistory.com/entry/%F0%9F%91%A9%E2%80%8D%F0%9F%92%BB-AS-IS-TO-BE-%EB%9E%80)
+
 ## 6. [이론] MITRE ATT&CK 활용(1)
 
 ## 7. [이론] MITRE ATT&CK 활용(2)
