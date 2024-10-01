@@ -219,6 +219,70 @@ pin: true
 
 ## 4.[이론] MITRE-ATT&CK-프래임워크의 이해 (4)
 
+### MITRE?
+
+- 1958년 설립된 미국의 비영리 민간 연구 기관
+- 미국의 정부 기관과 협력하여 국방, 보안, 헬스케어 등의 분야에서 전문적인 연구를 수행
+
+### CVE?
+
+> Common Vulnerabilities and Exposures
+
+`취약점` 리스트
+
+과거에는 취약점을 부르는 용어가 다 달랐었지만 CVE 프로젝트를 통해서 취약점의 공식적인 이름을 붙이게 되었다.
+
+[CVE란?](https://www.redhat.com/ko/topics/security/what-is-cve)
+
+### CWE?
+
+> Common Weakness Enumeration
+
+`보안의 약점` 리스트
+
+[CVE v.s. CWE 차이점](https://blog.naver.com/bycho211/221508854566)
+
+### CAPEC?
+
+> Common Attack Pattern Enumerations and Classifications
+
+> 흔한 공격 패턴 목록화 및 항목화 
+
+[[EQST insight] 사이버 공격 패러다임 변화에 따른 시나리오 기반 모의해킹 트렌드](https://blog.naver.com/adtkorea77/222501529256)
+
+### STIX, TAXII?
+
+> Structured Threat Information eXpression
+
+인텔리전스에 관련된 정보를 저장하는 방법을 통일했다.
+
+위협 정보를 표현하기 위한 틀
+
+> Trusted Automated eXchange of Intelligence Information
+
+STIX로 표현되는 위협 정보를 교환하는 프로토콜, 프레임워크이다.
+
+[STIX/TAXII란?](https://www.cloudflare.com/ko-kr/learning/security/what-is-stix-and-taxii/)
+
+### Cybox, MAEC?
+
+[Using MAEC Report within Cuckoo Sandbox](https://www.hakawati.co.kr/entry/Using-MAEC-Report-within-Cuckoo-Sandbox)
+
+요 부분은 추가 필요, 아직 이해 못함.
+
+### MITRE ATT&CK 프레임워크
+
+> Adversarial Tactics Techniques & Common Knowledge
+
+> 공격자의 전술 기술 & 일반적인 정보
+
+공격자들이 사용하는 TTP들을 집대성하고 체계적으로 정리해 놓은 공개된 데이터 베이스이다.
+
+- 공개된 침해사고분석 보고서, 악성코드 분석 보고서, 위협 그룹에 대한 정보를 분석하여 공격자들의 TTPs를 집대성하고 체계적으로 정리한 공개된 지식 베이스
+- 특히 post-exploitation(침투 후) 과정에서 사용되는 위협 행위들을 분석 및 분류 해 놓았다.
+- OSINT를 통해 확인된 모든 TTPs들을 포함하고 있으나 따로 중요도/관찰빈도에 따른 정보는 반영되지 않았다.
+- 하지만 여전히 블라인드 스팟(blind spot)은 존재하기에 지속적으로 업데이트 되고 있다.
+
 ## 5. [이론] MITRE ATT&CK 프래임워크의 이해(5)
 
 ## 6. [이론] MITRE ATT&CK 활용(1)
