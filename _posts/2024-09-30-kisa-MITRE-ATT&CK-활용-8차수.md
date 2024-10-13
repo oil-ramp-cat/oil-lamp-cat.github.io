@@ -351,9 +351,102 @@ STIX로 표현되는 위협 정보를 교환하는 프로토콜, 프레임워크
 
 ## 6. [이론] MITRE ATT&CK 활용(1)
 
+MITRE ATT&CK 프레임워크를 활용하여 SOC 및 보안 체계, 보안 솔루션, 개인 및 조직의 사이버보안 현황과 역량 수준을 평가(AS-IS 분석)하고 부족한 부분을 보완하기 위한 전략, 기술, 역량 개발에 활용
+
+- Assess Defensive Coverage
+  1. ATT&CK based Adversary Emulation
+  2. Atomic Red Team
+  3. ATT&CK based SOC Assessment
+  4. ATT&CK evaluations
+
+- Identify High Priority Gaps
+   1. ATT&CK Heatmap
+- Tune or Acquire New Defenses
+   1. ATT&CK evaluations
+   2. Cyber Analytics Repository
+
+실제로 공격자들의 공격을 시뮬레이션 해본다. 이를 통해 타겟이 이러한 공격을 잘 차단하는지, 감지를 잘 하는지 평가해 볼 수 있다
+
+각각의 테크닉을 에뮬레이션 하는 방법과 특정 그룹이 사용하고 있는 TTP를 모아서 그대로 재현해 보는 방법도 있다
+
+히트맵을 통해 탐지했던 공격과 막지 못한 공격을 가시적(Heat Map)으로 표시할 수 있고 우선순위를 결정할 수 있다
+
+> Threat Informed Defense
+
+![image](https://github.com/user-attachments/assets/8b3601b0-9456-4515-b4cc-79259dc44034)
+
+MITRE ATT&CK 프레임 워크를 실무에 적용하기 위한 과정
+
+- STEP 01 - Establish inputs
+   - THREAT INTEL (오픈소스 or 커머셜 툴)
+   - IOC
+   - IOB
+   - DATA MINING
+
+공격자들의 TTPS를 입력받는다
+
+- STEP 02 - Create an adversary emulation plan
+   - TTPs를 식별하고
+   - 정리한다
+   - 그리고 그를 통해 시뮬레이션에 필요한 툴 등을 만든다
+
+- STEP 03 - Run an attack simlation
+   - 실제로 시뮬레이션을 돌린다
+
+- STEP 04 - Alert, Hunt & Report
+   - 시뮬레이션 결과를 보고하고 경고한다
+
 ## 7. [이론] MITRE ATT&CK 활용(2)
 
+> Adversary Emulation (atomic)
+
+평가를 하기 위해 공격을 에뮬레이션 할 때에는 크게 2가지 방법으로 나눠진다
+
+1. 개별적인 TTPs를 구현
+2. 전체적인 시나리오를 구현
+
+`atomic`은 이름 그대로 개별적인 것을 다룬다
+
+> Atomic Red Team
+
+오픈소스이다
+
+MITRE ATT&CK의 각 테크닉들을 아토믹하게 구현해 놓았다
+
+각 테크닉과의 연계없이 개별적이고 독립적(아토믹)에뮬레이션
+
+현재 제공되는 프로시저가 다양성, 완전성 측면에서 완벽하지는 않음
+
+> Adversary Emulation Plan
+
+- 에뮬레이션 하고자 하는 위협 그룹의 TTPs 분석
+- 공격의 각 단계별로 사용할 TTPs 선택
+- 각 TTPs 들을 킬체인 등을 활용하여 공격 단계별로 배치하고 조합하여 공격 절차 구성
+- 프로시저 세부 내용 설계 및 구현
+- 특정 도구나 명령어에 의존하기 보다는 행위 자체에 집중
+- 동일한 행위 또는 테크닉일지라도 실제 사용할 수 있는 도구나 명령어는 매우 다양함
+
+![image](https://github.com/user-attachments/assets/55807083-f14e-47a1-93cb-6580033695d8)
+
+1. 스피어피싱 이메일이 사용자에게 보내짐
+2. DOCX 파일을 오픈
+3. 그 안에는 DDauto 커맨드가 삽입되어있어서 파일을 실행하게 되면 `mshta.exe(윈도우 기본 프로그램)`라는 프로그램이 실행
+4. `mshta.exe`를 통해 인터넷에서 자동으로 악성 코드를 다운받고 실행
+5. 악성코드는 자동으로 `EXCEL` 객체를 하나 만들게 되고 `EXCEL work book`에 매크로를 삽입하고 실행하게 됨
+6. 매크로는 `rundll32.exe`를 실행하여 악성코드를 네트워크에서 다운받아 주입
+7. 그 악성코드는 인터넷에서 `비콘`을 다운받아서 피해자 컴퓨터에 삽입
+
+![image](https://github.com/user-attachments/assets/3e448bfd-aa61-4655-9147-afb6ca0d7984)
+
 ## 8. [이론] MITRE ATT&CK 활용(3)
+
+> Top ATT&CK Techniques
+
+MITRE ATT&CK 프레임워크에 있는 기술 중 가장 많이 사용하는 기술에 관해 나열해 놓았다
+
+> Red Canary Top 10 Techniques
+
+Red Canary사가 `Top ATT&CK Techniques`보다 좀 더 자세하게 나열해놓았다
 
 ## 시험
 
