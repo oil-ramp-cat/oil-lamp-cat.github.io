@@ -3,7 +3,6 @@ title: "[wargame] overthewire bandit 2 -> 3"
 date: 2024-02-01 00:25:18 +09:00
 categories: [war game, Linux, bandit]
 tags: [bandit, overtherwire]
-pin: true
 ---
 
 ## Bandit Level 2 -> Level 3

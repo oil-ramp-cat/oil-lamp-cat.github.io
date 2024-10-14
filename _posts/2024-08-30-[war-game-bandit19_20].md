@@ -3,7 +3,6 @@ title: "[wargame] overthewire bandit 19 -> 20"
 date: 2024-08-30 13:41:15 +09:00
 categories: [war game, Linux, bandit]
 tags: [bandit, overtherwire]
-pin: true
 ---
 
 ## Bandit Level 19 -> Level 20
