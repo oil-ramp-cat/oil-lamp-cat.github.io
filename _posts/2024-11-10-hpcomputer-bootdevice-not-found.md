@@ -41,7 +41,7 @@ pin: true
 
 일단 USB 부팅으로 세팅을 하기 위해 바이오스에 들어가는 키는 `F10`이였다
 
-<img src="https://github.com/user-attachments/assets/569c778d-c81f-4a73-9577-0b2150bbe2c0" width="300" height="300">
+<img alt="" src="https://github.com/user-attachments/assets/569c778d-c81f-4a73-9577-0b2150bbe2c0" width="300" height="300">
 
 그리고 진입하자 마자 나를 반겨주는 처음보는 바이오스 화면...
 
@@ -63,7 +63,7 @@ pin: true
 
 일단 혹시 모르니 `Memory Test`와 `Hard Drive Check`를 둘다 돌려보았으나 아래 사진과 같이 모두 `PASS`를 받았다
 
-<img src="https://github.com/user-attachments/assets/4ac75b90-f881-461b-996b-e5a8831857b4" width="300" height="300"><img src="https://github.com/user-attachments/assets/07b3bfce-e81a-4d3b-8e93-ab61125e4be6" width="300" height="300">
+<img alt="" src="https://github.com/user-attachments/assets/4ac75b90-f881-461b-996b-e5a8831857b4" width="300" height="300"><img alt="" src="https://github.com/user-attachments/assets/07b3bfce-e81a-4d3b-8e93-ab61125e4be6" width="300" height="300">
 
 그럼 이번에는 부팅 옵션 문제인가 싶어 정말 이것저것 다 바꿔보았으나 여젼히 USB를 읽지 못했다
 
