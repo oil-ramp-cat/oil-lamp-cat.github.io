@@ -29,3 +29,15 @@ pin: true
 사진으로 보니 뭔가 바꿀게 많아 보이지만 지금은 새벽이라는 사실
 
 잠잘 시간
+
+## 2일차 (2024-11-13)
+
+얼굴 만들어보기
+
+![untitled](https://github.com/user-attachments/assets/bd1eed70-7ed9-40e5-ba75-369c9ca2f3f2)
+
+그리고 실패
+
+어떻게 해야하는지 감도 안잡히네
+
+일단 새벽이니까 수면
