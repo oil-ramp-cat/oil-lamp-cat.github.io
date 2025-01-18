@@ -186,7 +186,7 @@ pin: true
 
 상태를 확인해 보아도 포트가 잘 열려있음을 알 수 있다
 
-## 마인크래프트 서버 구동 설치
+## 마인크래프트 서버 구동 설치 (papermc)
 
 이제 정말로 마크 서버를 구동시키기 위한 마지막 단계를 시작하자
 
@@ -288,6 +288,87 @@ screen -S (이름) -X quit
 
 다른 사람들도 들어와서 사용 가능 확인 완료!
 
-## 서버 설정하기
 
-일단은 독감땜시 아프니까 여기까지
+## 마인크래프트 서버 구동 설치 (Fabric)
+
+모드를 사용하기 위해서는 `Fabric`이나 `Forge`를 이용해야 한다
+
+또한 `Forge`는 훨씬 많은 모드를 보유하고 있지만 조금 무겁고
+
+`Fabric`은 모드의 수가 적지만 훨씬 가벼운 서버에 친화적이다 고로 `Fabric` 너로 정했다
+
+![Image](https://github.com/user-attachments/assets/ce889742-d7dd-4571-aba5-9ee70e7689d5)
+
+VM 설정은 위와 동일하다
+
+![Image](https://github.com/user-attachments/assets/b20d6403-bae3-4c29-a3ed-f891fcb6660f)
+
+또한 서버 구동 준비 까지의 과정은 완전 동일하다
+
+이번에는 모드의 버전이 낮기에 OpenJDK의 버전은 17이 될 것이다
+
+![Image](https://github.com/user-attachments/assets/815b7fa6-f4a5-446c-9c3d-9591bfa3ea81)
+
+설치가 끝나면 minecraft 계정으로 돌아간다. 그리고 이제부터가 진짜 `Fabric`을 설치하는 과정이 되겠다
+
+![Image](https://github.com/user-attachments/assets/8394ba5b-0517-4be4-b9c1-7265efbcd8e9)
+
+공식 문서에 나온 대로 CLI 설치를 하고 실행을 해주면 서버는 실행하는데 성공한 것이다
+
+```
+java -Xmx12G -jar fabric-server-mc.1.20.1-loader.0.16.10-launcher.1.0.1.jar nogui
+```
+
+다시한번 실행용 `start.sh`를 만들고 `eula.txt`에서 동의로 바꿔주면
+
+![Image](https://github.com/user-attachments/assets/622723bf-914b-4894-9c02-156e5c682cc8)
+
+아 맞다 권한을 안줬네
+
+![Image](https://github.com/user-attachments/assets/3f2f8ac7-c37c-4899-a4db-9c13ca6f3bb8)
+
+권한을 주고 처음 실행시키게 되면
+
+![Image](https://github.com/user-attachments/assets/aa076b2f-982a-41a3-bb75-01dadd5d0304)
+
+이렇게 맵을 만들고 있는 것을 볼 수 있다
+
+![Image](https://github.com/user-attachments/assets/535f1926-ef47-4ac1-b018-a1cf7b867272)
+
+좋아 이제 서버를 만드는 작업은 끝났고 모드를 설치하고 맵을 다시 뒤엎어보자
+
+내가 설치할 모드는 Prominence II RPG: Hasturian Era라는 모드팩이다
+
+일단 설치해 보고 나중에 싹 다 갈아엎을 수도?
+
+```
+wget https://mediafilez.forgecdn.net/files/6088/184/Prominence%20II%20RPG%20Hasturian%20Era-v3.0.30hf.zip
+```
+
+모드 설치 경로는 위와 같다
+
+다름 모드들도 그렇지만 파일 다운로드 경로를 못 찾겠다면 그냥 본인 컴퓨터에 한번 다운받아보고 그 다운로드 경로를 써넣으면 된다
+
+월드를 새로 갈아 엎을 때에는 `world`파일을 그냥 통째로 날려버려라 그럼 다시 만들어질 것이다
+
+![Image](https://github.com/user-attachments/assets/c2be2f1d-ec71-40d4-b1b5-ed59c7e96ecf)
+
+그.. 그만.. 이번 오류는 바로 의존성 모드가 필요하다고 한다..
+
+```
+wget https://mediafilez.forgecdn.net/files/4731/991/Luna-FABRIC-MC1.19.X-1.0.1.jar
+
+wget https://mediafilez.forgecdn.net/files/6036/402/fabric-api-0.92.3%2B1.20.1.jar
+
+wget https://mediafilez.forgecdn.net/files/5772/682/Necronomicon-Fabric-1.6.0%2B1.20.1.jar
+```
+
+![Image](https://github.com/user-attachments/assets/b86110d2-1076-4ca7-b345-f541a8665dfa)
+
+일...단은 다 삭제하고 내일 다시 해봐야겠다. 어쩌면 그냥 모드팩이 아니라 모드만 까는 것이 훨씬 쉬울지도
+
+![Image](https://github.com/user-attachments/assets/28e6b3f6-6618-48a8-b7ad-a7a3a7158122)
+
+충격적이게도 내 본 마인크래프트를 설치하였을 때에 curse forge 앱에 서버용 다운로드가 뜨는 것을 발견하였다
+
+설마 이거를 따로 써야하나?
