@@ -284,6 +284,10 @@ screen -S (이름) -X quit
 
 일단 성공이다.. 와!
 
+![Image](https://github.com/user-attachments/assets/65f1667c-f466-4b67-934c-d28ed75e6a41)
+
+다른 사람들도 들어와서 사용 가능 확인 완료!
+
 ## 서버 설정하기
 
 일단은 독감땜시 아프니까 여기까지
