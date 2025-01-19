@@ -288,6 +288,77 @@ screen -S (이름) -X quit
 
 다른 사람들도 들어와서 사용 가능 확인 완료!
 
+## 서버 관리를 위해 플러그인 설치하기 (봇 생성)
+
+계속 Google Cloud에 들어가서 서버 상태를 확인하는 것 보다는 디스코드를 이용해서 서버와 통신을 통해 확인하는 것이 훨씬 빠르고 편할 것 이라고 생각해 플러그인을 추가하고자 한다
+
+[DiscordSRV](https://github.com/DiscordSRV/DiscordSRV)을 추가 할 생각이다
+
+방법은 매우 간단하다
+
+```
+cd /server/plugins
+```
+
+플러그인 파일에 들어가 `wget` 명령어로 가장 최신 .jar파일을 다운받으면 된다
+
+한번 다운받은 후에는 서버를 다시 실행시켜 Discord 봇 토큰을 넣으라는 메세지가 뜰 때 까지 기다리다 서버를 종료한 뒤에 봇 설정에 들어가자
+
+![Image](https://github.com/user-attachments/assets/86e9d305-ea56-4a9a-b295-cc4c75b3914e)
+
+이렇게 봇을 생성하고 나면 이제 다시 서버로 돌아가 토큰을 넣어주자. 복사한 토큰은 서버의 `./config.yml`에 넣어주면 된다
+
+봇 토큰을 발급 받은 후 `./plugins/DiscordSRV/config.yml`에 넣었다면 봇 초대 링크를 생성해 디스코드 서버에 봇을 초대할 차례이다
+
+![Image](https://github.com/user-attachments/assets/c06fffdb-cbe4-4cce-ac79-5316050991bc)
+
+`OAuth2`에 들어가 맨 아래로 페이지를 내려보자
+
+![Image](https://github.com/user-attachments/assets/6820aeac-e958-4539-99d5-0e1c53ff3412)
+
+여기서는 서버에서 어떤 권한들을 쥐여줄지 선택할 수 있는 페이지 이다. 나는 여기서 `SCOPES`는 `BOT`으로 `BOT PERMISSIONS`은 `Send Messages`, `Manage Messages` 두가지 기능을 사용하겠다
+
+이제 가장 아래 있는 링크 생성기에서 링크를 만들고 브라우저에 입력하면 봇을 어떤 서버에 부를지 정할 수 있게 되고 생성된 봇에 코드를 입혀줄 차례이다
+
+## 서버 관리를 위해 플러그인 설치하기 (봇 세팅)
+
+![Image](https://github.com/user-attachments/assets/ce659452-11bd-41c5-ba47-94a1b44495e5)
+
+먼저 디스코드에서 봇이 사용할 채널을 옮겨주자
+
+사실 이 외에도 많은 다른 코드가 있겠으나 사실 이젠 끝이다 이 상태로 서버를 활성화시켜주면 봇도 같이 활성화가 된다
+
+![Image](https://github.com/user-attachments/assets/b4c1d7a0-1d5f-4bf4-a02e-032f15bbdb42)
+
+서버가 실행될 때 알아서 플러그인을 잡아주니 얼마나 좋은가
+
+![Image](https://github.com/user-attachments/assets/8615d5fb-39c4-4e52-a1a3-1f27783f4650)
+
+아닌가? 이런.. 봇의 권한이 조금 더 필요했었다
+
+![Image](https://github.com/user-attachments/assets/5335a668-3de6-438d-b843-4ea6aea9b164)
+
+이제는 되겠지?
+
+![Image](https://github.com/user-attachments/assets/c51ae8a4-7480-4a19-b267-81101d51a34e)
+
+오오오오오 됬나!
+
+![Image](https://github.com/user-attachments/assets/ae06329b-0f33-4e4a-a1b7-cc1465500be4)
+
+성공이다
+
+![Image](https://github.com/user-attachments/assets/35517a9f-4dd3-4704-9194-b227858e18c7)
+
+채팅도 확인되었다
+
+![Image](https://github.com/user-attachments/assets/f95bf3bb-8e20-4213-afb7-c471c8dcdcc4)
+
+계속 알람이 울리면 좀 그래서 아예 따로 채널을 하나 만들었다. 이제 마인크래프트 서버는 쉽게 만들 수 있겠다
+
+![Image](https://github.com/user-attachments/assets/ac268e00-7235-4151-bcfc-1ac1d0c8bd73)
+
+명령어는 안뜨는 걸로 확인되었네요. 일단 당분간 이 서버는 이렇게 냅두는 걸로 해야겠습니다
 
 ## 마인크래프트 서버 구동 설치 (Fabric)
 
@@ -372,3 +443,25 @@ wget https://mediafilez.forgecdn.net/files/5772/682/Necronomicon-Fabric-1.6.0%2B
 충격적이게도 내 본 마인크래프트를 설치하였을 때에 curse forge 앱에 서버용 다운로드가 뜨는 것을 발견하였다
 
 설마 이거를 따로 써야하나?
+
+![Image](https://github.com/user-attachments/assets/7b865553-a9e5-42a2-8737-c892e34588c2)
+
+맞다 파일을 다운 받은 후 zip파일을 풀고 `start.sh`파일에 권한을 부여한 후 실행시키면 알아서 서버를 열어준다
+
+![Image](https://github.com/user-attachments/assets/d2840e4a-94c6-4d45-ae7a-876df7f269a4)
+
+그리고 확인해 보니 확실히 모드 서버가 실행하는데 있어 엄청나게 오래 걸린 다는 것을 알 수 있었다
+
+![Image](https://github.com/user-attachments/assets/a7e746fc-5f83-44a3-a3db-b663585896b4)
+
+모드 서버에 접속하는데 성공은 했으나 아무래도 서버가 못 버티는 듯 하다 이건 뭐 나중에 좀 더 바꾸기로 하자
+
+## 끝
+
+4주의 훈련소 과정을 할 때에 한번쯤은 다시 한번 시도해 보고 싶다는 생각이 들었던 마크 서버 만들기
+
+결국에는 하루만에 성공했네요
+
+어릴땐 이게 어찌나 어렵던지.. 그만큼 최근 나오는 도구들이 더 쉽게 도와준다는 뜻도 있겠죠
+
+다들 독감 조심하시길..
