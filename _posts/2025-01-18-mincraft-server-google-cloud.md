@@ -456,7 +456,109 @@ wget https://mediafilez.forgecdn.net/files/5772/682/Necronomicon-Fabric-1.6.0%2B
 
 모드 서버에 접속하는데 성공은 했으나 아무래도 서버가 못 버티는 듯 하다 이건 뭐 나중에 좀 더 바꾸기로 하자
 
-## 끝
+## 마인크래프트 서버 구동 설치 (Forge)
+
+서버를 갈아 엎고 Forge용 서버로 넣을 모드만 넣기로 하였다
+
+### 1. 서버 갈아엎기
+
+파일 내부를 전부 삭제 후 [Forge](https://files.minecraftforge.net/net/minecraftforge/forge/) 사이트에 들어가 원하는 버전을 선택한 후 위 `Febric`에서 하던 방법을 다시 하면 된다
+
+![Image](https://github.com/user-attachments/assets/23b0a6be-b918-46e9-bd42-4809d366e885)
+
+이렇게 서버 준비가 끝이 나면 시작은 `run.sh`파일로 하면 된다. 위에 보이는 `start.sh`는 서버를 처음 만들 때 필요해서 만들어 둔 것이기에 사실 한 번 실행 했다면 삭제해도 무방하다
+
+### 2. 모드 선정 후 다운로드 하기
+
+일단 이번 서버의 버전은 **1.20.1**로 결정했다
+
+모드를 선택할 때에는 [curseforge](https://www.curseforge.com/minecraft/search?class=mc-mods)에 들어가 다운로드 하면 되고 이 때 `Forge`인지 `Fabric`용 인지 확인하고 버전도 맞춰서 다운하길 바란다
+
+![Image](https://github.com/user-attachments/assets/a916dc9b-ffe4-44cf-b5ef-ed6ff97eef84)
+
+이번에 나는 이정도의 모드를 설치해 보고자 한다
+
+뭐 하는 모드인지는 나중에 시간이 남는다면 적어볼 수도?
+
+이제 나는 이 파일을 나의 마크 서버에 보내야 한다
+
+### 3. 모드 전송
+
+일단 한번 `scp` 명령어를 사용해 보자
+
+는 시작부터 문제네
+
+![Image](https://github.com/user-attachments/assets/3fd180ef-0c65-4abd-91e7-1664644e46ff)
+
+아무래도 내가 서버측에서 마크용 포트만 열어놔서 막히는 듯 하다. 이러면 또 다른 방법을 써야지
+
+`github`에 올린 뒤에 이걸 다운받으면 되겠지?
+
+![Image](https://github.com/user-attachments/assets/3e42245d-348d-41f0-ab25-a0c08ed87f4f)
+
+오케이 바로 실패. 뭐 당연한 거였겠지만 용량의 문제일 것이다
+
+그렇다면 그냥 외부 서비스를 이용하자
+
+![Image](https://github.com/user-attachments/assets/e4bc31a6-1c52-4b43-afb8-845deb3bc46d)
+
+그런데 `file.io`는 또 뭔가 `lime`이랑 합병 되면서 이상해졌다. `wget`사용 불가
+
+그냥 `github`에 올린 뒤에 다운 받자
+
+![Image](https://github.com/user-attachments/assets/f6c60448-d700-45a6-b346-350b4f114e39)
+
+`zip`파일로 올리게 되면 용량에 문제가 생기니 원래 있던 레포지토리에 `하나씩`파일을 쪼개 넣으면 된다
+
+![Image](https://github.com/user-attachments/assets/25506a0b-eb06-4f64-b167-b769216bfc54)
+
+`git clone`으로 다운 받으면 성공
+
+![Image](https://github.com/user-attachments/assets/fea5c608-39ad-4c36-8c4e-ca49de8000ce)
+
+끝!?
+
+![Image](https://github.com/user-attachments/assets/2e09c612-c28d-435b-a073-b43517c63095)
+
+실행시키면 필요한 라이브러리가 매우 많다는 것을 알 수 있다.. 아이고
+
+![Image](https://github.com/user-attachments/assets/3f65d390-5ef8-46cb-a4e5-9c4038a3d741)
+
+다시 설치를 끝내고 실행을 해보면?
+
+![Image](https://github.com/user-attachments/assets/17c302b7-706b-417d-970d-36985fea725e)
+
+월드 생성이 시작된다!
+
+![Image](https://github.com/user-attachments/assets/5746af4d-adca-40d1-935e-ba9183972f9c)
+
+서버 구동 성공!
+
+## 마인크래프트 (클라이언트) 모드 설치
+
+서버측 보다 훨씬 쉽다. 아니 사실상 과정이 동일하다 CLI가 아닌 GUI로 이루어진다는 것만 빼면 말이다
+
+파일 내부를 전부 삭제 후 [Forge](https://files.minecraftforge.net/net/minecraftforge/forge/) 사이트에 들어가 원하는 버전을 선택한 후 설치를 진행하자
+
+![Image](https://github.com/user-attachments/assets/799692c8-a66c-4c81-82f6-412069c1500f)
+
+![Image](https://github.com/user-attachments/assets/ea0f4c82-3491-4c36-8c2d-1dab1b1c1a1d)
+
+쭉 진행하면 된다
+
+마크 설치도 완료된다면 모드를 전부 넣어주자
+
+![Image](https://github.com/user-attachments/assets/dae619bb-7d32-4e0f-b843-2ebc46e2dc45)
+
+![Image](https://github.com/user-attachments/assets/7c19fa73-9c8e-4039-96f8-7c516bd3c045)
+
+모드를 몇가지 더 추가했다
+
+![Image](https://github.com/user-attachments/assets/b13027fe-c7a1-4191-bb1b-adbe9ddcd15f)
+
+모드 서버 접속 성공!!
+
+## 끝?
 
 4주의 훈련소 과정을 할 때에 한번쯤은 다시 한번 시도해 보고 싶다는 생각이 들었던 마크 서버 만들기
 
@@ -465,3 +567,7 @@ wget https://mediafilez.forgecdn.net/files/5772/682/Necronomicon-Fabric-1.6.0%2B
 어릴땐 이게 어찌나 어렵던지.. 그만큼 최근 나오는 도구들이 더 쉽게 도와준다는 뜻도 있겠죠
 
 다들 독감 조심하시길..
+
+## 진짜 끝 1차
+
+서버를 Forge용도로 변경하기 위해 Forge 관련 내용이 추가되었다
