@@ -1,8 +1,8 @@
 ---
-title: "[Google Cloud]마인크래프트 서버 만들기"
+title: "[Google Cloud] 마인크래프트 서버 만들기"
 date: 2025-1-18 18:50:15 +09:00
-categories: [마인크래프트, 서버]
-tags: [google cloud]
+categories: [google cloud, 마인크래프트]
+tags: [서버]
 pin: true
 ---
 
@@ -12,7 +12,7 @@ pin: true
 
 물론 a형 독감과 함께라는 문제가 있었지만 일단 나오고 나니 너무 기분이 좋다
 
-훈련소에서 만난 사람들과 마크 24시간 마크 서버를 간단하게 열어서 놀아볼까 하는 생각에 시작한다
+훈련소에서 만난 사람들과 마크 `24시간 마크 서버`를 간단하게 열어서 놀아볼까 하는 생각에 시작한다
 
 ## 선택
 
@@ -22,7 +22,7 @@ pin: true
 - 미니 컴퓨터
 - 외부 서비스
 
-일단 내가 고려해볼 것은 24시간 돌릴 생각이기에 개인 컴퓨터를 켜놓고 있기가 좀 그러니 외부 서비스와 미니 컴퓨터 중 하나일 것이다
+일단 내가 고려해볼 것은 24시간 돌릴 것이지만 개인 컴퓨터를 켜놓고 있기에는 잠 자는 시간동안에도 컴퓨터를 옆에 켜 놓고 팬 돌아가는 소리를 들어야하니 나에게 선택지는 외부 서비스와 미니 컴퓨터 중 하나가 되겠다
 
 외부 서비스에는 `Microsoft Azure` 과 `Google Cloud`가 있다
 
@@ -32,11 +32,13 @@ pin: true
 
 ![Image](https://github.com/user-attachments/assets/453ee0c3-2609-40eb-abab-fe7e3344adbd)
 
-우리 집이 좀 많이 오래된 곳인지라 랜선을 끌어오려면 라우터에서 직접 가져와야하는데 하필이면 출입문이 막고 있어 살짝 성가신 작업이 될 것이라고 생각한다
+우리 집이 좀 많이 오래된 곳인지라 랜선을 끌어오려면 벽을 통해서가 아닌 거실을 통과하여 라우터에서 직접 가져와야하는데 하필이면 출입문이 막고 있어 선을 끌어오는데 미관적으로 별로일 것 같아 라즈베리파이는 일단 미뤘다
 
-그렇다면 이제 `외부 서비스`를 이용하는 것인데 난 이미 `Microsoft Azure`을 재미사마 안드로이드 구동을 위한 VM 서비스를 한달 동안 썼기에 이제 무료 토큰은 남아있지 않았다
+하지만 뭐 결국에는 라우터도 오래된지라(4년) 무선인터넷 속도가 느리니 랜선을 끌어오기는 할 것이다. 하지만 지금은 몸이 아프니 좀 나중에나 하겠지
 
-그럼 `Google Cloud`를 써야겠지?
+그렇다면 이제 `외부 서비스`를 이용하는 방법만이 남았는데 난 이미 `Microsoft Azure`을 재미사마 `안드로이드 구동`을 위한 VM 서비스로 한달 동안 썼기에 이제 무료 토큰은 남아있지 않았다 (그런데 이렇게 만들어 놓고 기어코 라즈베리파이에 Android Lineage 버전을 설치 한뒤에 게임 구동에 까지 성공했었다. 그래서 VM에는 Windows를 설치하여 객체검출에 사용했다는 이야기가...)
+
+그럼 지금 당장 할 수 없는 방법들을 열외해 보면 `Google Cloud`를 써야겠지?
 
 ## Google Cloud 무료 서비스 등록하기
 
@@ -86,7 +88,7 @@ pin: true
 
 ![Image](https://github.com/user-attachments/assets/4b06394b-9aad-4b1c-a1f5-222f274b944a)
 
-페이지를 다시 로딩하니 제대로 페이지에 들어가졌다. 버그였던걸로
+페이지를 `다시 로딩(F5)`하니 제대로 페이지에 들어가졌다. 버그였던걸로
 
 이제는 나 처럼 이미 한번 `Azure` 서비스나 다른 서비스를 이용해 본 사람이라면 쉽게 할 수 있을 것이다
 
@@ -106,7 +108,7 @@ pin: true
 
 ![Image](https://github.com/user-attachments/assets/2cd45a4b-90e1-42d4-b171-e83e204b2861)
 
-만들기 전 OS 및 스토레지에서 기본 설정인 `Devian`에서 내게 더 익숙한 `Ubuntu`로 변경 후 SSD스토레지로 설정하여 25GB의 크기를 할당해 주었다
+만들기 전 OS 및 스토레지에서 기본 설정인 `Devian`에서 내게 더 익숙한 `Ubuntu`로 변경 후 SSD스토레지로 설정하여 25GB의 크기를 할당해 주었다 (일단 둘 다 Linux기반이기는 하다. 게다가 우리는 딱히 VM에 들어가 GUI를 쓸 일은 없다)
 
 ![Image](https://github.com/user-attachments/assets/aaabc66c-7435-4476-a932-1a713167d994)
 
@@ -118,25 +120,25 @@ pin: true
 
 ![Image](https://github.com/user-attachments/assets/9a44084b-d5b4-4797-bd88-66a5ab9bea05)
 
-이 때 네트워크 탭에서 위 두 트래픽을 허용해 주라는데 나는 왜인지 이해하지 못했다
+이 때 내가 찾아보던 사이트들에서는 네트워크 탭에서 위 두 트래픽을 허용해 주라는데 나는 왜인지 이해하지 못했다
 
 마인크래프트 방화벽을 여는데 HTTP, HTTPS가 필요한가?
 
 ![Image](https://github.com/user-attachments/assets/6d19fdd1-8a2d-4ddd-9ec1-88034059414a)
 
-예약 버튼을 눌러 서버 IP도 할당해보자. 결과는 이제 친구들과만 공유하길 바란다
+예약 버튼을 눌러 서버 IP도 할당해보자. 결과에 나오는 IP는 이제 친구들과만 공유하길 바란다
 
 **만들기** 버튼을 누르면 서버를 생성할 수 있다
 
 ![Image](https://github.com/user-attachments/assets/11582e8b-33c4-4570-9b7a-cd529efc3952)
 
-머신 생성 성공
+머신(서버용) 생성 성공
 
 ## 방화벽 설정
 
 외부에서 이 서버에 접속하기 위해서는 당연히 방화벽을 설정해줘야 한다
 
-하다못해 라즈베리파이도 FTP 쓰려고 방화벽을 설정하기도 한다
+하다못해 라즈베리파이도 FTP, VNC 쓰려고 방화벽을 설정하기도 한다
 
 ![Image](https://github.com/user-attachments/assets/6d8d8974-dd1d-498a-add8-4572b4f13ad3)
 
@@ -152,9 +154,11 @@ pin: true
 
 포트는 TCP 포트로 열고 마인크래프트 서버를 위한 포트인 `25565`을 넣어주자
 
+진짜 HTTPS랑 HTTP는 왜 필요한거지? 모드용 서버와 바닐라 서버를 모두 완성한 후 서버에서 잘 놀고있는 지금도 글을 다듬고 있는 지금도 이해하지 못했다
+
 ![Image](https://github.com/user-attachments/assets/ff9f1329-d792-4fbb-b23b-2958fcb398af)
 
-만들고 나면 이렇게 VPC 방화벽 규칙에서 볼 수 있다
+만들고 나면 이렇게 `VPC 방화벽 규칙`에서 볼 수 있다
 
 ## 마인크래프트 서버 구동 준비
 
@@ -172,7 +176,7 @@ pin: true
 
 ![Image](https://github.com/user-attachments/assets/029da4eb-0242-4983-b321-6ff5a737c269)
 
-매번 리눅스를 키면 하던 `apt update`와 `apt upgrade`를 하자
+매번 리눅스를 키면 하곤 했던 `apt update`와 `apt upgrade`를 하자
 
 ![Image](https://github.com/user-attachments/assets/7d1f76d3-715c-486d-8f0d-444b795b7604)
 
@@ -186,11 +190,11 @@ pin: true
 
 상태를 확인해 보아도 포트가 잘 열려있음을 알 수 있다
 
-## 마인크래프트 서버 구동 설치 (papermc)
+## 마인크래프트 서버 구동 설치 (paperMC) - 바닐라
 
 이제 정말로 마크 서버를 구동시키기 위한 마지막 단계를 시작하자
 
-나는 서버 구동을 위해 `Paper MC`를 이용하고자 한다. 마크 버전은 가장 최신 버전을 쓸 것이다 
+나는 바닐라 서버 구동을 위해 `PaperMC`를 이용하고자 한다. 마크 버전은 가장 최신 버전을 쓸 것이다 
 
 ![Image](https://github.com/user-attachments/assets/5f3bd865-d132-4ce7-bbab-9cf845caf3f2)
 
@@ -206,7 +210,7 @@ pin: true
 
 ![Image](https://github.com/user-attachments/assets/dbf90371-cbd2-4d1b-a782-f28e89fbdd60)
 
-가장 최근 `Paper MC`를 설치할 것인데 [paper](https://papermc.io/downloads/paper)사이트에 들어가 Build를 우클릭하고 링크를 복사해서 다운받을 수 있다
+가장 최근 버전의 `Paper MC`를 설치할 것인데 [paper](https://papermc.io/downloads/paper)사이트에 들어가 Build를 우클릭하고 링크를 복사해서 다운받을 수 있다
 
 ![Image](https://github.com/user-attachments/assets/9609d3c2-d4e8-4c29-ae3a-394bfb31f291)
 
@@ -216,7 +220,7 @@ pin: true
 
 라고 하기에는 문제가 발생하였다
 
-아무래도 다운로드 상에 문제인지 76KB만 다운이 되어 파일이 손상되었기에 `wget https://api.papermc.io/v2/projects/paper/versions/1.21.4/builds/117/downloads/paper-1.21.4-117.jar` 명령어를 통해 다시 다운로드 하였다
+아무래도 다운로드 상에 문제인지 76KB만 다운이 되고 내가 원하는 서버 실행 파일을 얻지 못했음으로 `wget https://api.papermc.io/v2/projects/paper/versions/1.21.4/builds/117/downloads/paper-1.21.4-117.jar` 명령어를 통해 다른 방식으로 다운로드 하였다
 
 ![Image](https://github.com/user-attachments/assets/c6390373-98ee-41d2-bbcc-c1a8c7b7862a)
 
@@ -288,11 +292,15 @@ screen -S (이름) -X quit
 
 다른 사람들도 들어와서 사용 가능 확인 완료!
 
-## 서버 관리를 위해 플러그인 설치하기 (봇 생성)
+## 서버 관리를 위해 플러그인 설치하기 (봇 생성) - PaperMC
 
 계속 Google Cloud에 들어가서 서버 상태를 확인하는 것 보다는 디스코드를 이용해서 서버와 통신을 통해 확인하는 것이 훨씬 빠르고 편할 것 이라고 생각해 플러그인을 추가하고자 한다
 
 [DiscordSRV](https://github.com/DiscordSRV/DiscordSRV)을 추가 할 생각이다
+
+정리하는 지금(25-1-24)에 와서 서버를 써보면서 안 사실이지만 `DiscordSRV`는 서버 상태를 알려주지는 않는다
+
+채팅이나 도전과제 달성, 서버에 들어오거나 나갈 때 봇을 통해 알려준다
 
 방법은 매우 간단하다
 
@@ -318,7 +326,7 @@ cd /server/plugins
 
 여기서는 서버에서 어떤 권한들을 쥐여줄지 선택할 수 있는 페이지 이다. 나는 여기서 `SCOPES`는 `BOT`으로 `BOT PERMISSIONS`은 `Send Messages`, `Manage Messages` 두가지 기능을 사용하겠다
 
-이제 가장 아래 있는 링크 생성기에서 링크를 만들고 브라우저에 입력하면 봇을 어떤 서버에 부를지 정할 수 있게 되고 생성된 봇에 코드를 입혀줄 차례이다
+이제 가장 아래 있는 링크 생성기에서 링크를 만들고 브라우저에 입력하면 봇을 어떤 서버에 부를지 정할 수 있게 되고 생성된 봇에 설정을 해줄 시간이다
 
 ## 서버 관리를 위해 플러그인 설치하기 (봇 세팅)
 
@@ -358,7 +366,7 @@ cd /server/plugins
 
 ![Image](https://github.com/user-attachments/assets/ac268e00-7235-4151-bcfc-1ac1d0c8bd73)
 
-명령어는 안뜨는 걸로 확인되었네요. 일단 당분간 이 서버는 이렇게 냅두는 걸로 해야겠습니다
+명령어는 안뜨는 걸로 확인되었다. 일단 당분간 이 서버는 이렇게 냅두는 걸로 하자
 
 ## 마인크래프트 서버 구동 설치 (Fabric)
 
@@ -367,6 +375,8 @@ cd /server/plugins
 또한 `Forge`는 훨씬 많은 모드를 보유하고 있지만 조금 무겁고
 
 `Fabric`은 모드의 수가 적지만 훨씬 가벼운 서버에 친화적이다 고로 `Fabric` 너로 정했다
+
+(25-1-24 : 라고 해놓고 모드팩을 설치하는 바람에 결국 싹 다시 날렸다는.. 그러니 처음 모드 서버를 만드는 사람은 Forge 탭으로 가시길)
 
 ![Image](https://github.com/user-attachments/assets/ce889742-d7dd-4571-aba5-9ee70e7689d5)
 
@@ -418,7 +428,7 @@ wget https://mediafilez.forgecdn.net/files/6088/184/Prominence%20II%20RPG%20Hast
 
 모드 설치 경로는 위와 같다
 
-다름 모드들도 그렇지만 파일 다운로드 경로를 못 찾겠다면 그냥 본인 컴퓨터에 한번 다운받아보고 그 다운로드 경로를 써넣으면 된다
+다른 모드들도 그렇지만 파일 다운로드 경로를 못 찾겠다면 그냥 본인 컴퓨터에 한번 다운 받아보고 다운로드 링크를 써넣으면 된다
 
 월드를 새로 갈아 엎을 때에는 `world`파일을 그냥 통째로 날려버려라 그럼 다시 만들어질 것이다
 
@@ -436,17 +446,17 @@ wget https://mediafilez.forgecdn.net/files/5772/682/Necronomicon-Fabric-1.6.0%2B
 
 ![Image](https://github.com/user-attachments/assets/b86110d2-1076-4ca7-b345-f541a8665dfa)
 
-일...단은 다 삭제하고 내일 다시 해봐야겠다. 어쩌면 그냥 모드팩이 아니라 모드만 까는 것이 훨씬 쉬울지도
+그래도 문제가 계속 생긴다. 일...단은 다 삭제하고 내일 다시 해봐야겠다. 어쩌면 그냥 모드팩이 아니라 모드만 까는 것이 훨씬 쉬울지도, 라고 생각했으나
 
 ![Image](https://github.com/user-attachments/assets/28e6b3f6-6618-48a8-b7ad-a7a3a7158122)
 
-충격적이게도 내 본 마인크래프트를 설치하였을 때에 curse forge 앱에 서버용 다운로드가 뜨는 것을 발견하였다
+충격적이게도 내 본 마인크래프트를 설치하였을 때에 `curse forge` 앱에 서버용 다운로드가 뜨는 것을 발견하였다
 
 설마 이거를 따로 써야하나?
 
 ![Image](https://github.com/user-attachments/assets/7b865553-a9e5-42a2-8737-c892e34588c2)
 
-맞다 파일을 다운 받은 후 zip파일을 풀고 `start.sh`파일에 권한을 부여한 후 실행시키면 알아서 서버를 열어준다
+맞았다! 파일을 다운 받은 후 zip파일을 풀고 `start.sh`파일에 권한을 부여한 후 실행시키면 알아서 서버를 열어준다
 
 ![Image](https://github.com/user-attachments/assets/d2840e4a-94c6-4d45-ae7a-876df7f269a4)
 
@@ -454,15 +464,17 @@ wget https://mediafilez.forgecdn.net/files/5772/682/Necronomicon-Fabric-1.6.0%2B
 
 ![Image](https://github.com/user-attachments/assets/a7e746fc-5f83-44a3-a3db-b663585896b4)
 
-모드 서버에 접속하는데 성공은 했으나 아무래도 서버가 못 버티는 듯 하다 이건 뭐 나중에 좀 더 바꾸기로 하자
+모드 서버에 접속하는데 성공은 했으나 아무래도 내가 설정한 VM이 모드팩을 못 버티는 듯 하다 이건 뭐 나중에 좀 더 바꾸기로 하자
+
+(25-1-24 : 사실 생각보다 오류가 뜨지만 맵 확장 시에만 조금 느렸지 모드팩을 즐기는데에는 무리가 없었다)
 
 ## 마인크래프트 서버 구동 설치 (Forge)
 
-서버를 갈아 엎고 Forge용 서버로 넣을 모드만 넣기로 하였다
+서버를 갈아 엎고 Forge용 서버로 필요한 모드만 넣기로 하였다
 
 ### 1. 서버 갈아엎기
 
-파일 내부를 전부 삭제 후 [Forge](https://files.minecraftforge.net/net/minecraftforge/forge/) 사이트에 들어가 원하는 버전을 선택한 후 위 `Febric`에서 하던 방법을 다시 하면 된다
+파일 내부를 전부 삭제 후 [Forge](https://files.minecraftforge.net/net/minecraftforge/forge/) 사이트에 들어가 원하는 버전을 선택한 후 위 `Fabric`에서 하던 방법을 다시 하면 된다
 
 ![Image](https://github.com/user-attachments/assets/23b0a6be-b918-46e9-bd42-4809d366e885)
 
@@ -482,6 +494,37 @@ wget https://mediafilez.forgecdn.net/files/5772/682/Necronomicon-Fabric-1.6.0%2B
 
 이제 나는 이 파일을 나의 마크 서버에 보내야 한다
 
+> 25-1-24
+
+- aether : 천국모드
+- alexsmobs : 새로운 몬스터, 동물 추가
+- animal_armor_trims : 동물 갑옷
+- appleskin : 음식 먹었을 때 추가 효과
+- betterfpsdist : 서버의 FPS 증가
+- BetterThirdPerson : 3인칭 추가 기능
+- BiomesOPlenty : 바이옴 추가
+- carryon : 물건 들 수 있음
+- chat_heads : 채팅치면 얼굴 나옴
+- Clumps : 경혐치 구슬 덩어리로 모아줌 - 랙 감소
+- embeddium : 이게 쉐이더였나?
+- EnchantmentDescriptions : 이름 그대로 인첸트 설명
+- gravestone : 무덤
+- irons_spellbooks : 마법책 모드
+- Jade : 누구세요?
+- jei : 아이템 검색 등등
+- journeymap : 지도
+- JustEnoughResources : jei랑 합쳐져서 추가 정보
+- modernfix : 움직임 인가? 기억이 안나네
+- moonlight : 다른 모드에 필요
+- mowziesmobs : 모찌라고 불리는 모드, 여러 몬스터 및 바이옴 추가
+- NatureCompass : 지형 찾기 나침반 추가
+- polymorph : 모드마다 조합법 안 썪이게 정리
+- skinlayers3d : 스킨 3d로 구현
+- sodiumdynamiclights : 이게 쉐이던데?
+- sophisticatedbackpacks : 가방 추가
+- twilightforest : 황혼의 숲
+- waystones : 텔레포트 할 수 있는 웨이포인트 비석 추가
+
 ### 3. 모드 전송
 
 일단 한번 `scp` 명령어를 사용해 보자
@@ -492,7 +535,7 @@ wget https://mediafilez.forgecdn.net/files/5772/682/Necronomicon-Fabric-1.6.0%2B
 
 아무래도 내가 서버측에서 마크용 포트만 열어놔서 막히는 듯 하다. 이러면 또 다른 방법을 써야지
 
-`github`에 올린 뒤에 이걸 다운받으면 되겠지?
+`github`서버에 올린 뒤에 이걸 다운받으면 되겠지?
 
 ![Image](https://github.com/user-attachments/assets/3e42245d-348d-41f0-ab25-a0c08ed87f4f)
 
@@ -504,7 +547,7 @@ wget https://mediafilez.forgecdn.net/files/5772/682/Necronomicon-Fabric-1.6.0%2B
 
 그런데 `file.io`는 또 뭔가 `lime`이랑 합병 되면서 이상해졌다. `wget`사용 불가
 
-그냥 `github`에 올린 뒤에 다운 받자
+그냥 `github 레포지토리`에 올린 뒤에 다운 받자
 
 ![Image](https://github.com/user-attachments/assets/f6c60448-d700-45a6-b346-350b4f114e39)
 
@@ -533,6 +576,12 @@ wget https://mediafilez.forgecdn.net/files/5772/682/Necronomicon-Fabric-1.6.0%2B
 ![Image](https://github.com/user-attachments/assets/5746af4d-adca-40d1-935e-ba9183972f9c)
 
 서버 구동 성공!
+
+> 25-1-24
+
+는 했지만 아직도 우리는 바닐라 서버를 즐기는 중이다
+
+필요에 따라 다르겠지만 동시에 쓸게 아니라면 토큰도 아낄겸 서버 하나만 열어서 구동하여도 좋을듯 하다
 
 ## 마인크래프트 (클라이언트) 모드 설치
 
@@ -571,3 +620,7 @@ wget https://mediafilez.forgecdn.net/files/5772/682/Necronomicon-Fabric-1.6.0%2B
 ## 진짜 끝 1차
 
 서버를 Forge용도로 변경하기 위해 Forge 관련 내용이 추가되었다
+
+## 2025-01-24 끝 2차
+
+다듬기까지 끝

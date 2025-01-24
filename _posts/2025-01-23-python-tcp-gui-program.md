@@ -20,8 +20,7 @@ pin: true
 
 ## 간단하게 구현한 서버, 클라이언트 코드
 
-- 서버측
-
+> 서버측
 <details><summary>Server_Receive.py</summary>
 <div markdown = "1">
 
@@ -98,9 +97,9 @@ while True:
 </div>
 </details>
 
-</br>
+.
 
-- 클라이언트 측
+> 클라이언트 측
 
 <details><summary>Client_Send.py</summary>
 <div markdown = "1">
