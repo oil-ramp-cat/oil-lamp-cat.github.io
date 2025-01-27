@@ -173,3 +173,141 @@ client_socket.close()
 3. IP의 문제가 아니라 포트의 문제일 것이다. 파이썬이 우분투의 포트를 열고 닫음에 있어 대기시간이 있다
 
 실제로 태스트를 해보았을 때에 우분투에서는 제대로 다시 서버를 사용할 수 있을 때 까지 최소 13초의 시간이 필요했다. 그런데 다른 환경에서 테스트 하기에는 시간이 걸리니 다른 누군가가 위 코드를 복사해서 테스트 해볼 수 있기를
+
+## GUI 구현하기 (Customtkinter)
+
+나는 GUI를 다뤄보기는 했지만 정말 가지고 놀 생각으로 `shimejiee`를 파이썬으로 구현하고 싶어서 건들여만 봤지 이번처럼 아예 프로그램에 쓸 GUI를 만드는 것은 처음이 되겠다
+
+[tkinter를 공부해보자!](https://oil-lamp-cat.github.io/posts/tkinter-%EA%B3%B5%EB%B6%80%ED%95%98%EA%B8%B0/), [PySide6를 공부해보자!](https://oil-lamp-cat.github.io/posts/PySide6%EB%A5%BC-%EA%B3%B5%EB%B6%80%ED%95%B4%EB%B3%B4%EC%9E%90/), [Pyqt5를 공부해보자!](https://oil-lamp-cat.github.io/posts/Pyqt5-%EA%B3%B5%EB%B6%80%ED%95%98%EA%B8%B0/)와 같은 여러 시도는 있었으나 결국 그 이후 CLI만 다루다가 이번에 갑작스럽게 도전하게 되었다
+
+파이썬으로 GUI를 구현하는 방법은 여러가지가 있다
+
+- flask로 html 코드로 구현
+- tkinter
+- pyqt
+- pyside
+
+그리고 이번에 사용해볼 방법은 여기에는 포함되어있지 않은 [customtkinter](https://customtkinter.tomschimansky.com/documentation/)되시겠다
+
+![Image](https://github.com/user-attachments/assets/44c22e4d-e29e-4cdc-9860-ad042ade4bcb)
+
+일단 가장 간단한 기본 코드를 `ChatGPT`에게 받았다 이제 이걸 통해서 내가 원하는 GUI를 구현할 차례이다
+
+만... GUI 너무 어렵다 나한테는... 도당체 뭐가 뭔지..
+
+## 서버 클라이언트 코드 2차
+
+<details><summary>Client_Send.py</summary>
+<div markdown = "1">
+
+```python
+import socket
+import time
+
+# TCP 서버의 IP와 포트 설정
+TCP_IP = '127.0.0.1'  # 서버 IP
+TCP_PORT = 12345      # 서버 포트
+
+# 파일 경로 설정
+file_path = "합치는중/test.txt"
+
+try:
+    # 소켓 생성
+    client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    client_socket.connect((TCP_IP, TCP_PORT))
+    print(f"서버 {TCP_IP}:{TCP_PORT}에 연결되었습니다.")
+
+    # 파일 읽기
+    with open(file_path, 'r', encoding='utf-8') as file:
+        for line in file:
+            line = line.strip()  # 줄 끝의 공백 제거
+            if line:  # 빈 줄 무시
+                client_socket.sendall(line.encode('utf-8'))  # 데이터 전송
+                print(f"보냄: {line}")
+
+                # 서버로부터 응답 받기
+                response = client_socket.recv(1024).decode('utf-8')  # 최대 1024 바이트 수신
+                print(f"서버 응답: {response}")
+
+                time.sleep(1)  # 1초 대기
+
+    print("파일의 모든 줄을 전송했습니다.")
+except FileNotFoundError:
+    print(f"파일을 찾을 수 없습니다: {file_path}")
+except ConnectionError:
+    print("TCP 서버와 연결할 수 없습니다.")
+except Exception as e:
+    print(f"오류 발생: {e}")
+finally:
+    client_socket.close()
+    print("연결이 종료되었습니다.")
+```
+
+</div>
+</details>
+
+테스트 파일을 한 줄씩 읽어서 서버로 보내는 작업을 추가하였다
+
+<details><summary>Server_Receive.py</summary>
+<div markdown = "1">
+
+```python
+import socket
+import configparser
+
+# ConfigParser 객체 생성
+config = configparser.ConfigParser()
+
+# 설정 파일 읽기
+config.read("config.ini")
+
+# 서버 설정 값 가져오기
+host = config["server"]["host"]  # 서버의 IP 주소 또는 도메인 이름
+port = int(config["server"]["port"])  # 포트 번호
+
+print(f"Server Host: {host}")
+print(f"Server Port: {port}")
+
+def run_server():
+    # 서버 소켓 생성
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_socket.bind((host, port))
+    server_socket.listen(5)
+
+    print(f"서버가 {host}:{port}에서 대기 중입니다...")
+
+    while True:
+        client_socket, client_address = server_socket.accept()
+        print(f"클라이언트 {client_address}가 연결되었습니다.")
+
+        try:
+            while True:
+                # 클라이언트로부터 요청 받기
+                data = client_socket.recv(1024).decode("utf-8")  # 최대 1024 바이트 수신
+                if not data:  # 클라이언트가 연결을 종료한 경우
+                    print(f"클라이언트 {client_address} 연결 종료.")
+                    break
+
+                # 요청 파싱 및 응답 생성
+                response = f"수신된 데이터: {data}"  # 적절한 응답 설정
+                print(f"받은 데이터: {data}")
+
+                # 응답 클라이언트에게 전송
+                client_socket.send(response.encode("utf-8"))
+                print(f"응답 전송 완료: {response}")
+
+        except Exception as e:
+            print(f"오류 발생: {e}")
+        finally:
+            # 클라이언트 소켓 닫기
+            client_socket.close()
+            print(f"클라이언트 {client_address}와의 연결이 종료되었습니다.")
+
+if __name__ == "__main__":
+    run_server()
+```
+
+</div>
+</details>
+
+서버에서는 한 줄씩 받아서 확인 후에 다시 클라이언트에게 응답을 전송하는 식으로 작동중이다
