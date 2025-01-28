@@ -311,3 +311,408 @@ if __name__ == "__main__":
 </details>
 
 서버에서는 한 줄씩 받아서 확인 후에 다시 클라이언트에게 응답을 전송하는 식으로 작동중이다
+
+## 앱 코드 1차 (2025-01-28)
+
+음.. 일단 간단하게 GUI를 구현하고 그에 따른 통신 기능까지는 넣어봤다
+
+![Image](https://github.com/user-attachments/assets/d7b71a7c-9aa6-455c-aec0-9661b3eba2a8)
+
+오는 통신을 리스트에 넣어서 보여준다
+
+<details><summary>App.py</summary>
+<div markdown = "1">
+
+```py
+import customtkinter as ctk
+import socket
+import configparser
+import threading
+
+class LTCApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("LTC")
+        self.root.geometry("800x600")  # 초기 크기 설정 (원하는 크기로 조정 가능)
+        ctk.set_appearance_mode("dark")
+        
+        
+        # 초기화: 화면 구성
+        self.create_main_frame()
+
+        # TCP 소켓 초기화
+        self.load_config()
+        self.server_socket = None
+        self.client_socket = None
+        self.server_thread = None
+        self.stop_thread_flag = threading.Event()  # 스레드 종료 플래그 추가
+        
+        # TCP 통신 연결 상태
+        self.device1_connected = False  # Device 1 연결 상태
+        self.device2_connected = False  # Device 2 연결 상태
+
+    def load_config(self):
+        # ConfigParser 객체 생성
+        config = configparser.ConfigParser()
+
+        # 설정 파일 읽기
+        config.read("config.ini")
+
+        # 서버 설정 값 가져오기
+        self.Receive_IP = config["TCP_Receive"]["host"]
+        self.Receive_Port = int(config["TCP_Receive"]["port"])
+        self.Send_IP = config["TCP_Send"]["host"]
+        self.Send_Port = config["TCP_Send"]["port"]
+
+        print(f"TCP Receive IP : {self.Receive_IP}")
+        print(f"TCP Receive Port : {self.Receive_Port}")
+        print(f"TCP Send IP : {self.Send_IP}")
+        print(f"TCP Send Port : {self.Send_Port}")
+        
+    def create_main_frame(self):
+        # 메인 프레임 (모니터링 영역)
+        self.main_frame = ctk.CTkFrame(self.root)
+        self.main_frame.pack(fill="both", expand=True)
+
+        # Monitor 구역
+        self.monitor_frame = ctk.CTkFrame(self.main_frame)
+        self.monitor_frame.pack(padx=10, pady=10, fill="x")
+
+        self.monitor_frame.grid_rowconfigure(0, weight=1)  # 한 줄로 크기 비례 조정
+        self.monitor_frame.grid_columnconfigure(0, weight=1)  # 왼쪽 열 비율 50%
+        self.monitor_frame.grid_columnconfigure(1, weight=1)  # 오른쪽 열 비율 50%
+
+        # 왼쪽 부분 (Device1 to PC)
+        left_frame = ctk.CTkFrame(self.monitor_frame)
+        left_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")  # "nsew"로 네 방향으로 확장
+
+        # Device1 to PC 레이블
+        self.device1_label = ctk.CTkLabel(left_frame, text="Device1 to PC", font=("Helvetica", 20, "bold"))
+        self.device1_label.pack(padx=10)
+
+        # Device1 상태 레이블
+        self.device1_status = ctk.CTkLabel(left_frame, text="Disconnected", text_color="red", font=("Helvetica", 20, "bold"))
+        self.device1_status.pack(padx=10)
+
+        # 오른쪽 부분 (Device2 to PC)
+        right_frame = ctk.CTkFrame(self.monitor_frame)
+        right_frame.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")  # "nsew"로 네 방향으로 확장
+
+        # Device2 to PC 레이블
+        self.device2_label = ctk.CTkLabel(right_frame, text="PC to Device2", font=("Helvetica", 20, "bold"))
+        self.device2_label.pack(padx=10)
+
+        # Device2 상태 레이블
+        self.device2_status = ctk.CTkLabel(right_frame, text="Disconnected", text_color="red", font=("Helvetica", 20, "bold"))
+        self.device2_status.pack(padx=10)
+
+        # 설정 버튼 (상단 우측)
+        self.settings_button = ctk.CTkButton(self.root, text="Settings", command=self.setup_settings_tab, font=("Helvetica", 20, "bold"))
+        self.settings_button.pack(padx=10, pady=10, side="right", anchor="ne")
+
+        # 로그 출력 구역
+        self.log_frame = ctk.CTkFrame(self.main_frame)
+        self.log_frame.pack(padx=10, pady=10, fill="both", expand=True)
+
+        # 왼쪽과 오른쪽 로그 영역 (동적으로 크기 조정)
+        self.left_log = ctk.CTkTextbox(self.log_frame, font=("Helvetica", 20, "bold"))
+        self.left_log.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
+
+        self.right_log = ctk.CTkTextbox(self.log_frame, font=("Helvetica", 20, "bold"))
+        self.right_log.grid(row=0, column=1, sticky="nsew", padx=10, pady=10)
+
+        # 실패한 로그 모음 구역
+        self.failed_frame = ctk.CTkFrame(self.main_frame)
+        self.failed_frame.pack(padx=10, pady=10, fill="x")
+
+        self.failed_left = ctk.CTkTextbox(self.failed_frame, font=("Helvetica", 20, "bold"))
+        self.failed_left.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+
+        self.failed_right = ctk.CTkTextbox(self.failed_frame, font=("Helvetica", 20, "bold"))
+        self.failed_right.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
+
+        # 레이아웃 비율 설정 (창 크기 변경 시 위젯 크기 비례적으로 변경)
+        self.main_frame.grid_rowconfigure(0, weight=1)
+        self.main_frame.grid_columnconfigure(0, weight=1)
+        self.main_frame.grid_columnconfigure(1, weight=1)
+
+        self.log_frame.grid_rowconfigure(0, weight=1)
+        self.log_frame.grid_columnconfigure(0, weight=1)
+        self.log_frame.grid_columnconfigure(1, weight=1)
+
+        self.failed_frame.grid_rowconfigure(0, weight=1)
+        self.failed_frame.grid_columnconfigure(0, weight=1)
+        self.failed_frame.grid_columnconfigure(1, weight=1)
+
+    ###
+    ### 설정창
+    ###
+    def setup_settings_tab(self):
+        # Toplevel을 사용하여 새 창 생성
+        settings_window = ctk.CTkToplevel(self.root)
+        settings_window.title("Settings")
+        settings_window.geometry("700x400")
+        
+        # 설정 창을 최상위 창으로 설정
+        settings_window.attributes("-topmost", True)  # 설정 창을 항상 최상위로 설정
+        
+        # settings_frame을 창 가운데에 배치
+        settings_frame = ctk.CTkFrame(settings_window, width=600, height=200)
+        settings_frame.place(relx=0.5, rely=0.5, anchor="center")  # 창의 가운데로 배치
+        
+        # Device 1 레이블
+        device1_label = ctk.CTkLabel(settings_frame, text="Device 1", font=("Helvetica", 20, "bold"))
+        device1_label.grid(row=0, column=0, padx=10, pady=10, columnspan=2, sticky="w")  # Device 1 레이블
+        
+        # IP 입력 (Device 1)
+        ip_label1 = ctk.CTkLabel(settings_frame, text="IP:", font=("Helvetica", 20, "bold"))
+        ip_label1.grid(row=1, column=0, padx=10, pady=10, sticky="w")  # 왼쪽 정렬
+        ip_entry1 = ctk.CTkEntry(settings_frame, font=("Helvetica", 20, "bold"))
+        ip_entry1.grid(row=1, column=1, padx=10, pady=10, sticky="ew")  # 가로로 확장
+        ip_entry1.insert(0, self.Receive_IP)
+        
+        # Port 입력 (Device 1)
+        port_label1 = ctk.CTkLabel(settings_frame, text="Port:", font=("Helvetica", 20, "bold"))
+        port_label1.grid(row=2, column=0, padx=10, pady=10, sticky="w")  # 왼쪽 정렬
+        port_entry1 = ctk.CTkEntry(settings_frame, font=("Helvetica", 20, "bold"))
+        port_entry1.grid(row=2, column=1, padx=10, pady=10, sticky="ew")  # 가로로 확장
+        port_entry1.insert(0, self.Receive_Port)
+        
+        # Device 1 Connect/Disconnect 버튼
+        self.connect_button1 = ctk.CTkButton(settings_frame, text="Connect", command=self.connect_device1, font=("Helvetica", 20, "bold"))
+        self.connect_button1.grid(row=3, column=0, pady=10)  # Device 1의 버튼을 하단에 배치
+        self.disconnect_button1 = ctk.CTkButton(settings_frame, text="Disconnect", command=self.disconnect_device1, state="disabled", font=("Helvetica", 20, "bold"))
+        self.disconnect_button1.grid(row=3, column=1, pady=10)  # Device 1의 Disconnect 버튼
+
+        # Device 2 레이블
+        device2_label = ctk.CTkLabel(settings_frame, text="Device 2", font=("Helvetica", 20, "bold"))
+        device2_label.grid(row=0, column=2, padx=10, pady=10, columnspan=2, sticky="w")  # Device 2 레이블
+        
+        # IP 입력 (Device 2)
+        ip_label2 = ctk.CTkLabel(settings_frame, text="IP:", font=("Helvetica", 20, "bold"))
+        ip_label2.grid(row=1, column=2, padx=10, pady=10, sticky="w")  # 왼쪽 정렬
+        ip_entry2 = ctk.CTkEntry(settings_frame, font=("Helvetica", 20, "bold"))
+        ip_entry2.grid(row=1, column=3, padx=10, pady=10, sticky="ew")  # 가로로 확장
+        ip_entry2.insert(0, self.Send_IP)
+        
+        # Port 입력 (Device 2)
+        port_label2 = ctk.CTkLabel(settings_frame, text="Port:", font=("Helvetica", 20, "bold"))
+        port_label2.grid(row=2, column=2, padx=10, pady=10, sticky="w")  # 왼쪽 정렬
+        port_entry2 = ctk.CTkEntry(settings_frame, font=("Helvetica", 20, "bold"))
+        port_entry2.grid(row=2, column=3, padx=10, pady=10, sticky="ew")  # 가로로 확장
+        port_entry2.insert(0, self.Send_Port)
+                
+        # Device 2 Connect/Disconnect 버튼
+        self.connect_button2 = ctk.CTkButton(settings_frame, command=self.connect_device2, font=("Helvetica", 20, "bold"))
+        self.connect_button2.grid(row=3, column=2, pady=10)  # Device 2의 버튼을 하단에 배치
+        self.disconnect_button2 = ctk.CTkButton(settings_frame, command=self.disconnect_device2, state="disabled", font=("Helvetica", 20, "bold"))
+        self.disconnect_button2.grid(row=3, column=3, pady=10)  # Device 2의 Disconnect 버튼
+        
+        # Device 1 버튼 상태 설정
+        if self.device1_connected:
+            self.connect_button1.configure(state="disabled")
+            self.disconnect_button1.configure(state="normal")
+        else:
+            self.connect_button1.configure(state="normal")
+            self.disconnect_button1.configure(state="disabled")
+        
+        # Device 2 버튼 상태 설정
+        if self.device2_connected:
+            self.connect_button2.configure(state="disabled")
+            self.disconnect_button2.configure(state="normal")
+        else:
+            self.connect_button2.configure(state="normal")
+            self.disconnect_button2.configure(state="disabled")
+    
+        # 값을 저장할 변수
+        def save_settings():
+            # IP 입력된 값 가져오기
+            ip_value1 = str(ip_entry1.get())
+            ip_value2 = str(ip_entry2.get())
+            # Port 입력된 값 가져오기
+            port_value1 = str(port_entry1.get())
+            port_value2 = str(port_entry2.get())
+            
+            # config.ini 파일에 저장
+            config = configparser.ConfigParser()
+            config.read("config.ini")
+            config['TCP_Receive']['host'] = ip_value1
+            config['TCP_Receive']['port'] = port_value1
+            config['TCP_Send']['host'] = ip_value2
+            config['TCP_Send']['port'] = port_value2
+            
+            with open('config.ini', 'w') as file:
+                config.write(file)  # config.ini 파일에 저장
+            
+            self.Receive_IP = ip_value1
+            self.Receive_Port = port_value1
+            self.Send_IP = ip_value2
+            self.Send_Port = port_value2
+            
+            print(f"Device 1 : {ip_value1}, {port_value1}\nDevice 2 : {ip_value2}, {port_value2}")  # 콘솔에 출력
+            
+            # 콘솔에 출력, 실제로는 파일에 저장하는 로직 등을 추가할 수 있음
+    
+        # Save Settings 버튼
+        save_button = ctk.CTkButton(settings_frame, text="Save Settings", font=("Helvetica", 20, "bold"), command=save_settings)
+        save_button.grid(row=4, column=0, columnspan=5, padx=10, pady=20)
+    
+    ###
+    ### 통신 구현부 (받기)
+    ###
+    def connect_device1(self):
+        print("Device 1 연결 중")
+        self.device1_status.configure(text="Trying...", text_color="orange")
+        
+        # 연결 시도 상태로 업데이트
+        self.stop_thread_flag.clear()  # 스레드 종료 플래그 초기화
+        
+        # 서버 소켓을 별도의 스레드에서 실행
+        self.server_thread = threading.Thread(target=self.start_server)
+        self.server_thread.daemon = True
+        self.server_thread.start()
+
+    def start_server(self):
+        try:
+            self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.server_socket.bind((self.Receive_IP, self.Receive_Port))
+            self.server_socket.listen(5)
+            print(f"서버가 {self.Receive_IP}:{self.Receive_Port}에서 대기 중입니다...")
+            self.connect_button1.configure(state="disabled")
+            self.disconnect_button1.configure(state="normal")
+            self.device1_connected = True
+            
+            while not self.stop_thread_flag.is_set():
+                try:
+                    if self.server_socket is None:
+                        break
+                    client_socket, client_address = self.server_socket.accept()
+                    print(f"클라이언트 {client_address}가 연결되었습니다.")
+                    self.device1_status.configure(text="Connected", text_color="green")
+                    self.device1_connected = True
+                    while not self.stop_thread_flag.is_set():
+                        data = client_socket.recv(1024).decode("utf-8")
+                        if not data:
+                            print(f"클라이언트 {client_address} 연결 종료.")
+                            self.connect_button1.configure(state="normal")
+                            self.disconnect_button1.configure(state="disabled")
+                            self.device1_connected = False
+                            break
+
+                        print(f"받은 데이터: {data}")
+                        self.left_log.insert(ctk.END, f"{data}\n")
+                        self.left_log.yview_moveto(1)
+
+                        client_socket.send(f"수신된 데이터: {data}".encode("utf-8"))
+
+                except Exception as e:
+                    print(f"클라이언트 처리 중 오류 발생: {e}")
+                    self.device1_connected = False
+                finally:
+                    if 'client_socket' in locals() and client_socket:
+                        client_socket.close()
+                        print(f"클라이언트 소켓 종료.")
+                        self.device1_connected = False
+
+        except Exception as e:
+            print(f"서버 설정 중 오류 발생: {e}")
+        finally:
+            if self.server_socket:
+                self.device1_connected = False
+                try:
+                    self.server_socket.close()
+                    print("서버 소켓이 성공적으로 종료되었습니다.")
+                except Exception as e:
+                    print(f"서버 소켓 종료 중 오류 발생: {e}")
+            self.server_socket = None
+
+
+    def disconnect_device1(self):
+        print("Device 1 연결 해제")
+        self.device1_status.configure(text="Disconnecting...", text_color="orange")
+
+        # 먼저 소켓 통신을 종료하기 전에 스레드 종료 플래그를 설정
+        self.stop_thread_flag.set()  # 스레드 종료 플래그 설정
+
+        # 서버 종료를 별도의 스레드로 처리
+        disconnect_thread = threading.Thread(target=self._disconnect_server)
+        disconnect_thread.daemon = True
+        disconnect_thread.start()
+
+    def _disconnect_server(self):
+        # 서버와 클라이언트 소켓이 아직 열려 있다면 종료
+        if self.server_socket:
+            try:
+                self.server_socket.close()
+                self.server_socket = None
+                print("서버 소켓이 성공적으로 종료되었습니다.")
+            except Exception as e:
+                print(f"서버 소켓 종료 중 오류 발생: {e}")
+
+        if self.client_socket:
+            try:
+                self.client_socket.close()
+                self.client_socket = None
+                print("클라이언트 소켓이 성공적으로 종료되었습니다.")
+            except Exception as e:
+                print(f"클라이언트 소켓 종료 중 오류 발생: {e}")
+
+        # UI 상태 업데이트
+        self.device1_status.configure(text="Disconnected", text_color="red")
+        self.connect_button1.configure(state="normal")
+        self.disconnect_button1.configure(state="disabled")
+        
+    ###
+    ### 통신 구현부 (보내기) - 아직 작업중
+    ###
+    def connect_device2(self):
+        print("Device 2 연결 중")
+        # 연결 시도 상태로 업데이트
+        self.device2_status.configure(text="Trying...", text_color="orange")
+        
+        # 연결 로직을 추가할 수 있습니다.
+        # 예를 들어, 연결 성공 후
+        self.root.after(2000, self.device2_connected)  # 2초 후 연결 성공 처리 (여기서는 예시)
+
+    def device2_connected(self):
+        # 연결 성공 시 상태를 초록색으로 업데이트
+        self.device2_status.configure(text="Connected", text_color="green")
+
+        # 연결 버튼 상태 업데이트
+        self.connect_button2.configure(state="disabled")
+        self.disconnect_button2.configure(state="normal")
+
+    def disconnect_device2(self):
+        print("Device 2 연결 해제")
+        # 연결 해제 로직을 추가할 수 있습니다.
+        self.device2_status.configure(text="Disconnected", text_color="red")
+
+        self.connect_button2.configure(state="normal")
+        self.disconnect_button2.configure(state="disabled")
+
+# 메인 실행부
+if __name__ == "__main__":
+    root = ctk.CTk()
+    app = LTCApp(root)
+    root.mainloop()
+```
+
+</div>
+</details>
+
+일단 오늘은 여기까지만 하고 정리를 먼저 해보자
+
+> 지금까지 만들어진 것들
+
+1. TCP 통신 연결(내가 서버일 경우) 후에 로그를 받아서 추가하는 기능
+2. 연결이 끊기거나 연결되었을 때 Disconnect, Connect가 뜨며 색 변경
+3. 왐마 많이 남았네
+
+> 추가하거나 처리해야하는 부분
+
+1. 내용을 TCP로 보내는 부분을 완성해야한다
+2. 로그를 선택할 수 있고 로그를 조절(다시 보내기, 선택)할 수 있어야 한다. 지금은 text로 추가되는 중이라...
+3. 추가적으로 선택할 로그 파일을 선택할 수 있어야 한다
+4. 로그를 1시간 단위로 저장할 수 있어야 한다
+5. 들어오거나 나가는 로그에서 뺴내야할 부분을 빼야한다
+6. GUI 개정.. 가능하려나?
