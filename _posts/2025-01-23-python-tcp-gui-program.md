@@ -936,3 +936,861 @@ chatgpt와 많은 이야기도 해보고 외국 친구들에게 물어보기도 
 일단 크게는 이렇게 더 해야한다... 많이 남았네?
 
 더 자잘하게는 많은 것이 남았지만! 일단 이정도만 써놓자, 사실 로그 받는 부분을 완벽히 구현한다면 다른 부분은 복사 붙여넣기 작업이 될 것이기에 간단하게 할 수 있을 것이다
+
+## 2025-02-04 로그 받는 부분 리스트 표현 문제
+
+리스트를 추가할 때에 위가 최신인 것으로 바꿔보고자 하였다
+
+```py
+def insert(self, index, option, update=True, **args):
+    """add new option in the listbox"""
+
+    if str(index).lower() == "end":
+        index = f"END{self.end_num}"
+        self.end_num += 1
+
+    if index in self.buttons:
+        self.buttons[index].destroy()
+
+    self.buttons[index] = customtkinter.CTkButton(
+        self,
+        text=option,
+        fg_color=self.button_fg_color,
+        anchor=self.justify,
+        text_color=self.text_color,
+        font=self.font,
+        hover_color=self.hover_color,
+        **args,
+    )
+    self.buttons[index].configure(command=lambda num=index: self.select(num))
+    
+    if type(index) is int:
+        self.buttons[index].grid(padx=0, pady=(0, 5), sticky="nsew", column=0, row=index)
+    else:
+        self.buttons[index].grid(padx=0, pady=(0, 5), sticky="nsew", column=0)
+        
+    if update:
+        self.update()
+
+    if self.multiple:
+        self.buttons[index].bind(
+            "<Shift-1>", lambda e: self.select_multiple(self.buttons[index])
+        )
+```
+
+그런데 코드를 뜯어보니 옵션이 end 밖에 없네?
+
+어.. 이건 진짜로 생각도 못했다
+
+```py
+self.receive_log.insert("end", f"{insert_data}")
+```
+
+이 부분의 `end`값을 `top`으로 바꾸면 될 줄 알았는데 어림도 없네...
+
+하지만!
+
+```py
+def move_up(self, index):
+        """Move the option up in the listbox"""
+        if index > 0:
+            current_key = list(self.buttons.keys())[index]
+            previous_key = list(self.buttons.keys())[index - 1]
+
+            # Store the text of the button to be moved
+            current_text = self.buttons[current_key].cget("text")
+
+            # Update the text of the buttons
+            self.buttons[current_key].configure(
+                text=self.buttons[previous_key].cget("text")
+            )
+            self.buttons[previous_key].configure(text=current_text)
+
+            # Clear the selection from the current option
+            self.deselect(current_key)
+
+            # Update the selection
+            self.select(previous_key)
+
+            # Update the scrollbar position
+            if self._parent_canvas.yview() != (0.0, 1.0):
+                self._parent_canvas.yview("scroll", -int(100 / 6), "units")
+```
+
+이 부분을 이용한다면?
+
+은 위 코드에 따르면 선택한 것만 올리는 것이니 안되고
+
+어?! 이거 뭐야!
+
+```py
+# Update the scrollbar position
+if self._parent_canvas.yview() != (0.0, 1.0):
+    self._parent_canvas.yview("scroll", -int(100 / 6), "units")
+```
+
+이 부분을 이용해볼까?
+
+일단 전체를 가져가서 추가한 후에 `ctk_lstbox.py`모듈에 직접 추가해서 테스트를 해보면?
+
+```py
+insert_data=str(datetime.now().strftime("%H:%M:%S"))+"  "+data
+self.receive_log.insert("end", f"{insert_data}") #"end",
+self.receive_log.scroll_down()
+# 스크롤 자동 다운좀 제발 ...
+#self.receive_log.move_down(1)
+#self.receive_log.scroll_to_index("end")
+```
+
+정말로 스크롤이 아래로 내려가기는 한다! 분명히 작지만 로그가 들어올 때 마다 조금씩 내려간다!
+
+조금씩 내려가는 문제는 딱 한 줄씩 내려갈 수 있게 세팅하면 될 것이고
+
+로그가 들어올 때 마다 스크롤이 내려가는 문제는는 프레임에 마우스가 올라와있을 때에는 다시 고정될 수 있게 하거나 우클릭을 눌렀을 때에 팝업을 띄워서 설정할 수 있게 세팅하면 될지도????
+
+```py
+def scroll_down(self):
+    if self._parent_canvas.yview() != (0.0, 1.0):
+        self._parent_canvas.yview("scroll", int(100), "units")
+```
+
+스크롤이 적게 내려가는 문제는 위와같이 `int(100/6)`의 수치를 `int(100)`으로 설정하여 딱 늘어난 만큼(버튼 크기)만 스크롤이 움직이게 세팅하였다
+
+```py
+print(f"받은 데이터: {data}")
+insert_data=str(datetime.now().strftime("%H:%M:%S"))+"  "+data
+self.receive_log.insert("end", f"{insert_data}") #"end",
+self.receive_log.scroll_down()
+```
+
+그럼 이제 다시 `App.py`로 돌아가서 `scroll_down`이 마우스가 프레임에 들어와있지 않을 때에만 실행될 수 있게 하고 원한다면 우클릭 메뉴에서 스크롤 다운 기능을 끄고 킬 수 있게 구현하면 된다!!
+
+그리고 13시 10분 구현 성공!!!!! 이게 되네!!!
+
+```py
+self.is_mouse_inside1 = False
+self.is_mouse_inside2 = False
+self.is_mouse_inside3 = False
+self.is_mouse_inside4 = False
+```
+
+마우스 들어왔는지 아닌지 변수 설정
+
+```py
+## 마우스 이벤트 부분
+def on_mouse_enter1(self, event):
+    """ 마우스가 리스트박스 위에 올라갔을 때 실행 """
+    print("들어옴")
+    self.is_mouse_inside1 = True
+
+def on_mouse_leave1(self, event):
+    """ 마우스가 리스트박스에서 나갔을 때 실행 """
+    print("나감")
+    self.is_mouse_inside1 = False
+```
+
+```py
+### 마우스 이벤트 인식 부분
+self.receive_log.bind("<Enter>", self.on_mouse_enter1)
+self.receive_log.bind("<Leave>", self.on_mouse_leave1)
+```
+
+마우스가 로그 그리드 안에 들어왔는지 아닌지 확인하는 부분을 추가했다
+
+## 2025-02-04 17시 37분 마우스 우클릭 메뉴 팝업
+
+`Customtikinter`에서 팝업 메뉴를 만들고 싶어서 찾다보니 [Here is a modern popup menu class you can use:](https://github.com/TomSchimansky/CustomTkinter/discussions/2473#discussioncomment-9856783)라는 것을 찾아서 가져다 추가했다
+
+```py
+from customtkinter import *
+import sys
+
+class CTkFloatingWindow(CTkToplevel):
+    """
+    On-screen popup window class for customtkinter
+    Author: Akascape
+    """
+    def __init__(self,
+                 master=None,
+                 corner_radius=15,
+                 border_width=1,
+                 **kwargs):
+        
+        super().__init__(takefocus=1)
+        
+        self.focus()
+        self.master_window = master
+        self.corner = corner_radius
+        self.border = border_width
+        self.hidden = True
+
+        # add transparency to suitable platforms
+        if sys.platform.startswith("win"):
+            self.after(100, lambda: self.overrideredirect(True))
+            self.transparent_color = self._apply_appearance_mode(self._fg_color)
+            self.attributes("-transparentcolor", self.transparent_color)
+        elif sys.platform.startswith("darwin"):
+            self.overrideredirect(True)
+            self.transparent_color = 'systemTransparent'
+            self.attributes("-transparent", True)
+        else:
+            self.attributes("-type", "splash")
+            self.transparent_color = '#000001'
+            self.corner = 0
+            self.withdraw()
+             
+        self.frame = CTkFrame(self, bg_color=self.transparent_color, corner_radius=self.corner,
+                              border_width=self.border, **kwargs)
+        self.frame.pack(expand=True, fill="both")
+        
+        self.master.bind("<Button-1>", lambda event: self._withdraw(), add="+") # hide menu when clicked outside
+        self.bind("<Button-1>", lambda event: self._withdraw()) # hide menu when clicked inside
+        self.master.bind("<Configure>", lambda event: self._withdraw()) # hide menu when master window is changed
+        
+        self.resizable(width=False, height=False)
+        self.transient(self.master_window)
+         
+        self.update_idletasks()
+        
+        self.withdraw()
+        
+    def _withdraw(self):
+        if not self.hidden:
+            self.withdraw()
+            self.hidden = True
+        
+    def popup(self, x=None, y=None):
+        self.x = x
+        self.y = y
+        self.deiconify()
+        self.focus()
+        self.geometry('+{}+{}'.format(self.x, self.y))
+        self.hidden = False
+```
+
+마우스 이벤트 인식하는 부분은 이렇게 된다
+
+```py
+        #---#중략#---#
+
+        ### 마우스 이벤트 인식 부분
+        self.receive_log.bind("<Enter>", self.on_mouse_enter1)
+        self.receive_log.bind("<Leave>", self.on_mouse_leave1)
+        self.receive_log.bind("<Button-3>", self.on_right_click)
+        
+    def on_right_click(self, event):
+        """ 우클릭 이벤트 핸들러 """
+        if self.float_window_rlm is None or not self.float_window_rlm.winfo_exists():
+            self.create_popup_menu()  # 메뉴 생성
+        self.do_popup(event)
+        
+    ## 마우스 이벤트 부분
+    def on_mouse_enter1(self, event):
+        """ 마우스가 리스트박스 위에 올라갔을 때 실행 """
+        #print("들어옴")
+        self.is_mouse_inside1 = True
+
+    def on_mouse_leave1(self, event):
+        """ 마우스가 리스트박스에서 나갔을 때 실행 """
+        #print("나감")
+        self.is_mouse_inside1 = False
+        
+    def do_popup(self, event):
+        """ 팝업 메뉴 표시 """
+        self.float_window_rlm.popup(event.x_root, event.y_root)
+
+    ###
+    ### receive log menu
+    ###
+    def create_popup_menu(self):
+        """ 팝업 메뉴 생성 """
+        self.float_window_rlm = ctkf(self.root)
+
+        menu_button = ctk.CTkButton(self.float_window_rlm.frame, text="Option 1", fg_color="transparent", command=lambda: print("Option 1 Selected"))
+        menu_button.pack(expand=True, fill="x", padx=10, pady=(10, 0))
+
+        menu_button2 = ctk.CTkButton(self.float_window_rlm.frame, text="Option 2", fg_color="transparent", command=lambda: print("Option 2 Selected"))
+        menu_button2.pack(expand=True, fill="x", padx=10, pady=(5, 0))
+
+        menu_button3 = ctk.CTkButton(self.float_window_rlm.frame, text="Option 3", fg_color="transparent", command=lambda: print("Option 3 Selected"))
+        menu_button3.pack(expand=True, fill="x", padx=10, pady=(5, 10))
+```
+
+## 2025-02-05 9시 25분 로그 저장부 기본 구현
+
+```py
+def save_receive_log(self, data):
+    now = datetime.now()
+
+    # 날짜 및 시간 폴더/파일 경로 설정
+    date_folder = now.strftime("logs/received/%Y-%m-%d")  # logs/YYYY-MM-DD
+    hour_file = now.strftime(f"{date_folder}/%Y-%m-%d-%H.txt")  # logs/YYYY-MM-DD/HH.txt
+
+    # 폴더가 없으면 생성
+    os.makedirs(date_folder, exist_ok=True)
+
+    # 로그 데이터 생성
+    timestamp = now.strftime("%H:%M:%S")
+    insert_data = f"{timestamp}  {data}\n"
+
+    # 파일에 로그 저장
+    with open(hour_file, "a", encoding="utf-8") as f:
+        f.write(insert_data)
+
+    # UI에도 로그 추가
+    #self.receive_log.insert("end", insert_data)
+    print(f"로그 저장 완료: {hour_file}")
+```
+
+사실 이제 여기서 쪼개서 보낼 데이터도 뽑아내야 하고 솎아내야 하는 부분도 존재하게 될 것이다만 고것은 조금 뒤에 하는걸로
+
+## 2025-02-05 17시 10분, 로그 다시 보내기 및 클라이언트 소켓 생성
+
+```py
+def send_log(self, log_message):
+    """로그를 Device2에 전송"""
+    if self.device2_connected and self.client_socket:
+        try:
+            self.client_socket.sendall(log_message.encode('utf-8'))
+            print(f"보낸 로그: {log_message}")
+        except socket.error as e:
+            print(f"로그 전송 실패: {e}")
+            self.device2_status.configure(text="Disconnected", text_color="red")
+            self.device2_connected = False
+            self.client_socket.close()
+            self.client_socket = None
+    else:
+        print("Device2에 연결되어 있지 않습니다.")
+
+def save_send_log(self, log_data):
+    """새 로그가 들어오면 send_log를 호출"""
+    self.send_log(log_data)
+
+def save_resend_log(self, log_data):
+    """다시 보내야 하는 로그를 처리"""
+    self.send_log(log_data)
+```
+
+로그를 보내는 부분은 위와 같이 구현했고
+
+```py
+def start_server(self):
+    try:
+        self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server_socket.bind((self.Receive_IP, self.Receive_Port))
+        self.server_socket.listen(5)
+        print(f"서버가 {self.Receive_IP}:{self.Receive_Port}에서 대기 중입니다...")
+        self.connect_button1.configure(state="disabled")
+        self.disconnect_button1.configure(state="normal")
+        self.device1_connected = True
+        
+        while not self.stop_thread_flag_receive.is_set():
+            try:
+                if self.server_socket is None:
+                    break
+                client_socket, client_address = self.server_socket.accept()
+                print(f"클라이언트 {client_address}가 연결되었습니다.")
+                self.device1_status.configure(text="Connected", text_color="green")
+                self.device1_connected = True
+                while not self.stop_thread_flag_receive.is_set():
+                    data = client_socket.recv(1024).decode("utf-8")
+                    if not data:
+                        print(f"클라이언트 {client_address} 연결 종료.")
+                        self.device1_connected = False
+                        break
+
+                    print(f"받은 데이터: {data}")
+                    insert_data=str(datetime.now().strftime("%H:%M:%S"))+"  "+data
+                    self.receive_log.insert("end", f"{insert_data}")
+                    
+                    # 로그 저장부
+                    self.save_receive_log(data)
+                    
+                    if self.device2_connected == True:
+                        self.save_send_log(data)
+                    elif self.device2_connected == False:
+                        self.save_resend_log(data)
+                    else:
+                        print("잘못된 입력입니다")
+                    
+                    # 스크롤 다운 쿠현부
+                    if self.is_mouse_inside1 == False:
+                        self.receive_log.scroll_down()
+                    # 스크롤 자동 다운좀 제발 ...
+
+                    client_socket.send(f"수신된 데이터: {data}".encode("utf-8"))
+
+            except Exception as e:
+                print(f"클라이언트 처리 중 오류 발생: {e}")
+                self.device1_status.configure(text="Disconnected", text_color="red")
+                self.device1_connected = False
+            finally:
+                if 'client_socket' in locals() and client_socket:
+                    client_socket.close()
+                    self.device1_status.configure(text="Disconnected", text_color="red")
+                    print(f"클라이언트 소켓 종료.")
+                    self.device1_connected = False
+
+    except Exception as e:
+        self.device1_status.configure(text="Server Error", text_color="red")
+        print(f"서버 설정 중 오류 발생: {e}")
+    finally:
+        if self.server_socket:
+            self.device1_connected = False
+            try:
+                self.server_socket.close()
+                print("서버 소켓이 성공적으로 종료되었습니다.")
+            except Exception as e:
+                print(f"서버 소켓 종료 중 오류 발생: {e}")
+        self.server_socket = None
+```
+
+로그를 보내거나 문제가 생긴 로그에 관한 내용을 위와 같이 만들었다
+
+```py
+def start_client(self):
+    try:
+        client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        client_socket.settimeout(5)  # 5초 후 타임아웃
+        client_socket.connect((self.Send_IP, self.Send_Port))
+        
+        self.device2_status.configure(text="Connected", text_color="green")
+        self.device2_connected = True
+        print("Device 2 연결 성공!")
+        
+        # 필요하면 client_socket을 유지하면서 데이터 송수신 구현 가능
+        self.client_socket = client_socket
+
+    except socket.timeout:
+        print("연결 시간이 초과되었습니다.")
+        self.device2_connected = False
+        self.device2_status.configure(text="Timeout", text_color="red")
+
+    except socket.error as e:
+        print(f"TCP 서버와 연결할 수 없습니다: {e}")
+        self.device2_connected = False
+        self.device2_status.configure(text="Failed", text_color="red")
+```
+
+클라이언트 실행부는 또 위와 같이 만들기는 했지만 바뀔수도?
+
+그리고 뭔가를 하기 전에 테스트 하는 것을 구현해야겠다
+
+## 2025-02-11 12시 47분, 로그 테스트부 구현에 생긴 문제
+
+이번에는 로그를 테스트 하는 부분을 구현하려 하였으나 
+
+```py
+    ###
+    ### Receive 로그 테스트 구현부
+    ###
+    def SendTestLog(self):
+        self.send_log_thread = threading.Thread(target=self.ClientTestLog)
+        self.send_log_thread.start()
+    
+    def ClientTestLog(self):
+        print("클라이언트 실행됨")
+        file_path = self.Test_File
+        
+        try:
+            #소켓 생성
+            client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            client_socket.connect((self.Receive_IP, self.Receive_Port))
+            print(f"서버 {self.Receive_IP}:{self.Receive_Port}에 연결되었습니다.")
+        
+            # 파일 읽기
+            with open(file_path, 'r', encoding='utf-8') as file:
+                for line in file:
+                    line = line.strip()  # 줄 끝의 공백 제거
+                    if line:  # 빈 줄 무시
+                        client_socket.sendall(line.encode('utf-8'))  # 데이터 전송
+                        print(f"보냄: {line}")
+
+                        # 서버로부터 응답 받기
+                        response = client_socket.recv(1024).decode('utf-8')  # 최대 1024 바이트 수신
+                        print(f"서버 응답: {response}")
+
+                        time.sleep(1)  # 1초 대기
+
+            print("파일의 모든 줄을 전송했습니다.")
+        except FileNotFoundError:
+            print(f"파일을 찾을 수 없습니다: {file_path}")
+        except ConnectionError:
+            print("TCP 서버와 연결할 수 없습니다.")
+        except Exception as e:
+            print(f"오류 발생: {e}")
+        finally:
+            client_socket.close()
+            print("연결이 종료되었습니다.")
+```
+
+위 부분에서 분명히 클라이언트를 실행하여 서버에 로그를 읽어 보낸다고 했을 때에 
+
+```
+TCP Receive IP : 127.0.0.1
+TCP Receive Port : 12345
+TCP Send IP : 127.0.0.1
+TCP Send Port : 23456
+ttr실행됨
+Device 1 연결 중
+서버가 127.0.0.1:12345에서 대기 중입니다...
+클라이언트 실행됨
+서버 127.0.0.1:12345에 연결되었습니다.
+보냄: 1
+클라이언트 ('127.0.0.1', 52594)가 연결되었습니다.
+받은 데이터: 1
+보냄: 2
+보냄: 3
+보냄: 4
+보냄: 5
+보냄: 6
+로그 저장 완료: logs/received/2025-02-11/2025-02-11-00.txt
+클라이언트 처리 중 오류 발생: 'NoneType' object is not callable
+클라이언트 소켓 종료.
+TCP 서버와 연결할 수 없습니다.
+연결이 종료되었습니다.
+```
+
+이런 식으로 서버가 아직 받은 데이터를 저장하고 있을 때에 이미 클라이언트가 서버에서 다시 응답을 받지 못했는데 혼자 계속 파일을 보내게 된다
+
+그냥 원래 쓰던 로그 전송 테스트 할 때 쓴 코드를 import해서 끌고와야겠다 그게 훨씬 더 잘 작동할 듯 하다
+
+## 2025-02-11 22시 16분, 테스트부 통신 문제
+
+```
+TCP Receive IP : 127.0.0.1
+TCP Receive Port : 12345
+TCP Send IP : 127.0.0.1
+TCP Send Port : 23456
+ttr실행됨
+Device 1 연결 중
+클라이언트 실행됨
+서버가 127.0.0.1:12345에서 대기 중입니다...
+서버 127.0.0.1:12345에 연결되었습니다.
+보냄: Trying 127.0.0.1...
+클라이언트 ('127.0.0.1', 55597)가 연결되었습니다.
+받은 데이터: Trying 127.0.0.1...
+로그 저장 완료: logs/received/2025-02-11/2025-02-11-22.txt
+클라이언트 처리 중 오류 발생: 'NoneType' object is not callable
+서버 응답:
+클라이언트 소켓 종료.
+보냄: Connected to cv02.
+TCP 서버와 연결할 수 없습니다.
+연결이 종료되었습니다.
+PS E:\Programing\AirPortProject\Log_TCP_classifier> 
+```
+
+아니 이건 또 무슨 문제인걸까?
+
+```py
+    def start_server(self):
+        try:
+            self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.server_socket.bind((self.Receive_IP, self.Receive_Port))
+            self.server_socket.listen(5)
+            print(f"서버가 {self.Receive_IP}:{self.Receive_Port}에서 대기 중입니다...")
+            self.connect_button1.configure(state="disabled")
+            self.disconnect_button1.configure(state="normal")
+            self.device1_connected = True
+            
+            while not self.stop_thread_flag_receive.is_set():
+                try:
+                    if self.server_socket is None:
+                        break
+                    client_socket, client_address = self.server_socket.accept()
+                    print(f"클라이언트 {client_address}가 연결되었습니다.")
+                    self.device1_status.configure(text="Connected", text_color="green")
+                    self.device1_connected = True
+                    while not self.stop_thread_flag_receive.is_set():
+                        data = client_socket.recv(1024).decode("utf-8")
+                        if not data:
+                            print(f"클라이언트 {client_address} 연결 종료.")
+                            self.device1_connected = False
+                            break
+
+                        print(f"받은 데이터: {data}")
+                        insert_data=str(datetime.now().strftime("%H:%M:%S"))+"  "+data
+                        self.receive_log.insert("end", f"{insert_data}")
+                        
+                        # 로그 저장부
+                        self.save_receive_log(data)
+                        
+                        if self.device2_connected == True:
+                            self.save_send_log(data)
+                        elif self.device2_connected == False:
+                            self.save_resend_log(data)
+                        else:
+                            print("잘못된 입력입니다")
+                        
+                        # 스크롤 다운 쿠현부
+                        if self.is_mouse_inside1 == False:
+                            self.receive_log.scroll_down()
+
+                        client_socket.send(f"수신된 데이터: {data}".encode("utf-8"))
+
+                except Exception as e:
+                    print(f"클라이언트 처리 중 오류 발생: {e}")
+                    self.device1_status.configure(text="Disconnected", text_color="red")
+                    self.device1_connected = False
+                finally:
+                    if 'client_socket' in locals() and client_socket:
+                        client_socket.close()
+                        self.device1_status.configure(text="Disconnected", text_color="red")
+                        print(f"클라이언트 소켓 종료.")
+                        self.device1_connected = False
+
+        except Exception as e:
+            self.device1_status.configure(text="Server Error", text_color="red")
+            print(f"서버 설정 중 오류 발생: {e}")
+        finally:
+            if self.server_socket:
+                self.device1_connected = False
+                try:
+                    self.server_socket.close()
+                    print("서버 소켓이 성공적으로 종료되었습니다.")
+                except Exception as e:
+                    print(f"서버 소켓 종료 중 오류 발생: {e}")
+            self.server_socket = None
+```
+
+이 부분과
+
+```py
+    ###
+    ### Receive 로그 테스트 구현부
+    ###
+    def SendTestLog(self):
+        self.send_log_thread = threading.Thread(target=self.ClientTestLog)
+        self.send_log_thread.start()
+    
+    def ClientTestLog(self):
+        print("클라이언트 실행됨")
+        file_path = self.Test_File
+        
+        try:
+            #소켓 생성
+            client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            client_socket.connect((self.Receive_IP, self.Receive_Port))
+            print(f"서버 {self.Receive_IP}:{self.Receive_Port}에 연결되었습니다.")
+        
+            # 파일 읽기
+            with open(file_path, 'r', encoding='utf-8') as file:
+                for line in file:
+                    line = line.strip()  # 줄 끝의 공백 제거
+                    if line:  # 빈 줄 무시
+                        client_socket.sendall(line.encode('utf-8'))  # 데이터 전송
+                        print(f"보냄: {line}")
+
+                        # 서버로부터 응답 받기
+                        response = client_socket.recv(1024).decode('utf-8')  # 최대 1024 바이트 수신
+                        print(f"서버 응답: {response}")
+
+                        time.sleep(1)  # 1초 대기
+
+            print("파일의 모든 줄을 전송했습니다.")
+        except FileNotFoundError:
+            print(f"파일을 찾을 수 없습니다: {file_path}")
+        except ConnectionError:
+            print("TCP 서버와 연결할 수 없습니다.")
+        except Exception as e:
+            print(f"오류 발생: {e}")
+        finally:
+            client_socket.close()
+            print("연결이 종료되었습니다.")
+```
+
+이 부분에서 서로 통신하는 도중에 문제가 생긴 것 같은데...
+
+전역 변수와 지역변수 그러니까 client_socket의 이름이 같아서 생긴 문제도 아닌 듯 하고...
+
+일단 여기저기에 print를 넣어서 확인해보자
+
+```py
+                        if self.device2_connected == True:
+                            self.save_send_log(data)
+                        elif self.device2_connected == False:
+                            self.save_resend_log(data)
+                        else:
+                            print("잘못된 입력입니다")
+```
+
+확인 결과 이 부분(420에서 425번째 줄)에서 문제가 발생했는데... 아...아닌데?
+
+```py
+        # 초기화: 화면 구성
+        self.create_main_frame()
+
+        # TCP 소켓 초기화
+        self.load_config()
+        self.server_socket = None
+        self.client_socket = None
+        self.server_thread = None
+        self.stop_thread_flag_receive = threading.Event()  # 스레드 종료 플래그 추가
+        self.client_thread = None
+        # TCP 통신 연결 상태
+        self.device1_connected = False  # Device 1 연결 상태
+        self.device2_connected = False  # Device 2 연결 상태
+```
+
+초기화 되어있는데?
+
+```
+로그 저장 완료: logs/received/2025-02-11/2025-02-11-22.txt
+여기?
+여기3
+클라이언트 처리 중 오류 발생: 'NoneType' object is not callable
+서버 응답:
+클라이언트 소켓 종료.
+보냄: Connected to cv02.
+TCP 서버와 연결할 수 없습니다.
+연결이 종료되었습니다.
+PS E:\Programing\AirPortProject\Log_TCP_classifier> 
+```
+
+```py
+                        if self.device2_connected == True:
+                            print("여기2")
+                            self.save_send_log(data)
+                        elif self.device2_connected == False:
+                            print("여기3")
+                            self.save_resend_log(data)
+                        else:
+                            print("잘못된 입력입니다")
+```
+
+잡았다 요놈
+
+`save_resend_log`에서 문제가 발생한 것이 분명하다
+
+
+는
+
+```py
+    def save_resend_log(self, log_data):
+        """다시 보내야 하는 로그를 처리"""
+        self.send_log(log_data)
+```
+
+이렇게 되어있고 그렇다는 것은? 다시 테스트 해보자
+
+```py
+    def save_resend_log(self, log_data):
+        """다시 보내야 하는 로그를 처리"""
+        print("여기4")
+        self.send_log(log_data)
+```
+
+```
+로그 저장 완료: logs/received/2025-02-11/2025-02-11-22.txt
+여기4
+클라이언트 처리 중 오류 발생: 'NoneType' object is not callable
+서버 응답:
+클라이언트 소켓 종료.
+보냄: Connected to cv02.
+TCP 서버와 연결할 수 없습니다.
+연결이 종료되었습니다.
+PS E:\Programing\AirPortProject\Log_TCP_classifier> 
+```
+
+잘 지나가네? 뭐지 진짜? 그럼 다음은 `send_log`인건데...
+
+```py
+    def send_log(self, log_message):
+        """로그를 Device2에 전송"""
+        print("센드 로귿 들어온" + log_message)
+        if self.device2_connected and self.client_socket:
+            try:
+                self.client_socket.sendall(log_message.encode('utf-8'))
+                print(f"보낸 로그: {log_message}")
+            except socket.error as e:
+                print(f"로그 전송 실패: {e}")
+                self.device2_status.configure(text="Disconnected", text_color="red")
+                self.device2_connected = False
+                self.client_socket.close()
+                self.client_socket = None
+        else:
+            print("Device2에 연결되어 있지 않습니다.")
+
+    def save_send_log(self, log_data):
+        """새 로그가 들어오면 send_log를 호출"""
+        self.send_log(log_data)
+
+    def save_resend_log(self, log_data):
+        """다시 보내야 하는 로그를 처리"""
+        print(f"로그 데이타 {log_data}")
+        print("여기4")
+        self.send_log(log_data)
+```
+
+의 실행 결과가 
+
+```
+로그 저장 완료: logs/received/2025-02-11/2025-02-11-22.txt
+로그 데이타 127.0.0.1...
+여기4
+클라이언트 처리 중 오류 발생: 'NoneType' object is not callable
+서버 응답:
+클라이언트 소켓 종료.
+보냄: Connected to cv02.
+TCP 서버와 연결할 수 없습니다.
+연결이 종료되었습니다.
+PS E:\Programing\AirPortProject\Log_TCP_classifier> 
+```
+
+가 될 수 있는건가?
+
+와... GPT는 신이야...
+
+![Image](https://github.com/user-attachments/assets/649a781d-9c8c-48a3-843a-137867d61b07)
+
+GPT가 말하길 혹시 내가 변수를 NONE으로 설정하지 않았냐고 하길래 내가 설마 그랬겠어 했는데 ...
+
+![Image](https://github.com/user-attachments/assets/36fc939a-b529-43d3-a1c8-726c9414537c)
+
+요깃네?
+
+와 해결!
+
+## 2025-02-11 22시 56분
+
+와! 또 문제가!
+
+```
+클라이언트 ('127.0.0.1', 55937)가 연결되었습니다.
+받은 데이터: Trying 127.0.0.1...
+로그 저장 완료: logs/received/2025-02-11/2025-02-11-22.txt
+로그 데이타 Trying 127.0.0.1...
+여기4
+센드 로귿 들어온Trying 127.0.0.1...
+Device2에 연결되어 있지 않습니다.
+클라이언트 처리 중 오류 발생: 'CTkListbox' object has no attribute 'scroll_down'
+서버 응답: 
+클라이언트 소켓 종료.
+보냄: Connected to cv02.
+TCP 서버와 연결할 수 없습니다.
+연결이 종료되었습니다.
+```
+
+아니 선생님 이건 또 뭡니까..
+
+아 미친...알았다..
+
+이 부분은 내가 노트북에서 작업하다가 컴퓨터로 가져와서 하드를 연결하고 vscode를 열었을 때에 `venv`에 파이썬이 없다는 어이가 없는 문제가 발생해서 다시 pip로 모듈을 설치했고 전에 추가했던 scrollDown함수가 없어진 상황이다.. 이거 기록해 뒀었나... 라고 하기 전에 휴지통에서 아직 삭제되지 않은 venv파일을 끄집어 냈다. 그냥 CTKFloatingWindow마냥 하나 직접 넣을까보다
+
+![Image](https://github.com/user-attachments/assets/10c4028a-3d1d-4212-b954-7790ad37e92f)
+
+찾았다! 그럼 이제 그냥 통째로 복사해서 파일을 추가하자
+
+![Image](https://github.com/user-attachments/assets/c038e8b9-676f-489e-8592-a8d55361ae7a)
+
+App.py의 import 부분을 바꾸고
+
+![Image](https://github.com/user-attachments/assets/fa16655f-ee07-469a-916f-9710faf312d7)
+
+추가해주면!(요건 나중에 내가 기억하려고)
+
+![Image](https://github.com/user-attachments/assets/2f7aa088-853f-439f-ad43-94e2f1fb6c25)
+
+이렇게 내가 구현하려 했던 부분이 확실하게 작동하는 것을 알 수 있다!
+
+근데 생각해보니 테스트 부분이랑 실사용 부분이랑 조금만 바꿔서 쓰면 바로 다른 기능도 따라 구현할 수 있을 것 같다는 생각이?
